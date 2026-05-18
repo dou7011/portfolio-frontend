@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.resumeService.getResumeData().subscribe({
       next: (res) => {
-        console.log('成功從 API 拿到資料！', res);
+        // console.log('成功從 API 拿到資料！', res);
         this.resumeData = res; // 把拿到的資料存進變數裡
       },
       error: (err) => {
