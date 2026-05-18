@@ -1,59 +1,67 @@
-# PortfolioFrontend
+# 🚀 Portfolio Frontend (個人網頁前端)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+這是一個使用最新版 **Angular (Standalone 模式)** 建構的個人履歷與作品集前端專案。
+此專案與基於 Cloudflare Workers + D1 的無伺服器後端 API 完美整合，具備極佳的效能、嚴謹的型別檢查與極致的開發體驗。
 
-## Development server
+## ✨ 核心技術棧 (Tech Stack)
 
-To start a local development server, run:
+* **前端框架**: [Angular](https://angular.dev/) (v17+ Standalone Component 架構)
+* **開發語言**: TypeScript
+* **樣式處理**: SCSS
+* **非同步處理**: RxJS
+* **狀態與依賴注入**: Angular `inject()` API & Services
 
-```bash
-ng serve
+## 📁 核心目錄結構
+
+```text
+portfolio-frontend/
+├── src/
+│   ├── app/
+│   │   ├── pages/         # 頁面元件 (例如：Home, Login)
+│   │   ├── services/      # 負責與後端 API 溝通的服務層 (例如：resume.service.ts)
+│   │   ├── app.config.ts  # 全域設定檔 (包含 Router 與 HttpClient 提供者)
+│   │   └── app.routes.ts  # 路由設定
+│   ├── environments/      # 環境變數設定檔 (區分開發與正式上線環境)
+│   └── styles.scss        # 全域共用樣式表
+└── angular.json           # Angular 專案核心設定
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🛠️ 本地開發環境設置 (Local Setup)
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 1. 安裝依賴套件
 
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 2. 環境變數設定 (Environment Variables)
+
+專案預設需要設定後端 API 的位址。請確認 `src/environments/` 目錄下的設定：
+
+* **`environment.development.ts`** (本地開發)：
+  預設指向本地 Wrangler 伺服器 `http://localhost:8787/api`
+* **`environment.ts`** (正式環境)：
+  預設指向 Cloudflare Workers 正式網址。
+
+### 3. 啟動開發伺服器
+
+請確保後端伺服器已啟動後，執行以下指令：
 
 ```bash
-ng generate --help
+npm start
 ```
 
-## Building
+伺服器將預設運行在 `http://localhost:4200/`，且會在修改程式碼時自動重新載入 (Live Reload)。
 
-To build the project run:
+## 🗺️ 目前實作進度 (Features)
 
-```bash
-ng build
-```
+- [x] Angular 基礎環境建置與 HttpClient 設定
+- [x] 多環境變數管理機制 (Development / Production)
+- [x] 後端 API (Cloudflare D1) 成功串接與跨域 (CORS) 處理
+- [x] 履歷資料取得與動態渲染 (Resume Service)
+- [ ] 履歷畫面視覺化排版 (UI/UX)
+- [ ] 系統管理員登入機制 (JWT Auth)
+- [ ] 路由守衛防護 (Auth Guard)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*Developed with ❤️ using Angular.*

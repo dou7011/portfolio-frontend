@@ -1,0 +1,13 @@
+<div class="container" style="padding: 20px;">
+  <h1>🚀 我的全端履歷資料</h1>
+  
+  <p>以下是從 Cloudflare D1 資料庫即時撈取的 JSON 資料：</p>
+
+  @if (resumeData) {
+    <pre style="background: #f4f4f4; padding: 15px; border-radius: 8px;">
+      {{ resumeData | json }}
+    </pre>
+  } @else {
+    <p>⏳ 資料載入中，請稍候...</p>
+  }
+</div>
