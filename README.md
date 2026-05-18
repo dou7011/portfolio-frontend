@@ -7,7 +7,7 @@
 
 * **前端框架**: [Angular](https://angular.dev/) (v17+ Standalone Component 架構)
 * **開發語言**: TypeScript
-* **樣式處理**: SCSS
+* **樣式處理**: CSS
 * **非同步處理**: RxJS
 * **狀態與依賴注入**: Angular `inject()` API & Services
 
