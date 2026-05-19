@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ResumeService } from '../../services/resume';
+import { ResumeService } from '../../services/resume.service';
 import { ResumeData } from '../../models/resume.interface';
 import { timeout } from 'rxjs';
 
