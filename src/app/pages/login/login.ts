@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,7 +15,6 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
 
   public errorMessage = '';
   public isLoading = false;
@@ -38,17 +37,14 @@ export class LoginComponent {
         this.isLoading = false;
         if (res.success && res.token) {
           localStorage.setItem('auth_token', res.token);
-          this.cdr.detectChanges();
           this.router.navigate(['/admin']);
         } else {
           this.errorMessage = res.message || '登入失敗';
-          this.cdr.detectChanges();
         }
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error?.message || '登入失敗，請檢查網路狀態';
-        this.cdr.detectChanges();
       }
     });
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,7 +15,6 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
 
   public message = '';
   public isSuccess = false;
@@ -38,14 +37,12 @@ export class RegisterComponent {
         this.isLoading = false;
         this.isSuccess = true;
         this.message = res.message;
-        this.cdr.detectChanges();
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {
         this.isLoading = false;
         this.isSuccess = false;
         this.message = err.error?.message || '註冊發生錯誤';
-        this.cdr.detectChanges();
       }
     });
   }
