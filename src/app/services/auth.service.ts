@@ -21,7 +21,7 @@ export class AuthService {
       // tap 不會改變資料流，儲存完後依然會把完整的 response 傳給後面的元件
       tap(res => {
         if (res && res.token) {
-          localStorage.setItem('auth_token', res.token);
+          localStorage.setItem('portfolio_auth_token', res.token);
           console.log('【AuthService】Token 儲存成功！');
         }
       })
@@ -33,16 +33,9 @@ export class AuthService {
    * 打包了清空 local storage 以及路由導向的邏輯
    */
   logoutApi() {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('portfolio_auth_token');
     // 如果未來有存其他個人設定，可以使用 localStorage.clear() 一次清空
     this.router.navigate(['/']); // 登出後踢回首頁
-  }
-
-  /**
-   * 3. 取得 Token
-   */
-  getToken(): string | null {
-    return localStorage.getItem('auth_token');
   }
 
   /**
