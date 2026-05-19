@@ -39,6 +39,18 @@ export class AuthService {
   }
 
   /**
+   * 3. 取得 Token
+   */
+  getToken(): string | null {
+    return localStorage.getItem('portfolio_auth_token');
+  }
+
+  verifyPermissions() {
+  // 呼叫後端的 /me 路由 (這支後端 API 我們等一下補)
+  return this.http.get<{ success: boolean; user: any }>(`${this.apiUrl}/auth/me`);
+}
+
+  /**
    * [臨時] 註冊管理員 API
    */
   registerApi(credentials: { email: string; password: string }) {
