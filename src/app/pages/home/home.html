@@ -1,13 +1,99 @@
-<div class="container" style="padding: 20px;">
-  <h1>🚀 我的全端履歷資料</h1>
-  
-  <p>以下是從 Cloudflare D1 資料庫即時撈取的 JSON 資料：</p>
+<div class="resume-wrapper">
+  @if (resumeData(); as data) {
+    <header class="resume-header">
+      <div class="header-top">
+        <h1>{{ data.title }}</h1>
+        <button
+          class="lang-switch"
+          [class.en]="currentLang() === 'en'"
+          (click)="toggleLang()"
+          [disabled]="isLoading()"
+          aria-label="切換語言"
+        >
+          <span class="lang-switch-option">中</span>
+          <span class="lang-switch-option">EN</span>
+        </button>
+      </div>
+      <p class="summary">{{ data.summary }}</p>
+    </header>
 
-  @if (resumeData) {
-    <pre style="background: #f4f4f4; padding: 15px; border-radius: 8px;">
-      {{ resumeData | json }}
-    </pre>
+    <div class="resume-content">
+      <section class="resume-section">
+        <h2 class="section-title">{{ uiText().skills }}</h2>
+        <div class="skills-list">
+          @for (skill of data.skills; track skill.category) {
+            <div class="skill-row">
+              <span class="skill-cat">{{ skill.category }}</span>
+              <div class="tags">
+                @for (item of skill.items; track item) {
+                  <span class="tag">{{ item }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="resume-section">
+        <h2 class="section-title">{{ uiText().experience }}</h2>
+        <div class="timeline">
+          @for (job of data.experience; track job.company) {
+            <article class="timeline-card">
+              <div class="timeline-header">
+                <h3>{{ job.title }}</h3>
+                <span class="date-badge">{{ job.startDate }} - {{ job.endDate }}</span>
+              </div>
+              <p class="company-name">{{ job.company }}</p>
+              <p class="description-box">{{ job.description }}</p>
+            </article>
+          }
+        </div>
+      </section>
+
+      <div class="two-column">
+        <section class="resume-section">
+          <h2 class="section-title">{{ uiText().education }}</h2>
+          <ul class="entry-list">
+            @for (edu of data.education; track edu.school) {
+              <li class="entry-item">
+                <div class="entry-header">
+                  <h3>{{ edu.school }}</h3>
+                  <span class="mini-date">{{ edu.startDate }} - {{ edu.endDate }}</span>
+                </div>
+                <p class="entry-sub">{{ edu.degree }}</p>
+              </li>
+            }
+          </ul>
+        </section>
+
+        <section class="resume-section">
+          <h2 class="section-title">{{ uiText().certifications }}</h2>
+          <ul class="entry-list">
+            @for (cert of data.certifications; track cert.credentialId) {
+              <li class="entry-item">
+                <div class="entry-header">
+                  <h3>{{ cert.name }}</h3>
+                </div>
+                <p class="entry-sub">{{ uiText().credentialPrefix }}: {{ cert.credentialId }}</p>
+                <p class="cert-desc">{{ cert.description }}</p>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    </div>
+  } @else if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>{{ uiText().loading }}</p>
+    </div>
   } @else {
-    <p>⏳ 資料載入中，請稍候...</p>
+    <div class="error-state">
+      <p>{{ errorMessage() || uiText().fallbackError }}</p>
+      <button class="lang-switch" [class.en]="currentLang() === 'en'" (click)="toggleLang()" aria-label="切換語言">
+        <span class="lang-switch-option">中</span>
+        <span class="lang-switch-option">EN</span>
+      </button>
+    </div>
   }
 </div>
