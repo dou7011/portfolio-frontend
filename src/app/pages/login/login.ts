@@ -34,17 +34,16 @@ export class LoginComponent {
 
     this.authService.loginApi(credentials).subscribe({
       next: (res) => {
+        // 🌟 只要進到 next，就代表後端回傳 200 OK，也就是絕對登入成功了！
         this.isLoading = false;
-        if (res.success && res.token) {
-          localStorage.setItem('auth_token', res.token);
-          this.router.navigate(['/admin']);
-        } else {
-          this.errorMessage = res.message || '登入失敗';
-        }
+        this.router.navigate(['/admin']);
       },
       error: (err) => {
+        // 🌟 當故意打錯密碼，後端回傳 401 時，100% 會直接噴進這裡！
         this.isLoading = false;
-        this.errorMessage = err.error?.message || '登入失敗，請檢查網路狀態';
+        // 抓取後端傳回來的錯誤訊息，如果後端崩潰沒回應，就顯示後面的預設提示
+        this.errorMessage = err.error?.message || '登入失敗，請檢查網路或後端狀態';
+        console.error('登入出錯啦：', err);
       }
     });
   }
