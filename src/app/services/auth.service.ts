@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,19 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
 
   loginApi(credentials: { email: string; password: string }) {
-    return this.http.post<{success: boolean, message: string, token: string, user: any}>(`${this.apiUrl}/auth/login`, credentials);
+    return this.http.post<{ success: boolean, message: string, token: string, user: any }>(
+      `${this.apiUrl}/auth/login`, 
+      credentials
+    ).pipe(
+      // 🌟 使用 tap 攔截回應：拿到 Token 的瞬間立刻存入 localStorage
+      // tap 不會改變資料流，儲存完後依然會把完整的 response 傳給後面的元件
+      tap(res => {
+        if (res && res.token) {
+          localStorage.setItem('auth_token', res.token);
+          console.log('【AuthService】Token 儲存成功！');
+        }
+      })
+    );
   }
 
   /**
