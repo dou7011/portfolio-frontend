@@ -19,10 +19,14 @@ export const routes: Routes = [
       {
         path:'resume',
         component: ResumeEditComponent
-      }
+      },
+      /*{
+        path: 'register',
+        component: RegisterComponent
+      } */
     ]
   },
-  { path: 'register', component: RegisterComponent },
+  
   // 如果亂打網址，自動導回首頁
   { path: '**', redirectTo: '' } 
 ];
