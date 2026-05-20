@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
   private resumeService = inject(ResumeService);
   private readonly labels = {
     zh: {
-      switchButton: 'English',
       skills: '專業技能',
       experience: '工作經歷',
       education: '學歷',
@@ -25,7 +24,6 @@ export class HomeComponent implements OnInit {
       credentialPrefix: 'ID'
     },
     en: {
-      switchButton: '中文',
       skills: 'Skills',
       experience: 'Experience',
       education: 'Education',

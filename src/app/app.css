@@ -1,0 +1,92 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+/* 核心版面設定 */
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #faf8f3 0%, #f5f2ec 100%);
+}
+
+/* 統一的版面容器：讓所有內容都在同一個範圍內 */
+.layout-container {
+    width: min(1100px, 100% - 48px);
+    margin: 0 auto;
+}
+
+/* ================= 頁首 (Header) ================= */
+.site-header {
+    padding: 10px 20px; /* 🌟 只保留上下間距，左右設為 0 確保與下方卡片絕對對齊 */
+    text-align: left;     /* 🌟 修改：Header 靠左對齊 */
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.brand {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start; /* 🌟 修改：主副標題內部文字靠左對齊 */
+    gap: 4px;
+    text-decoration: none;
+    color: #1f2937;
+    cursor: pointer;
+}
+
+.brand-main {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #785945;
+}
+
+.brand-sub {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+}
+
+/* ================= 頁尾 (Footer) ================= */
+.site-footer {
+    margin-top: auto;
+    padding: 24px 0;
+    color: #8a7363;
+    text-align: center; /* 頁尾通常維持置中比較和諧 */
+}
+
+.site-footer small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* ================= 響應式設定 ================= */
+@media (max-width: 640px) {
+    .layout-container {
+        width: min(1100px, 100% - 28px);
+    }
+
+    .site-header {
+        padding: 24px 0 16px; /* 行動端稍微縮小上方間距 */
+    }
+
+    .brand-main {
+        font-size: 1.3rem;
+    }
+
+    .brand-sub {
+        font-size: 0.8rem;
+    }
+
+    .site-footer {
+        padding: 20px 0;
+    }
+}

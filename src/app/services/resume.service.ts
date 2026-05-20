@@ -9,11 +9,11 @@ export class ResumeService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/resume`;
 
-  constructor() { }
-
   // 🌟 加入 lang 參數，預設為 'zh'
   getResumeData(lang: string = 'zh') {
     // 將 lang 參數拼接到網址後方
     return this.http.get(`${this.apiUrl}?lang=${lang}`);
   }
+
+  
 }

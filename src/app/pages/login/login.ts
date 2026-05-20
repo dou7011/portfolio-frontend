@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
     // 🌟 這裡呼叫你剛改好的 service.login()
     this.authService.loginApi(credentials).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
         this.router.navigate(['/']);
       },

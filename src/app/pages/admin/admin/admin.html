@@ -1,0 +1,48 @@
+<div class="admin-wrapper">
+  <aside class="sidebar">
+    <div class="brand">
+      <h2>IT AuthAdmin</h2>
+      <p>管理員控制中心</p>
+    </div>
+    
+    <nav class="menu">
+      <ul>
+        @for (item of menuItems; track item.path) {
+          <li>
+            <a [routerLink]="['/admin', item.path]" routerLinkActive="active">
+              {{ item.name }}
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="logout-box">
+      <a class="home-btn" [routerLink]="['/']">
+        首頁
+      </a>
+
+      <button class="logout-btn" (click)="onLogout()">
+        登出
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+@if (isLogoutModalOpen) {
+  <div class="modal-backdrop" (click)="closeLogoutModal()">
+    <section class="logout-modal" (click)="$event.stopPropagation()" aria-modal="true" role="dialog" aria-label="登出確認">
+      <h3>確認登出</h3>
+      <p>你確定要離開管理系統嗎？</p>
+
+      <div class="modal-actions">
+        <button class="modal-btn cancel" type="button" (click)="closeLogoutModal()">取消</button>
+        <button class="modal-btn confirm" type="button" (click)="confirmLogout()">確認登出</button>
+      </div>
+    </section>
+  </div>
+}

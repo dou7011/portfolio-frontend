@@ -1,0 +1,64 @@
+<div class="edit-container">
+  <div class="header-section">
+    <h2>📝 履歷編輯</h2>
+    <p>在這裡更新您的個人基本資訊與簡介。</p>
+  </div>
+
+  <div class="form-card">
+    <div class="tabs">
+      <button 
+        [class.active]="currentLang === 'zh'" 
+        (click)="switchLang('zh')">
+        🇹🇼 中文版 (ZH)
+      </button>
+      <button 
+        [class.active]="currentLang === 'en'" 
+        (click)="switchLang('en')">
+        🇺🇸 英文版 (EN)
+      </button>
+    </div>
+
+    <form [formGroup]="resumeForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">顯示名稱</label>
+          <input id="name" type="text" formControlName="name" placeholder="例如：開發者">
+          @if (resumeForm.get('name')?.invalid && resumeForm.get('name')?.touched) {
+            <span class="error-text">名稱為必填欄位</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="title">專業職稱</label>
+          <input id="title" type="text" formControlName="title" placeholder="例如：全端軟體工程師">
+          @if (resumeForm.get('title')?.invalid && resumeForm.get('title')?.touched) {
+            <span class="error-text">職稱為必填欄位</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="about">個人簡介 (About Me)</label>
+        <textarea id="about" rows="6" formControlName="about" placeholder="寫一段吸引人的自我介紹..."></textarea>
+        @if (resumeForm.get('about')?.invalid && resumeForm.get('about')?.touched) {
+          <span class="error-text">簡介為必填欄位</span>
+        }
+      </div>
+
+      <div class="form-actions">
+        @if (saveMessage) {
+          <span class="success-text">{{ saveMessage }}</span>
+        }
+        <button type="submit" class="submit-btn" [disabled]="isSaving">
+          @if (isSaving) {
+            <span class="spinner"></span> 儲存中...
+          } @else {
+            💾 儲存變更
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

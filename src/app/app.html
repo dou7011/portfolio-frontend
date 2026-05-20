@@ -1,1 +1,24 @@
-<router-outlet></router-outlet>
+<div class="app-shell">
+	@if (!isAdminRoute()) {
+		<header class="site-header">
+			<div class="layout-container">
+				<a class="brand" [routerLink]="['/']">
+					<span class="brand-main">{{ title() }}</span>
+					<span class="brand-sub">Personal Website</span>
+				</a>
+			</div>
+		</header>
+	}
+
+	<main class="page-content">
+		<router-outlet></router-outlet>
+	</main>
+
+	@if (!isAdminRoute()) {
+		<footer class="site-footer">
+			<div class="layout-container">
+				<small>Copyright {{ currentYear }} {{ title() }}. Built with care.</small>
+			</div>
+		</footer>
+	}
+</div>

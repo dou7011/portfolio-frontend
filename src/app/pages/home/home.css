@@ -407,8 +407,7 @@
 @media (prefers-reduced-motion: reduce) {
   .lang-switch,
   .lang-switch::before,
-  .lang-switch-option,
-  .skill-card {
+  .lang-switch-option {
     transition: none;
     animation: none;
   }
@@ -456,9 +455,6 @@
     margin-bottom: 34px;
   }
 
-  .resume-section::after {
-    bottom: -16px;
-  }
 }
 
 @media print {

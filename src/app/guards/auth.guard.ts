@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -23,7 +23,7 @@ export const authGuard: CanActivateFn = (route, state) => {
         return false;
       }
     }),
-    catchError((err) => {
+    catchError(() => {
       return of(false);
     })
   );

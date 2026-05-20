@@ -80,12 +80,6 @@
   background: linear-gradient(90deg, var(--accent-soft), transparent);
 }
 
-.login-header p {
-  color: var(--text-sub);
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
-}
-
 .login-body {
   padding: 32px 44px 40px;
 }
