@@ -19,8 +19,7 @@
 
 /* 統一的版面容器：讓所有內容都在同一個範圍內 */
 .layout-container {
-    width: min(1100px, 100% - 48px);
-    margin: 0 auto;
+    margin: 0 25px;
 }
 
 /* ================= 頁首 (Header) ================= */
@@ -70,10 +69,6 @@
 
 /* ================= 響應式設定 ================= */
 @media (max-width: 640px) {
-    .layout-container {
-        width: min(1100px, 100% - 28px);
-    }
-
     .site-header {
         padding: 24px 0 16px; /* 行動端稍微縮小上方間距 */
     }
