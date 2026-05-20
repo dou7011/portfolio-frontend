@@ -1,64 +1,232 @@
 <div class="edit-container">
-  <div class="header-section">
-    <h2>📝 履歷編輯</h2>
-    <p>在這裡更新您的個人基本資訊與簡介。</p>
+
+  <!-- 頁首 -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>履歷編輯</h2>
+      <p>管理您的線上履歷內容</p>
+    </div>
+    <div class="lang-tabs">
+      <button [class.active]="currentLang === 'zh'" (click)="switchLang('zh')">🇹🇼 中文</button>
+      <button [class.active]="currentLang === 'en'" (click)="switchLang('en')">🇺🇸 English</button>
+    </div>
   </div>
 
-  <div class="form-card">
-    <div class="tabs">
-      <button 
-        [class.active]="currentLang === 'zh'" 
-        (click)="switchLang('zh')">
-        🇹🇼 中文版 (ZH)
-      </button>
-      <button 
-        [class.active]="currentLang === 'en'" 
-        (click)="switchLang('en')">
-        🇺🇸 英文版 (EN)
+  <!-- 載入中 -->
+  @if (isLoading) {
+    <div class="loading-box">
+      <span class="loading-dot"></span>
+      <span>載入資料中...</span>
+    </div>
+  }
+
+  <form [formGroup]="resumeForm" (ngSubmit)="onSubmit()" [class.loading]="isLoading">
+
+    <div class="sections-grid">
+
+    <!-- ── 基本資訊 ─────────────────────────────── -->
+    <div class="section-card full-width">
+      <div class="section-head">
+        <span class="section-icon">✦</span>
+        <h3>基本資訊</h3>
+      </div>
+
+      <div class="field-group">
+        <label>職稱 / Title</label>
+        <input type="text" formControlName="title" placeholder="例如：Full Stack Developer">
+        @if (resumeForm.get('title')?.invalid && resumeForm.get('title')?.touched) {
+          <span class="field-error">職稱為必填欄位</span>
+        }
+      </div>
+
+      <div class="field-group">
+        <label>個人簡介 / Summary</label>
+        <textarea rows="5" formControlName="summary" placeholder="簡短介紹自己的專業背景與核心能力..."></textarea>
+        @if (resumeForm.get('summary')?.invalid && resumeForm.get('summary')?.touched) {
+          <span class="field-error">個人簡介為必填欄位</span>
+        }
+      </div>
+    </div>
+
+    <!-- ── 技能 ──────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-icon">⬡</span>
+        <h3>技能 Skills</h3>
+        <button type="button" class="add-btn" (click)="addSkill()">＋ 新增分類</button>
+      </div>
+
+      @for (skillGroup of skills.controls; track $index; let si = $index) {
+        <div class="sub-card" [formGroup]="$any(skillGroup)">
+          <div class="sub-card-head">
+            <input type="text" formControlName="category" placeholder="技能分類，例如：Frontend" class="inline-input">
+            <button type="button" class="remove-btn" (click)="removeSkill(si)" title="移除此分類">✕</button>
+          </div>
+
+          <div class="tags-row">
+            @for (item of getSkillItems(si).controls; track $index; let ii = $index) {
+              <div class="tag-input-wrap">
+                <input type="text" [formControl]="$any(item)" placeholder="技能名稱">
+                @if (getSkillItems(si).length > 1) {
+                  <button type="button" class="tag-remove-btn" (click)="removeSkillItem(si, ii)">✕</button>
+                }
+              </div>
+            }
+            <button type="button" class="tag-add-btn" (click)="addSkillItem(si)">＋ 新增</button>
+          </div>
+        </div>
+      }
+
+      @if (skills.length === 0) {
+        <p class="empty-hint">尚無技能分類，點擊「新增分類」開始新增</p>
+      }
+    </div>
+
+    <!-- ── 工作經歷 ──────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-icon">◈</span>
+        <h3>工作經歷 Experience</h3>
+        <button type="button" class="add-btn" (click)="addExperience()">＋ 新增</button>
+      </div>
+
+      @for (expGroup of experience.controls; track $index; let ei = $index) {
+        <div class="sub-card" [formGroup]="$any(expGroup)">
+          <div class="sub-card-head">
+            <span class="item-index">{{ ei + 1 }}</span>
+            <button type="button" class="remove-btn" (click)="removeExperience(ei)" title="移除此筆">✕</button>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>公司名稱</label>
+              <input type="text" formControlName="company" placeholder="公司名稱">
+            </div>
+            <div class="field-group">
+              <label>職位名稱</label>
+              <input type="text" formControlName="title" placeholder="職位">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>開始日期</label>
+              <input type="text" formControlName="startDate" placeholder="例如：2022-01">
+            </div>
+            <div class="field-group">
+              <label>結束日期</label>
+              <input type="text" formControlName="endDate" placeholder="例如：Present">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>工作描述</label>
+            <textarea rows="3" formControlName="description" placeholder="描述工作內容與成就..."></textarea>
+          </div>
+        </div>
+      }
+
+      @if (experience.length === 0) {
+        <p class="empty-hint">尚無工作經歷，點擊「新增」開始新增</p>
+      }
+    </div>
+
+    <!-- ── 學歷 ──────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-icon">◇</span>
+        <h3>學歷 Education</h3>
+        <button type="button" class="add-btn" (click)="addEducation()">＋ 新增</button>
+      </div>
+
+      @for (eduGroup of education.controls; track $index; let edi = $index) {
+        <div class="sub-card" [formGroup]="$any(eduGroup)">
+          <div class="sub-card-head">
+            <span class="item-index">{{ edi + 1 }}</span>
+            <button type="button" class="remove-btn" (click)="removeEducation(edi)" title="移除此筆">✕</button>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>學校名稱</label>
+              <input type="text" formControlName="school" placeholder="學校名稱">
+            </div>
+            <div class="field-group">
+              <label>學位 / 科系</label>
+              <input type="text" formControlName="degree" placeholder="例如：資訊工程學系 學士">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>開始日期</label>
+              <input type="text" formControlName="startDate" placeholder="例如：2018-09">
+            </div>
+            <div class="field-group">
+              <label>結束日期</label>
+              <input type="text" formControlName="endDate" placeholder="例如：2022-06">
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (education.length === 0) {
+        <p class="empty-hint">尚無學歷資料，點擊「新增」開始新增</p>
+      }
+    </div>
+
+    <!-- ── 證照 ──────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-icon">✧</span>
+        <h3>證照 Certifications</h3>
+        <button type="button" class="add-btn" (click)="addCertification()">＋ 新增</button>
+      </div>
+
+      @for (certGroup of certifications.controls; track $index; let ci = $index) {
+        <div class="sub-card" [formGroup]="$any(certGroup)">
+          <div class="sub-card-head">
+            <span class="item-index">{{ ci + 1 }}</span>
+            <button type="button" class="remove-btn" (click)="removeCertification(ci)" title="移除此筆">✕</button>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>證照名稱</label>
+              <input type="text" formControlName="name" placeholder="證照名稱">
+            </div>
+            <div class="field-group">
+              <label>Credential ID</label>
+              <input type="text" formControlName="credentialId" placeholder="證書編號">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>描述</label>
+            <input type="text" formControlName="description" placeholder="簡短說明此證照內容">
+          </div>
+        </div>
+      }
+
+      @if (certifications.length === 0) {
+        <p class="empty-hint">尚無證照資料，點擊「新增」開始新增</p>
+      }
+    </div>
+
+    </div><!-- /sections-grid -->
+
+    <!-- ── 提交按鈕 ───────────────────────────────── -->
+    <div class="form-footer">
+      @if (saveMessage) {
+        <span class="msg-success">{{ saveMessage }}</span>
+      }
+      @if (saveError) {
+        <span class="msg-error">{{ saveError }}</span>
+      }
+      <button type="submit" class="save-btn" [disabled]="isSaving">
+        @if (isSaving) {
+          <span class="spinner"></span> 儲存中...
+        } @else {
+          儲存履歷
+        }
       </button>
     </div>
 
-    <form [formGroup]="resumeForm" (ngSubmit)="onSubmit()">
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">顯示名稱</label>
-          <input id="name" type="text" formControlName="name" placeholder="例如：開發者">
-          @if (resumeForm.get('name')?.invalid && resumeForm.get('name')?.touched) {
-            <span class="error-text">名稱為必填欄位</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="title">專業職稱</label>
-          <input id="title" type="text" formControlName="title" placeholder="例如：全端軟體工程師">
-          @if (resumeForm.get('title')?.invalid && resumeForm.get('title')?.touched) {
-            <span class="error-text">職稱為必填欄位</span>
-          }
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="about">個人簡介 (About Me)</label>
-        <textarea id="about" rows="6" formControlName="about" placeholder="寫一段吸引人的自我介紹..."></textarea>
-        @if (resumeForm.get('about')?.invalid && resumeForm.get('about')?.touched) {
-          <span class="error-text">簡介為必填欄位</span>
-        }
-      </div>
-
-      <div class="form-actions">
-        @if (saveMessage) {
-          <span class="success-text">{{ saveMessage }}</span>
-        }
-        <button type="submit" class="submit-btn" [disabled]="isSaving">
-          @if (isSaving) {
-            <span class="spinner"></span> 儲存中...
-          } @else {
-            💾 儲存變更
-          }
-        </button>
-      </div>
-
-    </form>
-  </div>
+  </form>
 </div>

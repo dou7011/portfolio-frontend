@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ResumeData } from '../models/resume.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +16,8 @@ export class ResumeService {
     return this.http.get(`${this.apiUrl}?lang=${lang}`);
   }
 
-  
+  // 更新履歷資料
+  updateResume(resumeData: Partial<ResumeData>) {
+    return this.http.put(`${this.apiUrl}`, resumeData);
+  }
 }

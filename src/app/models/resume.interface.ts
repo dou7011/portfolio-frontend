@@ -26,7 +26,6 @@ export interface Certification {
   description: string;
 }
 
-// 這是你履歷的核心資料結構
 export interface ResumeData {
   id: number;
   title: string;
