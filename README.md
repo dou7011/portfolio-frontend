@@ -1,7 +1,7 @@
 # 🚀 Portfolio Frontend (個人網頁前端)
 
 這是一個使用 **Angular 21 Standalone 架構** 建構的個人履歷與作品集前端專案。
-目前專案已串接 Cloudflare Workers 後端 API，包含履歷資料讀取、管理員登入、JWT Token 攔截與受保護路由驗證流程。
+目前專案已串接 Cloudflare Workers 後端 API，包含履歷資料讀取、履歷編輯、管理員登入、JWT Token 攔截與受保護路由驗證流程。
 
 ## ✨ 核心技術棧 (Tech Stack)
 
@@ -73,7 +73,8 @@ npm test
 
 * **`/`**：首頁，顯示履歷內容，支援中英文切換
 * **`/login`**：系統管理員登入頁
-* **`/admin`**：受 `authGuard` 保護的管理路由，目前暫時載入管理員建立頁面
+* **`/admin`**：受 `authGuard` 保護的管理路由，預設會重新導向 `/admin/resume`
+* **`/admin/resume`**：履歷編輯頁面，可編輯標題、簡介、技能、工作經歷、學歷與證照
 * **萬用路由 (`**`)**：未定義路由會重新導回首頁
 
 ## ✅ 目前已完成功能
@@ -88,11 +89,14 @@ npm test
 - [x] 管理員登入表單與 JWT Token 儲存
 - [x] HTTP Interceptor 自動附加 Bearer Token
 - [x] Auth Guard 透過 `/auth/me` 驗證登入狀態
+- [x] 管理界面履歷編輯功能（`/admin/resume`）
+- [x] `PUT /resume` API 更新履歷：傳送 `lang`, `title`, `summary`, `skills`, `experience`, `education`, `certifications`
+- [x] 工作與學歷時間改用年月選擇器，不再手動輸入日期格式
 
 ## ⚠️ 目前狀態說明
 
-* `RegisterComponent` 目前被掛在 `/admin` 路由上，作為臨時管理入口頁。
-* 公開的 `/register` 路由目前已註解，尚未開放一般訪問。
+* `/admin` 路由已改為預設導向 `/admin/resume`，而非僅顯示暫時建立頁。
+* `RegisterComponent` 相關路由仍保留為註解，暫時未對外開放。
 * `authGuard` 若驗證失敗會拒絕進入受保護頁面。
 
 ---
