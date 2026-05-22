@@ -50,38 +50,80 @@
 }
 
 /* 語言切換 */
-.lang-tabs {
-  display: flex;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
+.lang-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
   flex-shrink: 0;
-}
-
-.lang-tabs button {
-  padding: 7px 18px;
-  background: transparent;
-  border: none;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--text-sub);
+  width: 92px;
+  height: 38px;
+  padding: 4px;
+  border: 1px solid rgba(117, 90, 73, 0.24);
+  background: rgba(255, 252, 247, 0.95);
+  border-radius: 999px;
+  overflow: hidden;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
-  white-space: nowrap;
+  isolation: isolate;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.lang-tabs button:hover {
-  background: var(--accent-soft);
-  color: var(--text-main);
+.lang-switch::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 40px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f0ddc8 0%, #e8d0b8 100%);
+  box-shadow: 0 3px 9px rgba(131, 93, 66, 0.2);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
 }
 
-.lang-tabs button.active {
-  background: var(--accent-soft);
-  color: var(--accent-hover);
+.lang-switch.en::before {
+  transform: translateX(42px);
+}
+
+.lang-switch-option {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
   font-weight: 600;
+  color: #856b58;
+  transition: color 0.2s ease;
 }
 
+.lang-switch:not(.en) .lang-switch-option:first-child,
+.lang-switch.en .lang-switch-option:last-child {
+  color: #5a4335;
+}
+
+.lang-switch:hover {
+  transform: translateY(-1px);
+  border-color: rgba(126, 92, 70, 0.38);
+  box-shadow: 0 8px 20px rgba(147, 108, 80, 0.14);
+}
+
+.lang-switch:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.lang-switch:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.lang-switch:disabled::before {
+  box-shadow: none;
+}
+
+/* 移除舊的 lang-tabs 樣式 */
 /* ── 載入中 ─────────────────────────────────────── */
 .loading-box {
   display: flex;
@@ -185,7 +227,7 @@ form.loading {
   min-width: 0;
   box-sizing: border-box;
   padding: 9px 12px;
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 9px;
   font-size: 0.88rem;
@@ -261,7 +303,7 @@ form.loading {
   flex: 1;
   min-width: 0;        /* 防止 flex 子項目撐破容器 */
   padding: 7px 11px;
-  background: var(--surface);
+  background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 8px;
   font-size: 0.85rem;
@@ -287,7 +329,7 @@ form.loading {
 .tag-input-wrap {
   display: flex;
   align-items: center;
-  background: var(--surface);
+  background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0 6px 0 12px;
@@ -491,7 +533,7 @@ form.loading {
   font-size: 0.95rem;
   font-family: inherit;
   transition: all 0.2s;
-  background-color: #f8fafc;
+  background-color: #ffffff;
 }
 
 .form-group input:focus,

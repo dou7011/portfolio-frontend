@@ -28,6 +28,7 @@ export interface Certification {
 
 export interface ResumeData {
   id: number;
+  lang: 'zh' | 'en';
   title: string;
   summary: string;
   skills: Skill[];

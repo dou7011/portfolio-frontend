@@ -156,7 +156,10 @@ export class ResumeEditComponent implements OnInit {
 
     const rawValue = this.resumeForm.getRawValue();
     const payload = {
-      ...rawValue,
+      lang: this.currentLang,
+      title: rawValue.title,
+      summary: rawValue.summary,
+      skills: rawValue.skills ?? [],
       experience: (rawValue.experience ?? []).map((exp: any) => ({
         ...exp,
         startDate: this.normalizeDateForSave(exp.startDate),
@@ -167,6 +170,7 @@ export class ResumeEditComponent implements OnInit {
         startDate: this.normalizeDateForSave(edu.startDate),
         endDate: this.normalizeDateForSave(edu.endDate),
       })),
+      certifications: rawValue.certifications ?? [],
     };
 
     this.resumeService.updateResume(payload).subscribe({

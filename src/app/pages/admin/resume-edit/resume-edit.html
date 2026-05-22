@@ -6,10 +6,16 @@
       <h2>履歷編輯</h2>
       <p>管理您的線上履歷內容</p>
     </div>
-    <div class="lang-tabs">
-      <button [class.active]="currentLang === 'zh'" (click)="switchLang('zh')">🇹🇼 中文</button>
-      <button [class.active]="currentLang === 'en'" (click)="switchLang('en')">🇺🇸 English</button>
-    </div>
+    <button
+      class="lang-switch"
+      [class.en]="currentLang === 'en'"
+      (click)="switchLang(currentLang === 'zh' ? 'en' : 'zh')"
+      [disabled]="isLoading"
+      aria-label="切換語言"
+    >
+      <span class="lang-switch-option">中</span>
+      <span class="lang-switch-option">EN</span>
+    </button>
   </div>
 
   <!-- 載入中 -->
