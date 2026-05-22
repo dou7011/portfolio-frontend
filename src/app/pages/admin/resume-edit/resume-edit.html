@@ -32,10 +32,10 @@
       </div>
 
       <div class="field-group">
-        <label>職稱 / Title</label>
+        <label>標題 / Title</label>
         <input type="text" formControlName="title" placeholder="例如：Full Stack Developer">
         @if (resumeForm.get('title')?.invalid && resumeForm.get('title')?.touched) {
-          <span class="field-error">職稱為必填欄位</span>
+          <span class="field-error">標題為必填欄位</span>
         }
       </div>
 
@@ -110,11 +110,11 @@
           <div class="field-row">
             <div class="field-group">
               <label>開始時間</label>
-              <input type="text" formControlName="startDate" placeholder="例如：2022-01">
+              <input type="month" formControlName="startDate" min="2000-01" max="2040-12">
             </div>
             <div class="field-group">
               <label>結束時間</label>
-              <input type="text" formControlName="endDate" placeholder="例如：Present">
+              <input type="month" formControlName="endDate" min="2000-01" max="2040-12">
             </div>
           </div>
           <div class="field-group">
@@ -157,11 +157,11 @@
           <div class="field-row">
             <div class="field-group">
               <label>入學時間</label>
-              <input type="text" formControlName="startDate" placeholder="例如：2018-09">
+              <input type="month" formControlName="startDate" min="2000-01" max="2040-12">
             </div>
             <div class="field-group">
               <label>畢業日期</label>
-              <input type="text" formControlName="endDate" placeholder="例如：2022-06">
+              <input type="month" formControlName="endDate" min="2000-01" max="2040-12">
             </div>
           </div>
         </div>

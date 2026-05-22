@@ -39,6 +39,21 @@ export class ResumeEditComponent implements OnInit {
     return this.skills.at(skillIndex).get('items') as FormArray;
   }
 
+  private normalizeDateForInput(value: string | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+    const match = value.match(/^(\d{4})[\/\-](\d{2})$/);
+    return match ? `${match[1]}-${match[2]}` : '';
+  }
+
+  private normalizeDateForSave(value: string | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+    return value.replace(/-/g, '/');
+  }
+
   ngOnInit() {
     this.loadResumeData();
   }
@@ -74,8 +89,8 @@ export class ResumeEditComponent implements OnInit {
           this.experience.push(this.fb.group({
             company: [e.company, Validators.required],
             title: [e.title, Validators.required],
-            startDate: [e.startDate],
-            endDate: [e.endDate],
+            startDate: [this.normalizeDateForInput(e.startDate)],
+            endDate: [this.normalizeDateForInput(e.endDate)],
             description: [e.description],
           }));
         });
@@ -84,8 +99,8 @@ export class ResumeEditComponent implements OnInit {
           this.education.push(this.fb.group({
             school: [e.school, Validators.required],
             degree: [e.degree],
-            startDate: [e.startDate],
-            endDate: [e.endDate],
+            startDate: [this.normalizeDateForInput(e.startDate)],
+            endDate: [this.normalizeDateForInput(e.endDate)],
           }));
         });
 
@@ -139,7 +154,22 @@ export class ResumeEditComponent implements OnInit {
     this.saveMessage = '';
     this.saveError = '';
 
-    this.resumeService.updateResume(this.resumeForm.getRawValue()).subscribe({
+    const rawValue = this.resumeForm.getRawValue();
+    const payload = {
+      ...rawValue,
+      experience: (rawValue.experience ?? []).map((exp: any) => ({
+        ...exp,
+        startDate: this.normalizeDateForSave(exp.startDate),
+        endDate: this.normalizeDateForSave(exp.endDate),
+      })),
+      education: (rawValue.education ?? []).map((edu: any) => ({
+        ...edu,
+        startDate: this.normalizeDateForSave(edu.startDate),
+        endDate: this.normalizeDateForSave(edu.endDate),
+      })),
+    };
+
+    this.resumeService.updateResume(payload).subscribe({
       next: () => {
         this.isSaving = false;
         this.saveMessage = '🎉 儲存成功！';

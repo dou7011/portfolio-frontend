@@ -17,6 +17,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children:[
       {
+        path: '',
+        redirectTo: 'resume',
+        pathMatch: 'full'
+      },
+      {
         path:'resume',
         component: ResumeEditComponent
       },
