@@ -24,8 +24,8 @@ export class HomeComponent implements OnInit {
       credentialPrefix: 'ID'
     },
     en: {
-      skills: 'Skills',
-      experience: 'Experience',
+      skills: 'Professional Skills',
+      experience: 'Work Experience',
       education: 'Education',
       certifications: 'Certifications',
       loading: 'Loading resume data...',
