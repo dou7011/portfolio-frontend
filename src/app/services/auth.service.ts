@@ -23,7 +23,6 @@ export class AuthService {
       tap(res => {
         if (res && res.token) {
           localStorage.setItem(this.tokenKey, res.token);
-          console.log('【AuthService】Token 儲存成功！');
         }
       })
     );
