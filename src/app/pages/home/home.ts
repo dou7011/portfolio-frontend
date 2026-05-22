@@ -59,6 +59,7 @@ export class HomeComponent implements OnInit {
     this.errorMessage.set('');
     this.resumeService.getResumeData(lang).pipe(timeout(8000)).subscribe({
       next: (res: any) => {
+        console.log('Fetched resume data:', res);
         this.resumeData.set(res?.data ?? null);
         if (!this.resumeData()) {
           this.errorMessage.set(lang === 'en'
