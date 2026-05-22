@@ -53,6 +53,86 @@
         }
       </div>
     </div>
+    
+    <!-- ── 學歷 ──────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-icon">◇</span>
+        <h3>學歷 Education</h3>
+        <button type="button" class="add-btn" (click)="addEducation()">＋ 新增</button>
+      </div>
+
+      @for (eduGroup of education.controls; track $index; let edi = $index) {
+        <div class="sub-card" [formGroup]="$any(eduGroup)">
+          <div class="sub-card-head">
+            <span class="item-index">{{ edi + 1 }}</span>
+            <button type="button" class="remove-btn" (click)="removeEducation(edi)" title="移除此筆">✕</button>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>學校名稱</label>
+              <input type="text" formControlName="school" placeholder="學校名稱">
+            </div>
+            <div class="field-group">
+              <label>學位 / 科系</label>
+              <input type="text" formControlName="degree" placeholder="例如：資訊工程學系 學士">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>入學時間</label>
+              <input type="month" formControlName="startDate" min="2000-01" max="2040-12">
+            </div>
+            <div class="field-group">
+              <label>畢業日期</label>
+              <input type="month" formControlName="endDate" min="2000-01" max="2040-12">
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (education.length === 0) {
+        <p class="empty-hint">尚無學歷資料，點擊「新增」開始新增</p>
+      }
+    </div>
+
+    <!-- ── 證照 ──────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-icon">✧</span>
+        <h3>證照 Certifications</h3>
+        <button type="button" class="add-btn" (click)="addCertification()">＋ 新增</button>
+      </div>
+
+      @for (certGroup of certifications.controls; track $index; let ci = $index) {
+        <div class="sub-card" [formGroup]="$any(certGroup)">
+          <div class="sub-card-head">
+            <span class="item-index">{{ ci + 1 }}</span>
+            <button type="button" class="remove-btn" (click)="removeCertification(ci)" title="移除此筆">✕</button>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>證照名稱</label>
+              <input type="text" formControlName="name" placeholder="證照名稱">
+            </div>
+            <div class="field-group">
+              <label>Credential ID</label>
+              <input type="text" formControlName="credentialId" placeholder="證書編號">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>描述</label>
+            <input type="text" formControlName="description" placeholder="簡短說明此證照內容">
+          </div>
+        </div>
+      }
+
+      @if (certifications.length === 0) {
+        <p class="empty-hint">尚無證照資料，點擊「新增」開始新增</p>
+      }
+    </div>
 
     <!-- ── 技能 ──────────────────────────────────── -->
     <div class="section-card">
@@ -132,86 +212,6 @@
 
       @if (experience.length === 0) {
         <p class="empty-hint">尚無工作經歷，點擊「新增」開始新增</p>
-      }
-    </div>
-
-    <!-- ── 學歷 ──────────────────────────────────── -->
-    <div class="section-card">
-      <div class="section-head">
-        <span class="section-icon">◇</span>
-        <h3>學歷 Education</h3>
-        <button type="button" class="add-btn" (click)="addEducation()">＋ 新增</button>
-      </div>
-
-      @for (eduGroup of education.controls; track $index; let edi = $index) {
-        <div class="sub-card" [formGroup]="$any(eduGroup)">
-          <div class="sub-card-head">
-            <span class="item-index">{{ edi + 1 }}</span>
-            <button type="button" class="remove-btn" (click)="removeEducation(edi)" title="移除此筆">✕</button>
-          </div>
-
-          <div class="field-row">
-            <div class="field-group">
-              <label>學校名稱</label>
-              <input type="text" formControlName="school" placeholder="學校名稱">
-            </div>
-            <div class="field-group">
-              <label>學位 / 科系</label>
-              <input type="text" formControlName="degree" placeholder="例如：資訊工程學系 學士">
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field-group">
-              <label>入學時間</label>
-              <input type="month" formControlName="startDate" min="2000-01" max="2040-12">
-            </div>
-            <div class="field-group">
-              <label>畢業日期</label>
-              <input type="month" formControlName="endDate" min="2000-01" max="2040-12">
-            </div>
-          </div>
-        </div>
-      }
-
-      @if (education.length === 0) {
-        <p class="empty-hint">尚無學歷資料，點擊「新增」開始新增</p>
-      }
-    </div>
-
-    <!-- ── 證照 ──────────────────────────────────── -->
-    <div class="section-card">
-      <div class="section-head">
-        <span class="section-icon">✧</span>
-        <h3>證照 Certifications</h3>
-        <button type="button" class="add-btn" (click)="addCertification()">＋ 新增</button>
-      </div>
-
-      @for (certGroup of certifications.controls; track $index; let ci = $index) {
-        <div class="sub-card" [formGroup]="$any(certGroup)">
-          <div class="sub-card-head">
-            <span class="item-index">{{ ci + 1 }}</span>
-            <button type="button" class="remove-btn" (click)="removeCertification(ci)" title="移除此筆">✕</button>
-          </div>
-
-          <div class="field-row">
-            <div class="field-group">
-              <label>證照名稱</label>
-              <input type="text" formControlName="name" placeholder="證照名稱">
-            </div>
-            <div class="field-group">
-              <label>Credential ID</label>
-              <input type="text" formControlName="credentialId" placeholder="證書編號">
-            </div>
-          </div>
-          <div class="field-group">
-            <label>描述</label>
-            <input type="text" formControlName="description" placeholder="簡短說明此證照內容">
-          </div>
-        </div>
-      }
-
-      @if (certifications.length === 0) {
-        <p class="empty-hint">尚無證照資料，點擊「新增」開始新增</p>
       }
     </div>
 

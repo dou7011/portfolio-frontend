@@ -19,19 +19,18 @@
 
     <div class="resume-content">
       <section class="resume-section">
-        <h2 class="section-title">{{ uiText().skills }}</h2>
-        <div class="skills-list">
-          @for (skill of data.skills; track skill.category) {
-            <div class="skill-row">
-              <span class="skill-cat">{{ skill.category }}</span>
-              <div class="tags">
-                @for (item of skill.items; track item) {
-                  <span class="tag">{{ item }}</span>
-                }
-              </div>
-            </div>
-          }
-        </div>
+          <h2 class="section-title">{{ uiText().education }}</h2>
+          <ul class="entry-list">
+            @for (edu of data.education; track edu.school) {
+              <li class="entry-item">
+                <div class="entry-header">
+                  <h3>{{ edu.school }}</h3>
+                  <span class="mini-date">{{ edu.startDate }} - {{ edu.endDate }}</span>
+                </div>
+                <p class="entry-sub">{{ edu.degree }}</p>
+              </li>
+            }
+          </ul>
       </section>
 
       <section class="resume-section">
@@ -50,23 +49,23 @@
         </div>
       </section>
 
-      <div class="two-column">
-        <section class="resume-section">
-          <h2 class="section-title">{{ uiText().education }}</h2>
-          <ul class="entry-list">
-            @for (edu of data.education; track edu.school) {
-              <li class="entry-item">
-                <div class="entry-header">
-                  <h3>{{ edu.school }}</h3>
-                  <span class="mini-date">{{ edu.startDate }} - {{ edu.endDate }}</span>
-                </div>
-                <p class="entry-sub">{{ edu.degree }}</p>
-              </li>
-            }
-          </ul>
-        </section>
+      <section class="resume-section">
+        <h2 class="section-title">{{ uiText().skills }}</h2>
+        <div class="skills-list">
+          @for (skill of data.skills; track skill.category) {
+            <div class="skill-row">
+              <span class="skill-cat">{{ skill.category }}</span>
+              <div class="tags">
+                @for (item of skill.items; track item) {
+                  <span class="tag">{{ item }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
 
-        <section class="resume-section">
+      <section class="resume-section">
           <h2 class="section-title">{{ uiText().certifications }}</h2>
           <ul class="entry-list">
             @for (cert of data.certifications; track cert.credentialId) {
@@ -80,7 +79,7 @@
             }
           </ul>
         </section>
-      </div>
+      
     </div>
   } @else if (isLoading()) {
     <div class="loading">
