@@ -322,7 +322,7 @@
 .entry-item {
   position: relative;
   padding: 10px 0 10px 16px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px dashed var(--line);
 }
 
 .entry-item:last-child {
