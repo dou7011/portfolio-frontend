@@ -1,8 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ResumeService } from '../../../services/resume.service';
 import { ResumeData } from '../../../models/resume.interface';
+import { ApiError } from '../../../models/api.interface';
 
 @Component({
   selector: 'app-resume-edit',
@@ -69,8 +71,13 @@ export class ResumeEditComponent implements OnInit {
     this.saveMessage = '';
     this.saveError = '';
     this.resumeService.getResumeData(this.currentLang).subscribe({
-      next: (res: any) => {
-        const data: ResumeData = res.data;
+      next: (res) => {
+        const data = res.data;
+        if (!data) {
+          this.saveError = '目前沒有可編輯的履歷資料。';
+          this.isLoading = false;
+          return;
+        }
         this.skills.clear();
         this.experience.clear();
         this.education.clear();
@@ -114,7 +121,11 @@ export class ResumeEditComponent implements OnInit {
 
         this.isLoading = false;
       },
-      error: () => { this.isLoading = false; }
+      error: (err: HttpErrorResponse) => {
+        const apiError = err.error as ApiError | undefined;
+        this.saveError = apiError?.message ?? '載入履歷失敗，請稍後再試。';
+        this.isLoading = false;
+      }
     });
   }
 
@@ -179,9 +190,10 @@ export class ResumeEditComponent implements OnInit {
         this.saveMessage = '🎉 儲存成功！';
         setTimeout(() => (this.saveMessage = ''), 3000);
       },
-      error: (err: any) => {
+      error: (err: HttpErrorResponse) => {
         this.isSaving = false;
-        this.saveError = err?.error?.error ?? '儲存失敗，請稍後再試。';
+        const apiError = err.error as ApiError | undefined;
+        this.saveError = apiError?.message ?? '儲存失敗，請稍後再試。';
       },
     });
   }

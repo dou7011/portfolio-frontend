@@ -37,9 +37,3 @@ export interface ResumeData {
   certifications: Certification[];
   updated_at: string;
 }
-
-// 這是後端 API 回傳的最外層格式
-export interface ApiResponse {
-  success: boolean;
-  data: ResumeData;
-}

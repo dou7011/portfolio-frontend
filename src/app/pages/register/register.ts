@@ -36,7 +36,7 @@ export class RegisterComponent {
       next: (res) => {
         this.isLoading = false;
         this.isSuccess = true;
-        this.message = res.message;
+        this.message = res.message ?? '註冊成功';
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {

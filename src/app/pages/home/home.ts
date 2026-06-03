@@ -1,8 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ResumeService } from '../../services/resume.service';
 import { ResumeData } from '../../models/resume.interface';
 import { timeout } from 'rxjs';
+import { ApiError } from '../../models/api.interface';
 
 @Component({
   selector: 'app-home',
@@ -58,7 +60,7 @@ export class HomeComponent implements OnInit {
     this.resumeData.set(null);
     this.errorMessage.set('');
     this.resumeService.getResumeData(lang).pipe(timeout(8000)).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         this.resumeData.set(res?.data ?? null);
         if (!this.resumeData()) {
           this.errorMessage.set(lang === 'en'
@@ -67,11 +69,16 @@ export class HomeComponent implements OnInit {
         }
         this.isLoading.set(false);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         console.error('API 呼叫失敗：', err);
-        this.errorMessage.set(lang === 'en'
-          ? '英文履歷載入失敗，請確認 API 是否支援 lang=en。'
-          : '無法連線到伺服器，請確認後端 API 是否已啟動。');
+        const apiError = err.error as ApiError | undefined;
+        if (apiError?.message) {
+          this.errorMessage.set(apiError.message);
+        } else {
+          this.errorMessage.set(lang === 'en'
+            ? '英文履歷載入失敗，請確認 API 是否支援 lang=en。'
+            : '無法連線到伺服器，請確認後端 API 是否已啟動。');
+        }
         this.isLoading.set(false);
       }
     });

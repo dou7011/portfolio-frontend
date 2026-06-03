@@ -1,8 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core'; // 🌟 引入 ChangeDetectorRef
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { ApiError } from '../../models/api.interface';
 
 @Component({
   selector: 'app-login',
@@ -12,42 +14,53 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.css',
 })
 export class LoginComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder).nonNullable;
   private authService = inject(AuthService);
   private router = inject(Router);
 
   public errorMessage = '';
   public isLoading = false;
 
+  // 🌟 2. 為 email 追加格式驗證
+  public loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
+  });
+
   ngOnInit() {
     // 如果已經有 token，直接轉回首頁
     const token = this.authService.getToken();
     if (token) {
-      this.router.navigate(['/']);
+      this.authService.verifyPermissions().subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.router.navigate(['/']);
+          }
+          else {
+            this.authService.logout(); // token 無效，直接登出清除
+          }
+        }
+      });
     }
   }
-
-  public loginForm = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required]
-  });
 
   onSubmit() {
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
     this.errorMessage = '';
-    const credentials = this.loginForm.getRawValue() as any;
+    
+    const credentials = this.loginForm.getRawValue();
 
-    // 🌟 這裡呼叫你剛改好的 service.login()
     this.authService.loginApi(credentials).subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || '登入失敗，請檢查網路或後端狀態';
+        const apiError = err.error as ApiError | undefined;
+        this.errorMessage = apiError?.message ?? '登入失敗，請檢查網路或後端狀態';
       }
     });
   }
