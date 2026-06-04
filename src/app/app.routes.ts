@@ -3,7 +3,6 @@ import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
 import { AdminComponent } from './pages/admin/admin/admin';
 import { ResumeEditComponent } from './pages/admin/resume-edit/resume-edit';
-import { RegisterComponent } from './pages/register/register';
 
 import { authGuard } from './guards/auth.guard';
 
@@ -24,11 +23,7 @@ export const routes: Routes = [
       {
         path:'resume',
         component: ResumeEditComponent
-      },
-      /*{
-        path: 'register',
-        component: RegisterComponent
-      } */
+      }
     ]
   },
   

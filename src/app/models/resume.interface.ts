@@ -1,5 +1,3 @@
-// src/app/models/resume.interface.ts
-
 export interface Skill {
   category: string;
   items: string[];

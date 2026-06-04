@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   public errorMessage = '';
   public isLoading = false;
 
-  // 🌟 2. 為 email 追加格式驗證
+  // email 追加格式驗證
   public loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]

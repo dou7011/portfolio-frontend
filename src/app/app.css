@@ -14,7 +14,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(180deg, #faf8f3 0%, #f5f2ec 100%);
+    background: #f8f3eb;
 }
 
 /* 統一的版面容器：讓所有內容都在同一個範圍內 */
