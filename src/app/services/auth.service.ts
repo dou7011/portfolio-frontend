@@ -24,27 +24,14 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private tokenKey = 'portfolio_auth_token';
 
-<<<<<<< HEAD
-  /**
-   * 呼叫登入 API，成功後將 token 存入 localStorage。
-   */
-  loginApi(credentials: { email: string; password: string }): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
-      `${this.apiUrl}/login`, 
-=======
   loginApi(credentials: { email: string; password: string }) {
     return this.http.post<{ success: boolean, message: string, data: { token: string } }>(
       `${this.apiUrl}/auth/login`, 
->>>>>>> 0a89780 (	modified:   src/app/app.routes.ts)
       credentials
     ).pipe(
       // 拿到 token 後立即保存，供 interceptor 夾帶授權標頭。
       tap(res => {
-<<<<<<< HEAD
-        if (res?.data?.token) {
-=======
         if (res && res.data.token) {
->>>>>>> 0a89780 (	modified:   src/app/app.routes.ts)
           localStorage.setItem(this.tokenKey, res.data.token);
         }
       })

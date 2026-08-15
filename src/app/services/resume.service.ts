@@ -15,18 +15,11 @@ export class ResumeService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/resume`;
 
-<<<<<<< HEAD
   /**
    * 取得指定語系的履歷資料。
    */
   getResumeData(lang: 'zh' | 'en' = 'zh'): Observable<ApiSuccess<ResumeData>> {
     return this.http.get<ApiSuccess<ResumeData>>(`${this.apiUrl}/${lang}`);
-=======
-  // 🌟 加入 lang 參數，預設為 'zh'
-  getResumeData(lang: string = 'zh') {
-    // 將 lang 參數拼接到網址後方
-    return this.http.get(`${this.apiUrl}/${lang}`);
->>>>>>> 0a89780 (	modified:   src/app/app.routes.ts)
   }
 
   /**
