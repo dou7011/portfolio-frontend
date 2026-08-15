@@ -17,6 +17,7 @@ export class AdminComponent {
   // 🌟 未來要新增選單，只要在這個陣列加一行就好！
   public menuItems = [
     { name: '履歷管理', path: 'resume' },
+    { name: '使用者管理', path: 'users' }
     // { name: '文章管理', path: 'articles' }, // 之後新增只要解開註解
     // { name: '系統設定', path: 'settings' }
   ];

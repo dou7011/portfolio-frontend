@@ -3,6 +3,11 @@ import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
 import { AdminComponent } from './pages/admin/admin/admin';
 import { ResumeEditComponent } from './pages/admin/resume-edit/resume-edit';
+<<<<<<< HEAD
+=======
+import { UsersComponent} from './pages/admin/users/users';
+
+>>>>>>> 0a89780 (	modified:   src/app/app.routes.ts)
 
 import { authGuard } from './guards/auth.guard';
 
@@ -23,6 +28,13 @@ export const routes: Routes = [
       {
         path:'resume',
         component: ResumeEditComponent
+<<<<<<< HEAD
+=======
+      },
+      {
+        path: 'users',
+        component: UsersComponent
+>>>>>>> 0a89780 (	modified:   src/app/app.routes.ts)
       }
     ]
   },
