@@ -26,7 +26,7 @@ export class AuthService {
 
   loginApi(credentials: { email: string; password: string }) {
     return this.http.post<{ success: boolean, message: string, data: { token: string } }>(
-      `${this.apiUrl}/auth/login`, 
+      `${this.apiUrl}/login`, 
       credentials
     ).pipe(
       // 拿到 token 後立即保存，供 interceptor 夾帶授權標頭。
