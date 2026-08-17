@@ -36,9 +36,10 @@ export class LoginComponent implements OnInit {
           if (res.success) {
             this.router.navigate(['/']);
           }
-          else {
-            this.authService.logout(); // token 無效，直接登出清除
-          }
+        },
+        error: (err: HttpErrorResponse) => {
+          // 請求失敗（例如 401）視為 token 無效，直接登出
+          this.authService.logout();
         }
       });
     }

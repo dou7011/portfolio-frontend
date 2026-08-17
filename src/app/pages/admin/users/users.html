@@ -1,1 +1,131 @@
-<p>users works!</p>
+<div class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>使用者管理</h2>
+      <p>管理後台帳號、啟用狀態與角色綁定</p>
+    </div>
+    <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增使用者</button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-box">
+      <span class="loading-dot"></span>
+      <span>載入使用者中...</span>
+    </div>
+  }
+
+  @if (pageError) {
+    <div class="msg-error">{{ pageError }}</div>
+  }
+
+  <div class="table-card">
+    <div class="table-head">
+      <span>帳號列表</span>
+      <small>{{ users.length }} 位使用者</small>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>狀態</th>
+            <th>角色</th>
+            <th>建立時間</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="status-badge" [class.inactive]="user.is_active !== 1">
+                  {{ getStatusText(user.is_active) }}
+                </span>
+              </td>
+              <td>{{ getRoleNames(user) }}</td>
+              <td>{{ user.created_at }}</td>
+              <td class="actions">
+                <button type="button" class="table-btn edit" (click)="openEditForm(user)">編輯</button>
+                <button type="button" class="table-btn danger" (click)="deleteUser(user)">刪除</button>
+              </td>
+            </tr>
+          }
+          @if (users.length === 0 && !isLoading) {
+            <tr>
+              <td colspan="5" class="empty-row">目前沒有使用者資料</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+@if (isFormOpen) {
+  <div class="modal-backdrop" (click)="closeForm()">
+    <section class="modal-panel" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3>{{ isEditing ? '編輯使用者' : '新增使用者' }}</h3>
+        <button type="button" class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+
+      <form [formGroup]="userForm" (ngSubmit)="submitUser()">
+        <div class="field-group">
+          <label>Email</label>
+          <input [readOnly]="isEditing" type="email" formControlName="email" placeholder="user@example.com" />
+          @if (userForm.get('email')?.touched && userForm.get('email')?.invalid) {
+            <span class="field-error">請輸入有效的 Email</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>{{ isEditing ? '新密碼（可選）' : '密碼' }}</label>
+          <input type="password" formControlName="password" placeholder="至少 6 碼" />
+          @if (userForm.get('password')?.touched && userForm.get('password')?.invalid) {
+            <span class="field-error">請輸入至少 6 碼</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>帳號狀態</label>
+          <select formControlName="isActive">
+            <option [ngValue]="1">啟用</option>
+            <option [ngValue]="0">停用</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label>角色分配</label>
+          <div class="role-list">
+            @for (role of roles; track role.id) {
+              <label
+                class="role-option"
+                [class.selected]="(userForm.get('roleIds')?.value ?? []).includes(role.id)"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="(userForm.get('roleIds')?.value ?? []).includes(role.id)"
+                  (change)="toggleRoleSelection(role.id)"
+                />
+                <span class="role-check" aria-hidden="true"></span>
+                <span class="role-copy">
+                  <span class="role-name">{{ role.name }}</span>
+                  <small class="role-description">{{ role.description || '暫無角色說明' }}</small>
+                </span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeForm()">取消</button>
+          <button type="submit" class="primary-btn" [disabled]="isSubmitting">
+            {{ isSubmitting ? '儲存中...' : (isEditing ? '更新使用者' : '建立使用者') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}

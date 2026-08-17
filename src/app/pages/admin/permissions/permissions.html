@@ -1,0 +1,50 @@
+<div class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>權限管理</h2>
+      <p>檢視系統可用權限與對應功能範圍</p>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-box">
+      <span class="loading-dot"></span>
+      <span>載入權限中...</span>
+    </div>
+  }
+
+  @if (pageError) {
+    <div class="msg-error">{{ pageError }}</div>
+  }
+
+  <div class="permission-card">
+    <div class="table-head">
+      <span>權限列表</span>
+      <small>{{ permissions.length }} 個權限</small>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>說明</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (permission of permissions; track permission.id) {
+            <tr>
+              <td>{{ permission.action }}</td>
+              <td>{{ permission.description || '—' }}</td>
+            </tr>
+          }
+          @if (permissions.length === 0 && !isLoading) {
+            <tr>
+              <td colspan="2" class="empty-row">目前沒有權限資料</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

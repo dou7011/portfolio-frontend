@@ -16,13 +16,6 @@
   font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
 }
 
-input[readonly] {
-  background: #f5f5f5 !important;
-  border-color: #f0dcd2 !important;
-  color: var(--text-sub) !important;
-  cursor: not-allowed;
-}
-
 .page-shell {
   max-width: 100%;
 }
@@ -75,14 +68,13 @@ input[readonly] {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 0;
   overflow: hidden;
 }
 
 .table-head {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 16px 18px;
   border-bottom: 1px solid var(--line);
   background: rgba(244, 237, 230, 0.52);
@@ -100,7 +92,7 @@ input[readonly] {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 720px;
+  min-width: 640px;
 }
 
 th,
@@ -120,23 +112,6 @@ th {
 
 tbody tr:hover {
   background: rgba(244, 237, 230, 0.2);
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  background: rgba(160, 210, 170, 0.16);
-  color: #447b58;
-  border: 1px solid rgba(160, 210, 170, 0.35);
-}
-
-.status-badge.inactive {
-  background: rgba(176, 90, 74, 0.08);
-  border-color: rgba(176, 90, 74, 0.2);
-  color: var(--danger-text);
 }
 
 .actions {
@@ -327,8 +302,7 @@ tbody tr:hover {
   text-transform: uppercase;
 }
 
-.field-group input,
-.field-group select {
+.field-group input {
   width: 100%;
   box-sizing: border-box;
   padding: 9px 12px;
@@ -340,8 +314,7 @@ tbody tr:hover {
   font-family: inherit;
 }
 
-.field-group input:focus,
-.field-group select:focus {
+.field-group input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(184, 152, 128, 0.14);
@@ -352,14 +325,14 @@ tbody tr:hover {
   color: var(--danger-text);
 }
 
-.role-list {
+.permission-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
   padding: 10px 0 4px;
 }
 
-.role-option {
+.permission-option {
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -373,26 +346,26 @@ tbody tr:hover {
   transition: all 0.2s ease;
 }
 
-.role-option:hover {
+.permission-option:hover {
   border-color: rgba(184, 152, 128, 0.5);
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(75, 57, 48, 0.06);
 }
 
-.role-option.selected {
+.permission-option.selected {
   border-color: rgba(160, 120, 90, 0.8);
   background: linear-gradient(180deg, rgba(244, 237, 230, 0.92), rgba(243, 228, 214, 0.78));
   box-shadow: inset 0 0 0 1px rgba(160, 120, 90, 0.18);
 }
 
-.role-option input {
+.permission-option input {
   position: absolute;
   inset: 0;
   opacity: 0;
   pointer-events: none;
 }
 
-.role-check {
+.permission-check {
   position: relative;
   width: 18px;
   height: 18px;
@@ -404,13 +377,13 @@ tbody tr:hover {
   transition: all 0.2s ease;
 }
 
-.role-option.selected .role-check {
+.permission-option.selected .permission-check {
   background: var(--accent);
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(184, 152, 128, 0.16);
 }
 
-.role-option.selected .role-check::after {
+.permission-option.selected .permission-check::after {
   content: '';
   position: absolute;
   top: 2px;
@@ -422,21 +395,21 @@ tbody tr:hover {
   transform: rotate(45deg);
 }
 
-.role-copy {
+.permission-copy {
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
 }
 
-.role-name {
+.permission-name {
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.4;
   color: var(--text-main);
 }
 
-.role-description {
+.permission-description {
   display: block;
   font-size: 0.7rem;
   line-height: 1.45;

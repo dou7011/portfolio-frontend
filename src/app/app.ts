@@ -1,9 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
+import { ToastComponent } from './components/toast/toast.component';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

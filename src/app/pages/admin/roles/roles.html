@@ -1,0 +1,114 @@
+<div class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>角色管理</h2>
+      <p>建立與維護角色與對應權限綁定</p>
+    </div>
+    <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增角色</button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-box">
+      <span class="loading-dot"></span>
+      <span>載入角色中...</span>
+    </div>
+  }
+
+  @if (pageError) {
+    <div class="msg-error">{{ pageError }}</div>
+  }
+
+  <div class="table-card">
+    <div class="table-head">
+      <span>角色列表</span>
+      <small>{{ roles.length }} 個角色</small>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>角色名稱</th>
+            <th>說明</th>
+            <th>權限數</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (role of roles; track role.id) {
+            <tr>
+              <td>{{ role.name }}</td>
+              <td>{{ role.description || '—' }}</td>
+              <td>{{ countPermissions(role) }}</td>
+              <td class="actions">
+                <button type="button" class="table-btn edit" (click)="openEditForm(role)">編輯</button>
+                <button type="button" class="table-btn danger" (click)="deleteRole(role)">刪除</button>
+              </td>
+            </tr>
+          }
+          @if (roles.length === 0 && !isLoading) {
+            <tr>
+              <td colspan="4" class="empty-row">目前沒有角色資料</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+@if (isFormOpen) {
+  <div class="modal-backdrop" (click)="closeForm()">
+    <section class="modal-panel" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3>{{ isEditing ? '編輯角色' : '新增角色' }}</h3>
+        <button type="button" class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+
+      <form [formGroup]="roleForm" (ngSubmit)="submitRole()">
+        <div class="field-group">
+          <label>角色名稱</label>
+          <input type="text" formControlName="name" placeholder="例如：CONTENT_EDITOR" />
+          @if (roleForm.get('name')?.touched && roleForm.get('name')?.invalid) {
+            <span class="field-error">角色名稱為必填</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label>角色說明</label>
+          <input type="text" formControlName="description" placeholder="例如：內容編輯者" />
+        </div>
+
+        <div class="field-group">
+          <label>權限綁定</label>
+          <div class="permission-list">
+            @for (permission of permissions; track permission.id) {
+              <label
+                class="permission-option"
+                [class.selected]="(roleForm.get('permissionIds')?.value ?? []).includes(permission.id)"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="(roleForm.get('permissionIds')?.value ?? []).includes(permission.id)"
+                  (change)="togglePermissionSelection(permission.id)"
+                />
+                <span class="permission-check" aria-hidden="true"></span>
+                <span class="permission-copy">
+                  <span class="permission-name">{{ permission.action }}</span>
+                  <small class="permission-description">{{ permission.description || '暫無權限說明' }}</small>
+                </span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeForm()">取消</button>
+          <button type="submit" class="primary-btn" [disabled]="isSubmitting">
+            {{ isSubmitting ? '儲存中...' : (isEditing ? '更新角色' : '建立角色') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
