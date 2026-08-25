@@ -14,6 +14,22 @@ export class App {
 
   protected readonly title = signal('My Portfolio');
   protected readonly currentYear = new Date().getFullYear();
+  protected readonly isDarkMode = signal(false);
+
+  constructor() {
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    this.setTheme(savedTheme === 'dark');
+  }
+
+  protected toggleTheme(): void {
+    this.setTheme(!this.isDarkMode());
+  }
+
+  private setTheme(isDark: boolean): void {
+    this.isDarkMode.set(isDark);
+    document.documentElement.dataset['theme'] = isDark ? 'dark' : 'light';
+    localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
+  }
 
   protected isAdminRoute(): boolean {
     return this.router.url.startsWith('/admin');

@@ -9,6 +9,21 @@
 					<span class="brand-sub">Personal Website</span>
 				</a>
 			</div>
+			<button class="theme-toggle" 
+					[class.is-dark]="isDarkMode()" 
+					type="button" 
+					(click)="toggleTheme()" 
+					[attr.aria-label]="isDarkMode() ? '切換至亮色模式' : '切換至暗色模式'">
+				
+				<!-- 圖示動畫區塊 -->
+				<div class="icon-wrapper" aria-hidden="true">
+					<span class="icon-sun">☀️</span>
+					<span class="icon-moon">🌙</span>
+				</div>
+				
+				<!-- 文字區塊 -->
+				<span class="text-wrapper">{{ isDarkMode() ? '亮色' : '暗色' }}</span>
+			</button>
 		</header>
 	}
 

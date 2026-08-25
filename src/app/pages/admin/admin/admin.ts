@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -13,6 +13,21 @@ import { AuthService } from '../../../services/auth.service';
 export class AdminComponent {
   private authService = inject(AuthService);
   public isLogoutModalOpen = false;
+  public readonly isDarkMode = signal(false);
+
+  constructor() {
+    this.setTheme(localStorage.getItem('portfolio-theme') === 'dark');
+  }
+
+  toggleTheme() {
+    this.setTheme(!this.isDarkMode());
+  }
+
+  private setTheme(isDark: boolean) {
+    this.isDarkMode.set(isDark);
+    document.documentElement.dataset['theme'] = isDark ? 'dark' : 'light';
+    localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
+  }
 
   // 🌟 未來要新增選單，只要在這個陣列加一行就好！
   public menuItems = [

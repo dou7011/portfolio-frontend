@@ -1,15 +1,15 @@
 :host {
-  --bg: #f9f7f5;
-  --surface: #ffffff;
-  --text-main: #2d2520;
-  --text-sub: #9e8e83;
-  --line: #ede8e3;
-  --line-strong: #e2d4ca;
-  --accent: #b89880;
-  --accent-hover: #9e7f68;
-  --danger-soft: #fce8e3;
-  --danger-text: #b05a4a;
-  --danger-line: #f0c4bb;
+  --bg: var(--color-bg);
+  --surface: var(--color-surface);
+  --text-main: var(--color-text-main);
+  --text-sub: var(--color-text-sub);
+  --line: var(--color-line);
+  --line-strong: var(--color-line-strong);
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+  --danger-soft: var(--color-danger-soft);
+  --danger-text: var(--color-danger-text);
+  --danger-line: var(--color-danger-line);
   display: block;
   color: var(--text-main);
   font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
@@ -48,7 +48,7 @@
   align-items: center;
   padding: 16px 18px;
   border-bottom: 1px solid var(--line);
-  background: rgba(244, 237, 230, 0.52);
+  background: var(--admin-control-muted);
   font-weight: 600;
 }
 
@@ -76,13 +76,13 @@ td {
 
 th {
   color: var(--text-sub);
-  background: rgba(249, 247, 245, 0.7);
+  background: var(--admin-control-muted);
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 tbody tr:hover {
-  background: rgba(244, 237, 230, 0.2);
+  background: var(--admin-control-hover);
 }
 
 .empty-row {

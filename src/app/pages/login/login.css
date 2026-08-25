@@ -6,35 +6,24 @@
 
 :host {
   display: block;
-  --bg: #f8f3eb;
-  --bg-soft: #fdfaf5;
-  --surface: #fffefa;
-  --text-main: #4a3b31;
-  --text-sub: #8a7363;
-  --line: #ebdfd2;
-  --line-strong: #e2d1be;
-  --accent: #9b7357;
-  --accent-soft: #c6a38a;
-  --accent-hover: #7d5c45;
-  --shadow: 0 14px 28px rgba(130, 96, 70, 0.08);
+  --bg: var(--color-bg);
+  --bg-soft: var(--color-bg-soft);
+  --surface: var(--color-surface);
+  --text-main: var(--color-text-main);
+  --text-sub: var(--color-text-sub);
+  --line: var(--color-line);
+  --line-strong: var(--color-line-strong);
+  --accent: var(--color-accent);
+  --accent-soft: var(--color-accent-soft);
+  --accent-hover: var(--color-accent-hover);
+  --shadow: var(--shadow-soft);
   font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   line-height: 1.6;
   color: var(--text-main);
   display: flex;
   justify-content: center;
   align-items: center;
-  background:
-    radial-gradient(circle at 14% 10%, #f3e7d7 0%, transparent 42%),
-    radial-gradient(circle at 88% 14%, #f5ebdf 0%, transparent 34%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(184, 154, 129, 0.03) 0,
-      rgba(184, 154, 129, 0.03) 1px,
-      transparent 1px,
-      transparent 18px
-    ),
-    linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%),
-    var(--bg);
+  background: var(--bg);
   padding-top: 80px;
 }
 
@@ -54,7 +43,7 @@
 .login-header {
   padding: 36px 44px 24px;
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #fcf6ee 0%, var(--surface) 100%);
+  background: var(--surface);
   text-align: center;
 }
 
@@ -76,7 +65,7 @@
   bottom: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent-soft), transparent);
+  background: var(--accent-soft);
 }
 
 .login-body {
@@ -118,7 +107,7 @@
 .form-group input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(155, 115, 87, 0.12);
+  box-shadow: 0 0 0 3px var(--color-focus-soft);
   background: var(--surface);
 }
 
@@ -128,23 +117,23 @@
   padding: 10px 14px;
   border-radius: 8px;
   text-align: center;
-  background: #fef2f2;
-  color: #a03030;
-  border: 1px solid #fde0e0;
+  background: var(--color-login-error-bg);
+  color: var(--color-login-error-text);
+  border: 1px solid var(--color-login-error-border);
 }
 
 .field-error {
   display: block;
   margin-top: 5px;
   font-size: 0.8rem;
-  color: #a03030;
+  color: var(--color-login-error-text);
 }
 
 .submit-btn {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(180deg, #b08060 0%, var(--accent) 100%);
-  color: #fffefa;
+  background: var(--accent);
+  color: var(--color-button-text);
   border: none;
   border-radius: 10px;
   font-size: 0.95rem;
@@ -153,13 +142,13 @@
   letter-spacing: 0.04em;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  box-shadow: 0 4px 14px rgba(155, 115, 87, 0.28);
+  box-shadow: 0 4px 14px var(--color-login-shadow);
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
   filter: brightness(1.06);
-  box-shadow: 0 8px 20px rgba(155, 115, 87, 0.32);
+  box-shadow: 0 8px 20px var(--color-login-hover-shadow);
 }
 
 .submit-btn:active:not(:disabled) {

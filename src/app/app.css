@@ -14,7 +14,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #f8f3eb;
+    background: var(--color-bg);
 }
 
 /* 統一的版面容器：讓所有內容都在同一個範圍內 */
@@ -22,11 +22,95 @@
     margin: 0 25px;
 }
 
+/* ================= 亮色/暗色 模式切換 ================= */
+/* --- 按鈕主體樣式 --- */
+.theme-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* 讓圖示與文字有呼吸空間 */
+    padding: 6px 12px; /* 稍微加寬，讓膠囊形狀更飽滿 */
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-main);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    
+    /* 統整過渡效果，讓 hover 更有質感 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 懸浮與點擊回饋 */
+.theme-toggle:hover {
+    background: var(--color-surface-soft);
+    transform: translateY(-2px); /* 懸浮時微微上浮 */
+    box-shadow: var(--shadow-soft); /* 加深陰影 */
+}
+
+.theme-toggle:active {
+    transform: translateY(0) scale(0.96); /* 點擊時的微縮回饋感 */
+}
+
+.theme-toggle:focus-visible {
+    outline: 3px solid var(--color-accent-soft);
+    outline-offset: 2px;
+}
+
+/* --- 圖示動畫區塊 --- */
+.icon-wrapper {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 隱藏超出範圍的圖示 */
+}
+
+.icon-sun, .icon-moon {
+    position: absolute;
+    /* 使用貝茲曲線創造帶有 Q 彈感的過渡動畫 */
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
+}
+
+/* 預設狀態 (顯示月亮，隱藏太陽) */
+.icon-sun {
+    transform: translateY(150%) rotate(45deg);
+    opacity: 0;
+}
+.icon-moon {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+}
+
+/* 當切換為 is-dark 狀態時 (顯示太陽，隱藏月亮) */
+.theme-toggle.is-dark .icon-moon {
+    transform: translateY(-150%) rotate(-45deg);
+    opacity: 0;
+}
+.theme-toggle.is-dark .icon-sun {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+}
+
+/* --- 文字區塊 --- */
+.text-wrapper {
+    min-width: 2em; /* 固定寬度，防止切換文字時按鈕寬度抖動 */
+    text-align: center;
+}
+
 /* ================= 頁首 (Header) ================= */
 .site-header {
-    padding: 10px 20px; /* 🌟 只保留上下間距，左右設為 0 確保與下方卡片絕對對齊 */
-    text-align: left;     /* 🌟 修改：Header 靠左對齊 */
-    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 20px;
+    display: flex;
+    text-align: left;
+    border-bottom: 1px solid var(--color-sidebar-line);
+    justify-content: space-between;
+    align-items: center;
 }
 
 .brand {
@@ -35,7 +119,7 @@
     align-items: flex-start; /* 🌟 修改：主副標題內部文字靠左對齊 */
     gap: 4px;
     text-decoration: none;
-    color: #1f2937;
+    color: var(--color-text-main);
     cursor: pointer;
 }
 
@@ -43,21 +127,21 @@
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.01em;
-    color: #785945;
+    color: var(--color-accent);
 }
 
 .brand-sub {
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.06em;
-    color: #6b7280;
+    color: var(--color-text-sub);
 }
 
 /* ================= 頁尾 (Footer) ================= */
 .site-footer {
     margin-top: auto;
     padding: 24px 0;
-    color: #8a7363;
+    color: var(--color-text-sub);
     text-align: center; /* 頁尾通常維持置中比較和諧 */
 }
 
@@ -70,7 +154,7 @@
 /* ================= 響應式設定 ================= */
 @media (max-width: 640px) {
     .site-header {
-        padding: 24px 0 16px; /* 行動端稍微縮小上方間距 */
+        padding: 24px 100px 16px 0;
     }
 
     .brand-main {

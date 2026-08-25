@@ -6,32 +6,21 @@
 
 :host {
   display: block;
-  --bg: #f8f3eb;
-  --bg-soft: #fdfaf5;
-  --surface: #fffefa;
-  --surface-soft: #fbf5ed;
-  --text-main: #4a3b31;
-  --text-sub: #8a7363;
-  --line: #ebdfd2;
-  --line-strong: #e2d1be;
-  --accent: #9b7357;
-  --accent-soft: #c6a38a;
-  --shadow: 0 14px 28px rgba(130, 96, 70, 0.08);
+  --bg: var(--color-bg);
+  --bg-soft: var(--color-bg-soft);
+  --surface: var(--color-surface);
+  --surface-soft: var(--color-surface-soft);
+  --text-main: var(--color-text-main);
+  --text-sub: var(--color-text-sub);
+  --line: var(--color-line);
+  --line-strong: var(--color-line-strong);
+  --accent: var(--color-accent);
+  --accent-soft: var(--color-accent-soft);
+  --shadow: var(--shadow-soft);
   font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   line-height: 1.6;
   color: var(--text-main);
-  background:
-    radial-gradient(circle at 14% 10%, #f3e7d7 0%, transparent 42%),
-    radial-gradient(circle at 88% 14%, #f5ebdf 0%, transparent 34%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(184, 154, 129, 0.03) 0,
-      rgba(184, 154, 129, 0.03) 1px,
-      transparent 1px,
-      transparent 18px
-    ),
-    linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%),
-    var(--bg);
+  background: var(--bg);
   padding: 40px 18px;
 }
 
@@ -48,7 +37,7 @@
 .resume-header {
   padding: 48px 52px 30px;
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #fcf6ee 0%, var(--surface) 100%);
+  background: var(--surface);
 }
 
 .header-top {
@@ -68,8 +57,8 @@
   width: 92px;
   height: 38px;
   padding: 4px;
-  border: 1px solid rgba(117, 90, 73, 0.24);
-  background: rgba(255, 252, 247, 0.95);
+  border: 1px solid var(--color-language-border);
+  background: var(--color-language-bg);
   border-radius: 999px;
   overflow: hidden;
   cursor: pointer;
@@ -85,8 +74,8 @@
   width: 40px;
   height: 28px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #f0ddc8 0%, #e8d0b8 100%);
-  box-shadow: 0 3px 9px rgba(131, 93, 66, 0.2);
+  background: var(--accent-soft);
+  box-shadow: 0 3px 9px var(--color-language-shadow);
   transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 0;
 }
@@ -107,19 +96,19 @@
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   font-weight: 600;
-  color: #856b58;
+  color: var(--color-language-unselected);
   transition: color 0.2s ease;
 }
 
 .lang-switch:not(.en) .lang-switch-option:first-child,
 .lang-switch.en .lang-switch-option:last-child {
-  color: #5a4335;
+  color: var(--color-language-selected);
 }
 
 .lang-switch:hover {
   transform: translateY(-1px);
-  border-color: rgba(126, 92, 70, 0.38);
-  box-shadow: 0 8px 20px rgba(147, 108, 80, 0.14);
+  border-color: var(--color-accent);
+  box-shadow: 0 8px 20px var(--color-language-hover-shadow);
 }
 
 .lang-switch:active {
@@ -177,7 +166,7 @@
   bottom: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent-soft), transparent);
+  background: var(--accent-soft);
 }
 
 .summary {
@@ -244,12 +233,18 @@
 
 .tag {
   border-radius: 999px;
-  border: 1px solid #e3d3c4;
-  background: #fffcf8;
-  color: #7c6352;
+  border: 1px solid var(--color-tag-border);
+  background: var(--color-tag-bg);
+  color: var(--color-tag-text);
   padding: 3px 10px;
   font-size: 0.8rem;
   font-weight: 400;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.tag:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-main);
 }
 
 .timeline {
@@ -260,10 +255,10 @@
 
 .timeline-card {
   border: 1px solid var(--line);
-  border-left: 3px solid #ceb39d;
+  border-left: 3px solid var(--color-resume-accent-line);
   border-radius: 14px;
   padding: 17px 18px;
-  background: linear-gradient(180deg, #fffefb 0%, #fcf8f1 100%);
+  background: var(--surface-soft);
 }
 
 .timeline-header {
@@ -276,16 +271,16 @@
 .timeline-header h3 {
   font-size: 1.02rem;
   font-weight: 600;
-  color: #624b3b;
+  color: var(--text-main);
 }
 
 .date-badge {
   flex-shrink: 0;
   font-size: 0.78rem;
-  color: #866a58;
+  color: var(--text-main);
   font-weight: 500;
-  background: #f7ede3;
-  border: 1px solid #e7d8ca;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
   padding: 2px 8px;
   border-radius: 999px;
 }
@@ -351,7 +346,7 @@
 .entry-header h3 {
   font-size: 0.94rem;
   font-weight: 600;
-  color: #6a5242;
+  color: var(--text-main);
 }
 
 .entry-sub {
@@ -398,7 +393,7 @@
   height: 34px;
   margin: 0 auto;
   border-radius: 50%;
-  border: 3px solid #ecdfd3;
+  border: 3px solid var(--color-resume-divider);
   border-top-color: var(--accent);
   animation: spin 0.9s linear infinite;
 }
@@ -464,7 +459,7 @@
 
 @media print {
   :host {
-    background: #ffffff;
+    background: var(--color-white);
     padding: 0;
   }
 

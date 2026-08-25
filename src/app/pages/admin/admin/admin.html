@@ -18,10 +18,13 @@
     </nav>
 
     <div class="logout-box">
+      <button class="theme-toggle-admin" type="button" (click)="toggleTheme()" [attr.aria-label]="isDarkMode() ? '切換亮色模式' : '切換暗色模式'">
+        <span aria-hidden="true">{{ isDarkMode() ? '☀' : '◐' }}</span>
+        {{ isDarkMode() ? '亮色' : '暗色' }}
+      </button>
       <a class="home-btn" [routerLink]="['/']">
         首頁
       </a>
-
       <button class="logout-btn" (click)="onLogout()">
         登出
       </button>
