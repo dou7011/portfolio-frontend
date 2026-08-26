@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home';
+import { ResumeComponent } from './pages/resume/resume';
 import { LoginComponent } from './pages/login/login';
 import { AdminComponent } from './pages/admin/admin/admin';
 import { ResumeEditComponent } from './pages/admin/resume-edit/resume-edit';
@@ -13,6 +14,7 @@ export const routes: Routes = [
   // 當網址是空的時候 (首頁)，載入 HomeComponent
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'resume', component: ResumeComponent },
   {
     path: 'admin',
     component: AdminComponent,

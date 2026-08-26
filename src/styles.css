@@ -222,8 +222,6 @@ select {
 	box-shadow: var(--shadow-soft) !important;
 }
 
-:root[data-theme='dark'] .site-header,
-:root[data-theme='dark'] .site-footer,
 :root[data-theme='dark'] .sidebar,
 :root[data-theme='dark'] .table-head,
 :root[data-theme='dark'] th,

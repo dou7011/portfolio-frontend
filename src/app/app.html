@@ -27,7 +27,7 @@
 		</header>
 	}
 
-	<main class="page-content">
+	<main class="page-content" [class.with-site-header]="!isAdminRoute()">
 		<router-outlet></router-outlet>
 	</main>
 
