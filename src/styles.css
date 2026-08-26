@@ -84,7 +84,7 @@
 :root[data-theme='dark'] {
 	/* 暗色模式只覆寫 token，元件不需要各自維護色票。 */
 	color-scheme: dark;
-	--color-bg: #111315;
+	--color-bg: #0a0f14;
 	--color-bg-soft: #191c20;
 	--color-surface: #202428;
 	--color-surface-soft: #292e33;
@@ -189,8 +189,10 @@ select {
 :root[data-theme='dark'] .admin-wrapper,
 :root[data-theme='dark'] .main-content {
 	background: var(--color-bg) !important;
-	background-image: none !important;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) !important;
 	color: var(--color-text-main) !important;
+	background-size: 30px 30px !important;
 }
 
 :root[data-theme='dark'] button,
