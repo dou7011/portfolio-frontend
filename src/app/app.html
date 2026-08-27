@@ -9,6 +9,11 @@
 					<span class="brand-sub">Personal Website</span>
 				</a>
 			</div>
+			<nav class="header-nav" aria-label="主要導覽">
+				<a [routerLink]="['/']">回首頁</a>
+				<a [routerLink]="['/articles']">文章</a>
+				<a [routerLink]="['/resume']">履歷</a>
+			</nav>
 			<button class="theme-toggle" 
 					[class.is-dark]="isDarkMode()" 
 					type="button" 
