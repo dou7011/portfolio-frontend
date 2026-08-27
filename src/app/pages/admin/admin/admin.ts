@@ -14,6 +14,7 @@ export class AdminComponent {
   private authService = inject(AuthService);
   public isLogoutModalOpen = false;
   public readonly isDarkMode = signal(false);
+  public readonly expandedMenus = new Set<string>(['identity']);
 
   constructor() {
     this.setTheme(localStorage.getItem('portfolio-theme') === 'dark');
@@ -27,6 +28,18 @@ export class AdminComponent {
     this.isDarkMode.set(isDark);
     document.documentElement.dataset['theme'] = isDark ? 'dark' : 'light';
     localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
+  }
+
+  toggleMenu(menuPath: string): void {
+    if (this.expandedMenus.has(menuPath)) {
+      this.expandedMenus.delete(menuPath);
+    } else {
+      this.expandedMenus.add(menuPath);
+    }
+  }
+
+  isMenuExpanded(menuPath: string): boolean {
+    return this.expandedMenus.has(menuPath);
   }
 
   public menuItems = [

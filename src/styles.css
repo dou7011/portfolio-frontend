@@ -383,13 +383,6 @@ input[readonly] {
 	border-color: var(--color-accent) !important;
 }
 
-.role-option.selected,
-.permission-option.selected {
-	background: var(--admin-selected-bg) !important;
-	border-color: var(--admin-selected-border) !important;
-	box-shadow: inset 0 0 0 1px var(--admin-selected-border) !important;
-}
-
 .modal-head,
 .table-head {
 	background: var(--admin-control-muted) !important;

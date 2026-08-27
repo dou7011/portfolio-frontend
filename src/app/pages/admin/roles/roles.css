@@ -280,7 +280,7 @@ tbody tr:hover {
 
 .modal-panel {
   width: min(660px, 100%);
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 100px);
   overflow-y: auto;
   background: var(--surface);
   border-radius: 18px;
@@ -356,20 +356,144 @@ tbody tr:hover {
 }
 
 .permission-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 4px 0 2px;
+}
+
+.permission-group {
+  overflow: hidden;
+  border: 1px solid var(--admin-control-border);
+  border-radius: 11px;
+  background: var(--color-surface-soft);
+}
+
+.permission-group-head {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 13px;
+}
+
+.permission-group-select {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.permission-group-select input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.permission-group-select input:checked + .permission-check {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--color-selection-soft);
+}
+
+.permission-group-select input:checked + .permission-check::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--color-button-text);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.permission-group-select.partial .permission-check {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--color-selection-soft);
+}
+
+.permission-group-select.partial .permission-check::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  border: 0;
+  border-radius: 1px;
+  background: var(--color-button-text);
+  transform: translate(-50%, -50%);
+}
+
+.permission-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  padding: 0 0 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--text-main);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.permission-group-name {
+  font-weight: 650;
+}
+
+.permission-count {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--admin-selected-bg);
+  color: var(--text-sub);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.permission-chevron {
+  width: 7px;
+  height: 7px;
+  margin-left: auto;
+  border-right: 2px solid var(--text-sub);
+  border-bottom: 2px solid var(--text-sub);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+.permission-group-toggle[aria-expanded='true'] .permission-chevron {
+  transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.permission-group-items {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  border-top: 1px solid transparent;
+  transition: grid-template-rows 0.38s ease, opacity 0.28s ease, border-top-color 0.38s ease;
+}
+
+.permission-group-items.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  border-top-color: var(--admin-control-border);
+}
+
+.permission-group-items-inner {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .permission-option {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
-  padding: 13px 13px 12px;
-  border: 1px solid var(--admin-control-border);
-  border-radius: 11px;
+  padding: 10px 30px;
+  border: 0;
+  border-radius: 0;
   background: var(--admin-control-bg);
   color: var(--text-main);
   cursor: pointer;
@@ -382,10 +506,8 @@ tbody tr:hover {
   box-shadow: var(--shadow-soft);
 }
 
-.permission-option.selected {
-  border-color: var(--admin-selected-border);
-  background: var(--admin-selected-bg);
-  box-shadow: inset 0 0 0 1px var(--color-selection-soft), var(--shadow-soft);
+.permission-option:hover:last-child {
+  border-bottom: 0;
 }
 
 .permission-option input {
@@ -427,21 +549,29 @@ tbody tr:hover {
 
 .permission-copy {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 10px;
   min-width: 0;
+  align-items: center;
 }
 
 .permission-name {
-  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 3px 5px;
+  border: 1px solid var(--admin-control-border);
+  border-radius: 10px;
+  background: var(--admin-control-muted);
+  font-size: 0.7rem;
   font-weight: 700;
   line-height: 1.4;
   color: var(--text-main);
+  white-space: nowrap;
 }
 
 .permission-description {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.45;
   color: var(--text-sub);
   letter-spacing: 0.01em;

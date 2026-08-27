@@ -10,25 +10,32 @@
         @for (item of menuItems; track item.path) {
           <li>
             @if (item.children) {
-              <details class="nav-group" open>
-                <summary class="group-label">
+              <div class="nav-group" [class.expanded]="isMenuExpanded(item.path)">
+                <button
+                  class="group-label"
+                  type="button"
+                  [attr.aria-expanded]="isMenuExpanded(item.path)"
+                  (click)="toggleMenu(item.path)"
+                >
                   <span>{{ item.name }}</span>
                   <span class="group-chevron" aria-hidden="true">
                     <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </span>
-                </summary>
-                <ul class="submenu">
-                  @for (child of item.children; track child.path) {
-                    <li>
-                      <a [routerLink]="['/admin', child.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                        {{ child.name }}
-                      </a>
-                    </li>
-                  }
-                </ul>
-              </details>
+                </button>
+                <div class="submenu-outer">
+                  <ul class="submenu">
+                    @for (child of item.children; track child.path) {
+                      <li>
+                        <a [routerLink]="['/admin', child.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                          {{ child.name }}
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              </div>
             } @else {
               <a [routerLink]="['/admin', item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 {{ item.name }}

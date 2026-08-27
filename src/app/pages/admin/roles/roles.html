@@ -82,22 +82,59 @@
         <div class="field-group">
           <label>權限綁定</label>
           <div class="permission-list">
-            @for (permission of permissions; track permission.id) {
-              <label
-                class="permission-option"
-                [class.selected]="(roleForm.get('permissionIds')?.value ?? []).includes(permission.id)"
-              >
-                <input
-                  type="checkbox"
-                  [checked]="(roleForm.get('permissionIds')?.value ?? []).includes(permission.id)"
-                  (change)="togglePermissionSelection(permission.id)"
-                />
-                <span class="permission-check" aria-hidden="true"></span>
-                <span class="permission-copy">
-                  <span class="permission-name">{{ permission.action }}</span>
-                  <small class="permission-description">{{ permission.description || '暫無權限說明' }}</small>
-                </span>
-              </label>
+            @for (group of permissionGroups; track group.key) {
+              <div class="permission-group">
+                <div class="permission-group-head">
+                  <label
+                    class="permission-group-select"
+                    [class.partial]="isPermissionGroupPartiallySelected(group)"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="isPermissionGroupFullySelected(group)"
+                      [indeterminate]="isPermissionGroupPartiallySelected(group)"
+                      (change)="togglePermissionGroup(group)"
+                    />
+                    <span class="permission-check" aria-hidden="true"></span>
+                  </label>
+                  <button
+                    type="button"
+                    class="permission-group-toggle"
+                    [attr.aria-expanded]="isPermissionGroupExpanded(group.key)"
+                    (click)="togglePermissionGroupExpanded(group.key)"
+                  >
+                    <span class="permission-group-name">{{ group.label }}</span>
+                    <span class="permission-count">{{ countSelectedPermissions(group) }}/{{ group.permissions.length }}</span>
+                    <span class="permission-chevron" aria-hidden="true"></span>
+                  </button>
+                </div>
+
+                <div
+                  class="permission-group-items"
+                  [class.expanded]="isPermissionGroupExpanded(group.key)"
+                >
+                  <div class="permission-group-items-inner">
+                    @for (permission of group.permissions; track permission.id) {
+                      <label
+                        class="permission-option"
+                        [class.selected]="(roleForm.get('permissionIds')?.value ?? []).includes(permission.id)"
+                      >
+                        <input
+                          type="checkbox"
+                          [checked]="(roleForm.get('permissionIds')?.value ?? []).includes(permission.id)"
+                          (change)="togglePermissionSelection(permission.id)"
+                        />
+                        <span class="permission-check" aria-hidden="true"></span>
+                        <span class="permission-copy">
+                          <span class="permission-name">{{ getPermissionLabel(permission) }}</span>
+                          <small class="permission-description">{{ permission.description || '暫無權限說明' }}</small>
+                        </span>
+                      </label>
+                    }
+                  </div>
+                </div>
+              </div>
             }
           </div>
         </div>

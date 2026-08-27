@@ -9,6 +9,12 @@ import { Permission } from '../../../models/permission.interface';
 import { ApiError } from '../../../models/api.interface';
 import { ToastService } from '../../../services/toast.service';
 
+interface PermissionGroup {
+  key: string;
+  label: string;
+  permissions: Permission[];
+}
+
 @Component({
   selector: 'app-roles',
   standalone: true,
@@ -24,6 +30,8 @@ export class RolesComponent implements OnInit {
 
   public roles: Role[] = [];
   public permissions: Permission[] = [];
+  public permissionGroups: PermissionGroup[] = [];
+  public expandedPermissionGroups = new Set<string>();
   public isLoading = false;
   public isSubmitting = false;
   public isFormOpen = false;
@@ -49,9 +57,11 @@ export class RolesComponent implements OnInit {
     this.permissionService.getPermissions().subscribe({
       next: (permissionRes) => {
         this.permissions = permissionRes.data ?? [];
+        this.permissionGroups = this.groupPermissions(this.permissions);
       },
       error: () => {
         this.permissions = [];
+        this.permissionGroups = [];
       },
     });
 
@@ -118,6 +128,68 @@ export class RolesComponent implements OnInit {
     this.roleForm.patchValue({
       permissionIds: [...current, permissionId],
     });
+  }
+
+  togglePermissionGroup(group: PermissionGroup): void {
+    const selected = this.roleForm.get('permissionIds')?.value as number[];
+    const current = selected ?? [];
+    const groupPermissionIds = group.permissions.map((permission) => permission.id);
+    const allSelected = groupPermissionIds.every((id) => current.includes(id));
+    const next = allSelected
+      ? current.filter((id) => !groupPermissionIds.includes(id))
+      : [...new Set([...current, ...groupPermissionIds])];
+
+    this.roleForm.patchValue({ permissionIds: next });
+  }
+
+  togglePermissionGroupExpanded(groupKey: string): void {
+    if (this.expandedPermissionGroups.has(groupKey)) {
+      this.expandedPermissionGroups.delete(groupKey);
+    } else {
+      this.expandedPermissionGroups.add(groupKey);
+    }
+  }
+
+  isPermissionGroupExpanded(groupKey: string): boolean {
+    return this.expandedPermissionGroups.has(groupKey);
+  }
+
+  countSelectedPermissions(group: PermissionGroup): number {
+    const selected = this.roleForm.get('permissionIds')?.value as number[] ?? [];
+    return group.permissions.filter((permission) => selected.includes(permission.id)).length;
+  }
+
+  isPermissionGroupFullySelected(group: PermissionGroup): boolean {
+    return this.countSelectedPermissions(group) === group.permissions.length;
+  }
+
+  isPermissionGroupPartiallySelected(group: PermissionGroup): boolean {
+    const selectedCount = this.countSelectedPermissions(group);
+    return selectedCount > 0 && selectedCount < group.permissions.length;
+  }
+
+  getPermissionLabel(permission: Permission): string {
+    const separatorIndex = permission.action.indexOf(':');
+    return separatorIndex === -1 ? permission.action : permission.action.slice(separatorIndex + 1);
+  }
+
+  private groupPermissions(permissions: Permission[]): PermissionGroup[] {
+    const groups = new Map<string, PermissionGroup>();
+
+    for (const permission of permissions) {
+      const separatorIndex = permission.action.indexOf(':');
+      const groupKey = separatorIndex === -1 ? permission.action : permission.action.slice(0, separatorIndex);
+      const group = groups.get(groupKey) ?? {
+        key: groupKey,
+        label: groupKey,
+        permissions: [],
+      };
+
+      group.permissions.push(permission);
+      groups.set(groupKey, group);
+    }
+
+    return [...groups.values()];
   }
 
   submitRole(): void {
