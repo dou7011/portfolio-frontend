@@ -15,6 +15,13 @@
   --accent-hover: var(--color-accent-hover);
   --sidebar-bg: var(--color-sidebar-bg);
   --sidebar-line: var(--color-sidebar-line);
+  --menu-bg: var(--color-sidebar-bg);
+  --menu-hover-bg: var(--admin-control-hover);
+  --menu-active-bg: var(--admin-selected-bg);
+  --menu-button-bg: var(--color-surface);
+  --menu-button-border: var(--color-line);
+  --menu-button-hover-bg: var(--color-surface-soft);
+  --menu-button-hover-border: var(--color-line-strong);
   --danger-soft: var(--color-danger-soft);
   --danger-text: var(--color-danger-text);
   --danger-line: var(--color-danger-line);
@@ -29,91 +36,154 @@
   min-height: 100vh;
   max-height: 100vh;
   background-color: var(--bg);
+  background-image: var(--background-grid);
+  background-size: 30px 30px;
 }
 
 /* 左側邊欄 */
 .sidebar {
-  width: 248px;
+  width: 250px;
   background-color: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-line);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  padding: 20px 0;
 }
 
 .brand {
-  padding: 26px 22px 20px;
-  border-bottom: 1px solid var(--sidebar-line);
+  margin-bottom: 20px;
+  padding: 0 20px;
 }
 
 .brand h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--text-main);
-  letter-spacing: 0.02em;
+  color: var(--color-text-main);
+  letter-spacing: 0.03em;
 }
 
 .brand p {
-  margin: 6px 0 0;
-  font-size: 0.78rem;
-  color: var(--text-sub);
-  letter-spacing: 0.02em;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-sub);
 }
 
 .menu {
   flex: 1;
-  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  background-color: var(--menu-bg);
+  padding: 0 15px;
 }
 
-.menu a {
-  display: block;
+.menu ul {
+  list-style: none;
+}
+
+.menu > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu a,
+.group-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 12px;
-  margin: 4px 0;
-  color: var(--text-sub);
+  color: var(--color-text-sub);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.88rem;
-  letter-spacing: 0.01em;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.menu a:hover {
-  background-color: var(--admin-control-hover);
-  border-color: var(--sidebar-line);
-  color: var(--text-main);
+.menu a:hover,
+.group-label:hover {
+  color: var(--color-text-main);
+  background: var(--menu-hover-bg);
 }
 
-/* 點擊後的高亮狀態 */
 .menu a.active {
-  background-color: var(--surface);
-  color: var(--text-main);
+  background: var(--menu-active-bg);
+  color: var(--color-accent);
   font-weight: 600;
-  border-color: var(--line);
+}
+
+.nav-group {
+  margin: 0;
+}
+
+.nav-group summary {
+  list-style: none;
+}
+
+.nav-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.group-chevron {
+  opacity: 0.5;
+  transition: transform 0.3s ease;
+}
+
+.nav-group[open] .group-chevron {
+  transform: rotate(180deg);
+}
+
+.group-label:hover .group-chevron {
+  opacity: 1;
+}
+
+.submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0 8px 16px;
+}
+
+.submenu a {
+  display: block;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+.submenu a.active {
+  background: transparent;
+  color: var(--color-accent);
 }
 
 .logout-box {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  padding: 12px 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 15px 0 15px;
+  margin-top: auto;
   border-top: 1px solid var(--sidebar-line);
+}
+
+.footer-links {
+  display: flex;
+  gap: 4px;
 }
 
 .home-btn,
 .logout-btn,
 .theme-toggle-admin {
-  width: 100%;
-  padding: 7px 6px;
-  background-color: var(--surface);
-  color: var(--text-sub);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  background: var(--menu-button-bg);
+  border: 1px solid var(--menu-button-border);
+  color: var(--color-text-sub);
+  padding: 6px 12px;
+  border-radius: 6px;
   font-weight: 500;
-  font-size: 0.78rem;
-  letter-spacing: 0.01em;
+  font-size: 0.85rem;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -126,9 +196,19 @@
 .home-btn:hover,
 .logout-btn:hover,
 .theme-toggle-admin:hover {
-  background-color: var(--accent-soft);
-  color: var(--text-main);
-  border-color: var(--sidebar-line);
+  background: var(--menu-button-hover-bg);
+  color: var(--color-text-main);
+  border-color: var(--menu-button-hover-border);
+}
+
+.theme-toggle-admin {
+  color: var(--color-accent);
+}
+
+.theme-toggle-admin:hover {
+  background: var(--menu-active-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .modal-backdrop {
@@ -206,11 +286,14 @@
   padding: 32px 40px;
   overflow-y: auto;
   background-color: var(--bg);
+  background-image: var(--background-grid);
+  background-size: 30px 30px;
 }
 
 @media (max-width: 960px) {
   .sidebar {
     width: 220px;
+    padding: 24px 16px;
   }
 
   .main-content {
@@ -234,7 +317,5 @@
 
 .theme-toggle-admin {
   gap: 4px;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
 }

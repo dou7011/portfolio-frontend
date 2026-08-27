@@ -29,12 +29,17 @@ export class AdminComponent {
     localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
   }
 
-  // 🌟 未來要新增選單，只要在這個陣列加一行就好！
   public menuItems = [
     { name: '履歷管理', path: 'resume' },
-    { name: '使用者管理', path: 'users' },
-    { name: '角色管理', path: 'roles' },
-    { name: '權限管理', path: 'permissions' },
+    {
+      name: '身分管理',
+      path: 'identity',
+      children: [
+        { name: '使用者管理', path: 'users' },
+        { name: '角色管理', path: 'roles' },
+        { name: '權限管理', path: 'permissions' },
+      ],
+    },
     // { name: '文章管理', path: 'articles' }, // 之後新增只要解開註解
     // { name: '系統設定', path: 'settings' }
   ];

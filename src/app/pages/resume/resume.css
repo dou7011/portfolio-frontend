@@ -21,6 +21,8 @@
   line-height: 1.6;
   color: var(--text-main);
   background: var(--bg);
+  background-image: var(--background-grid);
+  background-size: 30px 30px;
   padding: 40px 18px;
 }
 

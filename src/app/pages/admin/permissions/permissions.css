@@ -75,8 +75,8 @@ td {
 }
 
 th {
+  text-align: center;
   color: var(--text-sub);
-  background: var(--admin-control-muted);
   font-weight: 700;
   letter-spacing: 0.02em;
 }

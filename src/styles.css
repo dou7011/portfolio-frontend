@@ -79,6 +79,8 @@
 	--color-language-hover-shadow: rgba(147, 108, 80, 0.14);
 	--color-login-shadow: rgba(155, 115, 87, 0.28);
 	--color-login-hover-shadow: rgba(155, 115, 87, 0.32);
+	--background-grid: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
 }
 
 :root[data-theme='dark'] {
@@ -160,6 +162,8 @@
 	--color-language-hover-shadow: rgba(0, 0, 0, 0.45);
 	--color-login-shadow: rgba(0, 0, 0, 0.3);
 	--color-login-hover-shadow: rgba(0, 0, 0, 0.4);
+	--background-grid: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 html,
@@ -186,11 +190,11 @@ select {
 :root[data-theme='dark'] .app-shell,
 :root[data-theme='dark'] app-home,
 :root[data-theme='dark'] app-login,
+:root[data-theme='dark'] app-resume,
 :root[data-theme='dark'] .admin-wrapper,
 :root[data-theme='dark'] .main-content {
 	background: var(--color-bg) !important;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) !important;
+	background-image: var(--background-grid) !important;
 	color: var(--color-text-main) !important;
 	background-size: 30px 30px !important;
 }
@@ -224,7 +228,7 @@ select {
 	box-shadow: var(--shadow-soft) !important;
 }
 
-:root[data-theme='dark'] .sidebar,
+
 :root[data-theme='dark'] .table-head,
 :root[data-theme='dark'] th,
 :root[data-theme='dark'] .menu a:hover,

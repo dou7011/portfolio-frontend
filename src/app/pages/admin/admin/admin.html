@@ -1,7 +1,7 @@
 <div class="admin-wrapper">
   <aside class="sidebar">
     <div class="brand">
-      <h2>IT AuthAdmin</h2>
+      <h2>Admin Panel</h2>
       <p>管理員控制中心</p>
     </div>
     
@@ -9,9 +9,31 @@
       <ul>
         @for (item of menuItems; track item.path) {
           <li>
-            <a [routerLink]="['/admin', item.path]" routerLinkActive="active">
-              {{ item.name }}
-            </a>
+            @if (item.children) {
+              <details class="nav-group" open>
+                <summary class="group-label">
+                  <span>{{ item.name }}</span>
+                  <span class="group-chevron" aria-hidden="true">
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </summary>
+                <ul class="submenu">
+                  @for (child of item.children; track child.path) {
+                    <li>
+                      <a [routerLink]="['/admin', child.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                        {{ child.name }}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </details>
+            } @else {
+              <a [routerLink]="['/admin', item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                {{ item.name }}
+              </a>
+            }
           </li>
         }
       </ul>
@@ -22,12 +44,10 @@
         <span aria-hidden="true">{{ isDarkMode() ? '☀' : '◐' }}</span>
         {{ isDarkMode() ? '亮色' : '暗色' }}
       </button>
-      <a class="home-btn" [routerLink]="['/']">
-        首頁
-      </a>
-      <button class="logout-btn" (click)="onLogout()">
-        登出
-      </button>
+      <div class="footer-links">
+        <a class="home-btn" [routerLink]="['/']">首頁</a>
+        <button class="logout-btn" (click)="onLogout()">登出</button>
+      </div>
     </div>
   </aside>
 

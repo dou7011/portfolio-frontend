@@ -59,8 +59,8 @@
   width: 92px;
   height: 38px;
   padding: 4px;
-  border: 1px solid var(--line-strong);
-  background: var(--surface);
+  border: 1px solid var(--color-language-border);
+  background: var(--color-language-bg);
   border-radius: 999px;
   overflow: hidden;
   cursor: pointer;
@@ -76,14 +76,19 @@
   width: 40px;
   height: 28px;
   border-radius: 999px;
-  background: var(--accent-soft);
-  box-shadow: var(--shadow-soft);
+  background: var(--color-accent-soft);
+  box-shadow: 0 3px 9px var(--color-language-shadow);
   transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 0;
 }
 
 .lang-switch.en::before {
   transform: translateX(42px);
+  animation: lang-knob-to-en 0.42s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.lang-switch:not(.en)::before {
+  animation: lang-knob-to-zh 0.42s cubic-bezier(0.2, 0.9, 0.2, 1);
 }
 
 .lang-switch-option {
@@ -93,19 +98,19 @@
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   font-weight: 600;
-  color: var(--text-sub);
+  color: var(--color-language-unselected);
   transition: color 0.2s ease;
 }
 
 .lang-switch:not(.en) .lang-switch-option:first-child,
 .lang-switch.en .lang-switch-option:last-child {
-  color: var(--text-main);
+  color: var(--color-language-selected);
 }
 
 .lang-switch:hover {
   transform: translateY(-1px);
-  border-color: var(--accent);
-  box-shadow: var(--shadow-soft);
+  border-color: var(--color-accent);
+  box-shadow: 0 8px 20px var(--color-language-hover-shadow);
 }
 
 .lang-switch:active {
@@ -121,6 +126,30 @@
 
 .lang-switch:disabled::before {
   box-shadow: none;
+}
+
+@keyframes lang-knob-to-en {
+  0% {
+    transform: translateX(0) scaleX(1);
+  }
+  58% {
+    transform: translateX(44px) scaleX(1.06);
+  }
+  100% {
+    transform: translateX(42px) scaleX(1);
+  }
+}
+
+@keyframes lang-knob-to-zh {
+  0% {
+    transform: translateX(42px) scaleX(1);
+  }
+  58% {
+    transform: translateX(-2px) scaleX(1.06);
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+  }
 }
 
 /* 移除舊的 lang-tabs 樣式 */
