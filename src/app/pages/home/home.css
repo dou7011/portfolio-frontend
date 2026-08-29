@@ -263,7 +263,7 @@
 }
 
 .info-section {
-  padding: 80px 0 70px;
+  padding: 90px 0;
   border-top: 1px solid var(--home-line);
   border-bottom: 1px solid var(--home-line);
 }
@@ -302,19 +302,19 @@
 }
 
 .cred-name {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--home-text);
 }
 
 .cred-meta {
   margin-top: 4px;
-  font-size: 0.86rem;
+  font-size: 0.85rem;
   color: var(--home-text-muted);
 }
 
 .featured-section {
-  padding: 100px 0 40px;
+  padding: 90px 0;
 }
 
 .featured-header {
