@@ -1,3 +1,7 @@
+html, body {
+  overflow-anchor: none;
+}
+
 :root {
 	/* 基礎頁面色彩 */
 	color-scheme: light;
