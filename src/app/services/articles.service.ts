@@ -14,9 +14,23 @@ export class Articles {
 
   /**
    * 取得已發布文章或作品列表。
+   * 可用 `type` 篩選 blog / portfolio，並透過 `limit` 限制筆數（需大於 0）。
    */
-  getArticles(): Observable<ApiSuccess<ArticleData>> {
-    return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}`);
+  getArticles(params?: { type?: string; limit?: number }): Observable<ApiSuccess<ArticleData[]>> {
+    const query = new URLSearchParams();
+
+    if (params?.type) {
+      query.set('type', params.type);
+    }
+
+    if (params?.limit && params.limit > 0) {
+      query.set('limit', String(params.limit));
+    }
+
+    const queryString = query.toString();
+    return this.http.get<ApiSuccess<ArticleData[]>>(
+      queryString ? `${this.apiUrl}?${queryString}` : this.apiUrl
+    );
   }
 
   /**
@@ -25,6 +39,4 @@ export class Articles {
   getArticleBySlug(slug: string): Observable<ApiSuccess<ArticleData>> {
     return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}/${slug}`);
   }
-  
-  
 }

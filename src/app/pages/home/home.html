@@ -92,99 +92,77 @@
       </div>
 
       <div class="project-grid">
-        <a href="/internship-showcase" class="project-card reveal">
-          <div class="project-visual visual-auth">
-            <div class="project-frame">
-              <div class="window-bar">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="header-label">AUTH SERVICE</span>
-              </div>
-
-              <div class="window-body">
-                <div class="bars-panel">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-
-                <div class="status-panel">
-                  <div class="status-row">
-                    <span>RBAC</span>
-                    <span class="status-live">ACTIVE</span>
+        @for (article of articles(); track article.slug; let i = $index) {
+          <a class="project-card reveal" [href]="'/articles/' + article.slug">
+            <div class="project-visual" [class.visual-auth]="i % 2 === 0" [class.visual-notes]="i % 2 === 1">
+              @if (i % 2 === 0) {
+                <div class="project-frame">
+                  <div class="window-bar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="header-label">{{ article.type || 'PROJECT' }}</span>
                   </div>
-                  <div class="progress-bar"><span></span></div>
+
+                  <div class="window-body">
+                    <div class="bars-panel">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+
+                    <div class="status-panel">
+                      <div class="status-row">
+                        <span>{{ article.tags[0] || 'TECH' }}</span>
+                        <span class="status-live">LIVE</span>
+                      </div>
+                      <div class="progress-bar"><span></span></div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+                <div class="float-dot"></div>
+              } @else {
+                <div class="note-panel">
+                  <div class="panel-head">
+                    <span>Project log</span>
+                    <span>{{ article.type || 'CASE STUDY' }}</span>
+                  </div>
+
+                  <div class="note-cards">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+
+                  <div class="panel-lines">
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              }
             </div>
-            <div class="float-dot"></div>
-          </div>
 
-          <div class="project-copy">
-            <div class="project-head">
-              <span class="project-tag project-tag-blue">Internal Platform</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M5 12h13M13 6l6 6-6 6" />
-              </svg>
-            </div>
-
-            <h3>內部工具整合平台與權限中心</h3>
-            <p>
-              打造 IT AuthService，集中處理 SSO 狀態管理與即時權限驗證，降低授權空窗期。
-            </p>
-
-            <div class="meta-list">
-              <span>Vue.js</span>
-              <span>·</span>
-              <span>TypeScript</span>
-              <span>·</span>
-              <span>RBAC</span>
-            </div>
-          </div>
-        </a>
-
-        <a href="/articles/ncut-csie-project" class="project-card reveal project-offset">
-          <div class="project-visual visual-notes">
-            <div class="note-panel">
-              <div class="panel-head">
-                <span>Project log</span>
-                <span>NCUT / CSIE</span>
+            <div class="project-copy">
+              <div class="project-head">
+                <span class="project-tag" [class.project-tag-blue]="i % 2 === 0" [class.project-tag-green]="i % 2 === 1">
+                  {{ article.type || 'Featured' }}
+                </span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
               </div>
 
-              <div class="note-cards">
-                <div></div>
-                <div></div>
-                <div></div>
-              </div>
+              <h3>{{ article.title }}</h3>
+              <p>{{ getExcerpt(article) }}</p>
 
-              <div class="panel-lines">
-                <span></span>
-                <span></span>
+              <div class="meta-list">
+                @for (tag of getTags(article); track tag) {
+                    <span class="meta-tag">{{ tag }}</span>
+                }
               </div>
             </div>
-          </div>
-
-          <div class="project-copy">
-            <div class="project-head">
-              <span class="project-tag project-tag-green">Technical Notes</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M5 12h13M13 6l6 6-6 6" />
-              </svg>
-            </div>
-
-            <h3>勤益科大資工系 — 專題開發紀錄</h3>
-            <p>
-              記錄系統開發與架構設計歷程，將課堂理論與實務上的前後端分離開發串在一起。
-            </p>
-
-            <div class="meta-list">
-              <span>NCUT</span>
-              <span>·</span>
-              <span>Frontend</span>
-            </div>
-          </div>
-        </a>
+          </a>
+        }
       </div>
     </div>
   </section>
