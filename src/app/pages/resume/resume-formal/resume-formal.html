@@ -21,7 +21,7 @@
       <section class="resume-section">
           <h2 class="section-title">{{ uiText().education }}</h2>
           <ul class="entry-list">
-            @for (edu of data.education; track edu.school) {
+            @for (edu of data.education; track $index) {
               <li class="entry-item">
                 <div class="entry-header">
                   <h3>{{ edu.school }}</h3>
@@ -36,7 +36,7 @@
       <section class="resume-section">
         <h2 class="section-title">{{ uiText().experience }}</h2>
         <div class="timeline">
-          @for (job of data.experience; track job.company) {
+          @for (job of data.experience; track $index) {
             <article class="timeline-card">
               <div class="timeline-header">
                 <h3>{{ job.title }}</h3>
@@ -52,7 +52,7 @@
       <section class="resume-section">
         <h2 class="section-title">{{ uiText().skills }}</h2>
         <div class="skills-list">
-          @for (skill of data.skills; track skill.category) {
+          @for (skill of data.skills; track $index) {
             <div class="skill-row">
               <span class="skill-cat">{{ skill.category }}</span>
               <div class="tags">
