@@ -34,6 +34,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return article.tags?.slice(0, 3) ?? [];
   }
 
+  public hasCoverImage(article: ArticleData): boolean {
+    return !!article?.cover_image && article.cover_image.trim().length > 0;
+  }
+
+  public getCoverImageUrl(article: ArticleData): string {
+    return article?.cover_image?.trim() || '';
+  }
+
   private loadFeaturedArticles(): void {
     this.articlesService
       //.getArticles({ type: 'portfolio', limit: 3 })
