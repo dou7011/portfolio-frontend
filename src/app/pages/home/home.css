@@ -381,6 +381,11 @@
   height: 300px;
   overflow: hidden;
   transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  background: #f8f3eb;
+}
+
+:host-context([data-theme='dark']) .project-visual {
+  background: #0d1114;
 }
 
 .project-card:hover .project-visual {
@@ -422,19 +427,11 @@
   backdrop-filter: blur(8px);
 }
 
-.visual-auth {
-  background: #0d121b;
-}
-
 .visual-auth::before {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at 60% 40%, rgba(126, 171, 255, 0.18), transparent 36%);
-}
-
-.visual-notes {
-  background: #0d1114;
 }
 
 .visual-notes::before {
@@ -554,6 +551,10 @@
   font-size: 9px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: #0d1114;
+}
+
+:host-context([data-theme='dark']) .panel-head {
   color: rgba(148, 163, 184, 0.8);
 }
 
