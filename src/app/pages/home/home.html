@@ -1,1 +1,191 @@
-<p>home works!</p>
+<div class="home-page">
+  <section class="hero-section">
+    <div class="hero-orb" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow reveal">
+          <span class="status-dot"></span>
+          Available for new opportunities
+        </div>
+
+        <h1 class="reveal">
+          Building digital<br />
+          <span class="gradient-word">systems that matter.</span>
+        </h1>
+
+        <div class="hero-summary reveal">
+          <p>
+            我是林和泰，專注於企業級內部系統的「從零到一」。<br class="desktop-only" />
+            具備獨立開發企業入口 (Portal)、SSO 權限中心 (AuthService) 及多項微服務應用的全端實戰經驗。
+          </p>
+
+          <div class="cta-group">
+            <a class="primary-btn" href="#featured">
+              查看作品
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </a>
+            <a class="secondary-btn" href="/resume">履歷</a>
+          </div>
+        </div>
+
+        <div class="tech-tag-list reveal">
+            <span>Angular & Vue.js</span>
+            <span>TypeScript / Python</span>
+            <span>SSO / RBAC</span>
+            <span>Docker & Nginx</span>
+            <span>Redis & MySQL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">Scroll to explore</div>
+  </section>
+
+  <section id="about" class="info-section">
+    <div class="section-inner split-layout">
+      <div class="section-heading reveal">
+        <p class="section-label">01 — About</p>
+        <h2>
+          從底層到前端，<br />
+          掌握每一處細節。
+        </h2>
+      </div>
+
+      <div class="section-copy reveal">
+        <p>
+          從 Nginx 反向代理、獨立開發 AuthService 身分驗證中心與 Portal 入口，到串接 AD/LDAP 並一手包辦資產查詢、報工週報系統與BPM月報系統，我具備從零到一的端到端開發能力，致力於打造高內聚、低耦合的企業級內部生態系。
+        </p>
+
+        <div class="cred-list">
+          <div>
+            <div class="cred-name">AuthService</div>
+            <div class="cred-meta">SSO & RBAC 權限中心</div>
+          </div>
+          <div>
+            <div class="cred-name">IT Toolify Portal</div>
+            <div class="cred-meta">企業入口與白名單管控</div>
+          </div>
+          <div>
+            <div class="cred-name">OPS-SYNC Report</div>
+            <div class="cred-meta">BPM月報系統與通知服務</div>
+          </div>
+          <div>
+            <div class="cred-name">Internal Tools</div>
+            <div class="cred-meta">資產查詢與週報系統</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="featured" class="featured-section">
+    <div class="section-inner">
+      <div class="featured-header reveal">
+        <div>
+          <p class="section-label">02 — Selected work</p>
+          <h2>精選作品</h2>
+        </div>
+        <span class="timeline-label">2024 — 2026</span>
+      </div>
+
+      <div class="project-grid">
+        @for (article of articles(); track article.slug; let i = $index) {
+          <a class="project-card reveal" [href]="'/articles/' + article.slug">
+            <div class="project-visual" [class.visual-auth]="!hasCoverImage(article) && i % 2 === 0" [class.visual-notes]="!hasCoverImage(article) && i % 2 === 1" [class.has-cover]="hasCoverImage(article)">
+              @if (hasCoverImage(article)) {
+                <img class="project-cover-image" [src]="getCoverImageUrl(article)" [alt]="article.title" loading="lazy" />
+                <div class="cover-overlay">
+                  <span class="cover-badge">{{ article.type || 'PROJECT' }}</span>
+                </div>
+              } @else if (i % 2 === 0) {
+                <div class="project-frame">
+                  <div class="window-bar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="header-label">{{ article.type || 'PROJECT' }}</span>
+                  </div>
+
+                  <div class="window-body">
+                    <div class="bars-panel">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+
+                    <div class="status-panel">
+                      <div class="status-row">
+                        <span>{{ article.tags[0] || 'TECH' }}</span>
+                        <span class="status-live">LIVE</span>
+                      </div>
+                      <div class="progress-bar"><span></span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="float-dot"></div>
+              } @else {
+                <div class="note-panel">
+                  <div class="panel-head">
+                    <span>Project log</span>
+                    <span>{{ article.type || 'CASE STUDY' }}</span>
+                  </div>
+
+                  <div class="note-cards">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+
+                  <div class="panel-lines">
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="project-copy">
+              <div class="project-head">
+                <span class="project-tag" [class.project-tag-blue]="i % 2 === 0" [class.project-tag-green]="i % 2 === 1">
+                  {{ article.type || 'Featured' }}
+                </span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </div>
+
+              <h3>{{ article.title }}</h3>
+              <p>{{ getExcerpt(article) }}</p>
+
+              <div class="meta-list">
+                @for (tag of getTags(article); track tag) {
+                    <span class="meta-tag">{{ tag }}</span>
+                }
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <footer class="cta-section">
+    <div class="section-inner">
+      <div class="cta-card reveal">
+        <div class="cta-line"></div>
+        <p class="section-label">03 — Contact</p>
+        <h2>Let's build something great.</h2>
+        <p class="cta-copy">對完整技術歷程與技能樹感興趣？歡迎檢視我的線上履歷。</p>
+        <a class="primary-btn" href="/resume">
+          檢視完整履歷
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M5 12h13M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</div>
