@@ -333,15 +333,20 @@
 }
 
 .project-grid {
-  gap: 26px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 450px));
   justify-content: center;
+  gap: 26px;
+  width: 100%;
 }
 
 .project-card {
+  width: 100%;
   max-width: 450px;
+  min-height: 620px;
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border-radius: 28px;
   border: 1px solid var(--home-border);
@@ -621,6 +626,9 @@
 }
 
 .project-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 24px 26px 28px;
 }
 
@@ -671,13 +679,19 @@
   color: var(--home-text-muted);
   font-size: 0.92rem;
   line-height: 1.8;
+  min-height: 102px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
 }
 
 .meta-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: auto;
+  padding-top: 22px;
 }
 
 .meta-tag {
