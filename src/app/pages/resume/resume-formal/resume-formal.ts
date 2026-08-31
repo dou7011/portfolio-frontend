@@ -1,18 +1,18 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ResumeService } from '../../services/resume.service';
-import { ResumeData } from '../../models/resume.interface';
+import { ResumeService } from '../../../services/resume.service';
+import { ResumeData } from '../../../models/resume.interface';
 import { timeout } from 'rxjs';
-import { ApiError } from '../../models/api.interface';
+import { ApiError } from '../../../models/api.interface';
 
 @Component({
-  selector: 'app-resume',
+  selector: 'app-resume-formal',
   imports: [CommonModule],
-  templateUrl: './resume.html',
-  styleUrl: './resume.css',
+  templateUrl: './resume-formal.html',
+  styleUrl: './resume-formal.css',
 })
-export class ResumeComponent implements OnInit {
+export class ResumeFormalComponent implements OnInit {
   private resumeService = inject(ResumeService);
   private readonly labels = {
     zh: {
@@ -60,6 +60,7 @@ export class ResumeComponent implements OnInit {
     this.errorMessage.set('');
     this.resumeService.getResumeData(lang).pipe(timeout(8000)).subscribe({
       next: (res) => {
+        console.log('API 呼叫成功：', res);
         this.resumeData.set(res?.data ?? null);
         if (!this.resumeData()) {
           this.errorMessage.set(lang === 'en'
