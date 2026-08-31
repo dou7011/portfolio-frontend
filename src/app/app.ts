@@ -12,7 +12,7 @@ import { ToastComponent } from './components/toast/toast.component';
 export class App {
   private readonly router = inject(Router);
 
-  protected readonly title = signal('My Portfolio');
+  protected readonly title = signal('Ho-Tai Lin');
   protected readonly currentYear = new Date().getFullYear();
   protected readonly isDarkMode = signal(false);
 
