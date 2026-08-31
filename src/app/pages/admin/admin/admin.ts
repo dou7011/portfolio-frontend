@@ -17,7 +17,8 @@ export class AdminComponent {
   public readonly expandedMenus = new Set<string>(['identity']);
 
   constructor() {
-    this.setTheme(localStorage.getItem('portfolio-theme') === 'dark');
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    this.setTheme(savedTheme === 'dark' || savedTheme === null);
   }
 
   toggleTheme() {

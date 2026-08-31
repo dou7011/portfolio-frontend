@@ -18,7 +18,7 @@ export class App {
 
   constructor() {
     const savedTheme = localStorage.getItem('portfolio-theme');
-    this.setTheme(savedTheme === 'dark');
+    this.setTheme(savedTheme === 'dark' || savedTheme === null);
   }
 
   protected toggleTheme(): void {
