@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { ResumeService } from '../../../services/resume.service';
 import { ResumeData } from '../../../models/resume.interface';
 import { timeout } from 'rxjs';
@@ -8,7 +9,7 @@ import { ApiError } from '../../../models/api.interface';
 
 @Component({
   selector: 'app-resume-formal',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './resume-formal.html',
   styleUrl: './resume-formal.css',
 })
@@ -22,7 +23,8 @@ export class ResumeFormalComponent implements OnInit {
       certifications: '專業證照',
       loading: '讀取履歷資料中...',
       fallbackError: '載入資料失敗，請稍後再試。',
-      credentialPrefix: 'ID'
+      credentialPrefix: 'ID',
+      interactiveLink: '切換到互動式履歷'
     },
     en: {
       skills: 'Professional Skills',
@@ -31,7 +33,8 @@ export class ResumeFormalComponent implements OnInit {
       certifications: 'Certifications',
       loading: 'Loading resume data...',
       fallbackError: 'Failed to load data. Please try again later.',
-      credentialPrefix: 'ID'
+      credentialPrefix: 'ID',
+      interactiveLink: 'View interactive resume'
     }
   } as const;
   

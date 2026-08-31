@@ -79,8 +79,14 @@
             }
           </ul>
         </section>
-      
+
     </div>
+
+    <footer class="resume-footer">
+      <a class="interactive-link" [routerLink]="['/resume']">
+        {{ uiText().interactiveLink }}
+      </a>
+    </footer>
   } @else if (isLoading()) {
     <div class="loading">
       <div class="spinner"></div>

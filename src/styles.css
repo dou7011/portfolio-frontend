@@ -218,7 +218,6 @@ select {
 	color: var(--color-text-sub) !important;
 }
 
-:root[data-theme='dark'] .resume-wrapper,
 :root[data-theme='dark'] .login-card,
 :root[data-theme='dark'] [class*='-card'],
 :root[data-theme='dark'] .modal-panel,
