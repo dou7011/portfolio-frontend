@@ -7,10 +7,8 @@ import { tap } from 'rxjs/operators';
 import { ApiSuccess } from '../models/api.interface';
 import { AuthUser } from '../models/auth.interface';
 
-
 export type LoginResponse = ApiSuccess<{ token: string }>;
 export type AuthMeResponse = ApiSuccess<AuthUser>;
-export type RegisterResponse = ApiSuccess<never>;
 
 @Injectable({
   providedIn: 'root'

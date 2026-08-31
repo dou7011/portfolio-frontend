@@ -17,8 +17,8 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'resume', component: ResumeInteractiveComponent },
   { path: 'resume-formal', component: ResumeFormalComponent },
-  { path: 'resumective', component: ResumeInteractiveComponent },
-  {  path: 'admin',
+  {
+    path: 'admin',
     component: AdminComponent,
     canActivate: [authGuard],
     children: [

@@ -1,67 +1,130 @@
-# 🚀 Portfolio Frontend (個人網頁前端)
+# Portfolio Frontend
 
-這是一個使用 **Angular 21 Standalone 架構** 建構的個人履歷與作品集前端專案。
-目前專案已串接 Cloudflare Workers 後端 API，包含履歷資料讀取、履歷編輯、管理員登入、JWT Token 攔截與受保護路由驗證流程。
+這個專案是個人作品集與履歷網站的前端，使用 Angular 21 Standalone Components 建立，負責展示履歷與作品內容，並提供受保護的後台管理頁面。
 
-## ✨ 核心技術棧 (Tech Stack)
+## 目前技術棧
 
-* **前端框架**: [Angular](https://angular.dev/) 21
-* **架構模式**: Standalone Components + ApplicationConfig
-* **開發語言**: TypeScript
-* **樣式處理**: CSS
-* **非同步處理**: RxJS
-* **HTTP 與 DI**: Angular HttpClient、Interceptor、`inject()` API
+- Angular 21
+- Standalone Components
+- TypeScript
+- RxJS
+- Angular Router + HttpClient
+- JWT auth flow through backend API
 
-## 📁 目前專案結構
+## 專案結構
 
 ```text
 portfolio-frontend/
-├── src/
-│   ├── app/
-│   │   ├── guards/              # 路由守衛（auth.guard.ts）
-│   │   ├── interceptors/        # HTTP 攔截器（auth.interceptor.ts）
-│   │   ├── models/              # 前後端資料結構介面（resume.interface.ts）
-│   │   ├── pages/
-│   │   │   ├── home/            # 首頁履歷展示頁
-│   │   │   ├── login/           # 管理員登入頁
-│   │   │   └── register/        # 臨時管理員建立頁
-│   │   ├── services/            # API 服務層（auth.service.ts、resume.service.ts）
-│   │   ├── app.config.ts        # Router、HttpClient、Interceptor 提供者設定
-│   │   ├── app.routes.ts        # 路由設定
-│   │   ├── app.ts               # Root component
-│   │   └── app.spec.ts          # 基本單元測試
-│   ├── environments/            # 開發 / 正式環境 API 設定
-│   ├── main.ts                  # Angular 啟動入口
-│   └── styles.css               # 全域樣式
-├── public/                      # 靜態資源
-├── angular.json                 # Angular 專案設定
-└── package.json                 # 套件與腳本設定
+├── src/                                     # Angular 應用程式來源碼
+│   ├── app/                                 # 應用程式根層
+│   │   ├── components/                      # 共用 UI 元件
+│   │   │   └── toast/                       # Toast 通知組件
+│   │   │       └── toast.component.ts       # 顯示成功/錯誤通知
+│   │   ├── guards/                          # 路由守衛
+│   │   │   └── auth.guard.ts                # 檢查是否已登入並保護 admin 路由
+│   │   ├── interceptors/                    # HTTP 攔截器
+│   │   │   └── auth.interceptor.ts          # 自動附加 Authorization header
+│   │   ├── models/                          # API / 資料結構型別
+│   │   │   ├── api.interface.ts             # API 回應通用型別
+│   │   │   ├── article.interface.ts         # 文章資料介面
+│   │   │   ├── auth.interface.ts            # 登入使用者型別
+│   │   │   ├── permission.interface.ts      # 權限型別
+│   │   │   ├── resume.interface.ts          # 履歷資料型別
+│   │   │   ├── role.interface.ts            # 角色型別
+│   │   │   └── user.interface.ts            # 使用者型別
+│   │   ├── pages/                           # 各頁面元件
+│   │   │   ├── admin/                       # 後台管理頁
+│   │   │   │   ├── admin/                   # 管理 shell / 側邊導航
+│   │   │   │   │   ├── admin.ts             # 後台主容器元件
+│   │   │   │   │   ├── admin.html           # 後台版型
+│   │   │   │   │   └── admin.css            # 後台樣式
+│   │   │   │   ├── permissions/             # 權限管理頁
+│   │   │   │   ├── resume-edit/             # 履歷編輯頁
+│   │   │   │   ├── roles/                   # 角色管理頁
+│   │   │   │   └── users/                   # 使用者管理頁
+│   │   │   ├── home/                        # 首頁
+│   │   │   │   ├── home.ts                  # 首頁資料載入與 UI 邏輯
+│   │   │   │   ├── home.html                # 首頁版型
+│   │   │   │   └── home.css                 # 首頁樣式
+│   │   │   ├── login/                       # 管理員登入頁
+│   │   │   │   ├── login.ts                 # 登入邏輯
+│   │   │   │   ├── login.html               # 登入表單
+│   │   │   │   └── login.css                # 登入頁樣式
+│   │   │   └── resume/                      # 履歷展示頁
+│   │   │       ├── resume-interactive/      # 互動式履歷版型
+│   │   │       └── resume-formal/           # 正式履歷版型
+│   │   ├── services/                        # API 服務層
+│   │   │   ├── articles.service.ts          # 文章資料 API
+│   │   │   ├── auth.service.ts              # 登入 / logout / JWT 驗證
+│   │   │   ├── permission.service.ts        # 權限資料 API
+│   │   │   ├── resume.service.ts            # 履歷 API
+│   │   │   ├── role.service.ts              # 角色 API
+│   │   │   ├── toast.service.ts             # 全域通知服務
+│   │   │   └── user.service.ts              # 使用者 API
+│   │   ├── app.config.ts                    # Router / HTTP / provider 設定
+│   │   ├── app.routes.ts                    # 路由配置
+│   │   ├── app.ts                           # App root component
+│   │   ├── app.html                         # Root layout 與全域導覽
+│   │   ├── app.css                          # 全域樣式
+│   │   └── app.spec.ts                      # 基本 app 測試
+│   ├── environments/                        # 環境變數設定
+│   │   ├── environment.development.ts       # 本機 API base URL
+│   │   └── environment.ts                   # 正式 / 預設 API base URL
+│   ├── index.html                           # Angular HTML entry
+│   ├── main.ts                              # 啟動 entry point
+│   └── styles.css                           # 全域 shared style
+├── public/                                  # 靜態資源（如 favicon、圖片等）
+├── angular.json                              # Angular 專案設定
+├── package.json                              # 專案腳本與依賴
+├── tsconfig.json                             # TypeScript 基本設定
+├── tsconfig.app.json                         # App 編譯設定
+├── tsconfig.spec.json                        # 測試編譯設定
+├── README.md                                 # 專案說明文件
+├── .gitignore                                # Git 忽略設定
+└── ...
 ```
 
-## 🛠️ 本地開發環境設置
+## 目前路由
 
-### 1. 安裝依賴套件
+- `/`：首頁，展示個人簡介與精選作品
+- `/resume`：互動式履歷頁
+- `/resume-formal`：正式履歷頁
+- `/login`：後台登入頁
+- `/admin`：受保護管理頁面，預設導向 `/admin/resume`
+  - `/admin/resume`
+  - `/admin/users`
+  - `/admin/roles`
+  - `/admin/permissions`
+
+> 目前沒有單獨的 `/articles` 前端頁面；首頁上的作品卡片是由後端文章資料匯入，不會導向不存在的路由。
+
+## 本機開發
+
+### 1. 安裝依賴
 
 ```bash
 npm install
 ```
 
-### 2. 確認 API 環境設定
+### 2. 啟動前端
 
-專案使用 `src/environments/` 管理 API 位址：
-
-* **`environment.development.ts`**：`http://localhost:8787/api`
-* **`environment.ts`**：`https://portfolio-backend.dou7011.workers.dev/api`
-
-### 3. 啟動開發伺服器
-
-請先確認後端 API 已啟動，再執行：
+請先確認後端已在本機啟動：
 
 ```bash
 npm start
 ```
 
-前端開發伺服器預設運行於 `http://localhost:4200/`。
+預設開發地址：
+
+```text
+http://localhost:4200/
+```
+
+### 3. 建置專案
+
+```bash
+npm run build
+```
 
 ### 4. 執行測試
 
@@ -69,35 +132,24 @@ npm start
 npm test
 ```
 
-## 🗺️ 目前路由與頁面
+## 目前功能狀態
 
-* **`/`**：首頁，顯示履歷內容，支援中英文切換
-* **`/login`**：系統管理員登入頁
-* **`/admin`**：受 `authGuard` 保護的管理路由，預設會重新導向 `/admin/resume`
-* **`/admin/resume`**：履歷編輯頁面，可編輯標題、簡介、技能、工作經歷、學歷與證照
-* **萬用路由 (`**`)**：未定義路由會重新導回首頁
+- [x] 首頁展示與精選作品區塊
+- [x] 互動式與正式履歷頁
+- [x] 管理者登入與 JWT 保存
+- [x] `AuthInterceptor` 自動附加 Bearer Token
+- [x] `authGuard` 保護管理路由
+- [x] 使用者 / 角色 / 權限 CRUD 管理
+- [x] 履歷內容編輯
+- [x] 亮暗主題切換
+- [x] Toast 通知與全域錯誤處理
 
-## ✅ 目前已完成功能
+## 專案維護重點
 
-- [x] Angular Standalone 基礎環境建置
-- [x] Router 與 HttpClient 全域設定
-- [x] Development / Production 環境 API 切換
-- [x] 串接履歷 API 並支援 `lang` 查詢參數
-- [x] 首頁履歷資料動態渲染
-- [x] 中英文履歷切換
-- [x] 載入中與錯誤狀態處理
-- [x] 管理員登入表單與 JWT Token 儲存
-- [x] HTTP Interceptor 自動附加 Bearer Token
-- [x] Auth Guard 透過 `/auth/me` 驗證登入狀態
-- [x] 管理界面履歷編輯功能（`/admin/resume`）
-- [x] `PUT /resume` API 更新履歷：傳送 `lang`, `title`, `summary`, `skills`, `experience`, `education`, `certifications`
-- [x] 工作與學歷時間改用年月選擇器，不再手動輸入日期格式
+這次整理修正了幾個過時點：
 
-## ⚠️ 目前狀態說明
+- 移除未使用的靜態原型 HTML
+- 刪除過時的註冊型別與錯誤路由假設
+- 修正首頁與導覽中不存在的 `/articles` 連結
+- README 現在與實際架構一致
 
-* `/admin` 路由已改為預設導向 `/admin/resume`，而非僅顯示暫時建立頁。
-* `RegisterComponent` 相關路由仍保留為註解，暫時未對外開放。
-* `authGuard` 若驗證失敗會拒絕進入受保護頁面。
-
----
-*Developed with Angular.*

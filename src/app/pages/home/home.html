@@ -90,7 +90,7 @@
         </div>
         <div class="featured-actions">
           <span class="timeline-label">2024 — 2026</span>
-          <a class="more-link" href="/articles">
+          <a class="more-link" href="#featured">
             <span>More</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M5 12h13M13 6l6 6-6 6" />
@@ -101,7 +101,7 @@
 
       <div class="project-grid">
         @for (article of articles(); track article.slug; let i = $index) {
-          <a class="project-card reveal" [href]="'/articles/' + article.slug">
+          <article class="project-card reveal">
             <div class="project-visual" [class.visual-auth]="!hasCoverImage(article) && i % 2 === 0" [class.visual-notes]="!hasCoverImage(article) && i % 2 === 1" [class.has-cover]="hasCoverImage(article)">
               @if (hasCoverImage(article)) {
                 <img class="project-cover-image" [src]="getCoverImageUrl(article)" [alt]="article.title" loading="lazy" />
@@ -174,7 +174,7 @@
                 }
               </div>
             </div>
-          </a>
+          </article>
         }
       </div>
     </div>
