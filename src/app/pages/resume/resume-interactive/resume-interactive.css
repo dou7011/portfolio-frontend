@@ -125,7 +125,7 @@
   z-index: 2;
   max-width: 820px;
   margin: 0 auto;
-  padding: 100px 24px 160px;
+  padding: 100px 24px 20px;
   display: flex;
   flex-direction: column;
   gap: 100px;
