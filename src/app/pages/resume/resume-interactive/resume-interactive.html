@@ -33,7 +33,7 @@
       <section class="reveal">
         <h2 class="section-title">{{ uiText().experience }}</h2>
         <div class="timeline">
-          @for (job of data.experience; track job.company; let i = $index) {
+          @for (job of data.experience; track $index; let i = $index) {
             <div class="timeline-item">
               <article
                 class="resume-card glass-card spotlight-card"
@@ -60,7 +60,7 @@
         </div>
 
         <div class="bento-grid">
-          @for (skill of data.skills; track skill.category; let i = $index) {
+          @for (skill of data.skills; track $index; let i = $index) {
             <div
               class="resume-card spotlight-card bento-item"
               [class.span-2]="i === 0"
@@ -88,7 +88,7 @@
       <section class="reveal">
         <h2 class="section-title">{{ uiText().education }}</h2>
         <div class="timeline edu-timeline">
-          @for (edu of data.education; track edu.school; let i = $index) {
+          @for (edu of data.education; track $index; let i = $index) {
             <div class="timeline-item">
               <article
                 class="resume-card glass-card spotlight-card"
@@ -111,7 +111,7 @@
       <section class="reveal">
         <h2 class="section-title">{{ uiText().certifications }}</h2>
         <div class="cert-grid">
-          @for (cert of data.certifications; track cert.credentialId; let i = $index) {
+          @for (cert of data.certifications; track $index; let i = $index) {
             <article
               class="resume-card glass-card spotlight-card"
               [attr.data-index]="i"
