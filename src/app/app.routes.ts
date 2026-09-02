@@ -1,25 +1,29 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home';
-import { ResumeInteractiveComponent } from './pages/resume/resume-interactive/resume-interactive';
-import { ResumeFormalComponent } from './pages/resume/resume-formal/resume-formal';
-import { LoginComponent } from './pages/login/login';
-import { AdminComponent } from './pages/admin/admin/admin';
-import { ResumeEditComponent } from './pages/admin/resume-edit/resume-edit';
-import { UsersComponent } from './pages/admin/users/users';
-import { RolesComponent } from './pages/admin/roles/roles';
-import { PermissionsComponent } from './pages/admin/permissions/permissions';
-
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   // 當網址是空的時候 (首頁)，載入 HomeComponent
-  { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'resume', component: ResumeInteractiveComponent },
-  { path: 'resume-formal', component: ResumeFormalComponent },
+  { path: '', loadComponent: () => import('./pages/home/home').then((m) => m.HomeComponent) },
+  { path: 'login', loadComponent: () => import('./pages/login/login').then((m) => m.LoginComponent) },
+  {
+    path: 'resume',
+    loadComponent: () =>
+      import('./pages/resume/resume-interactive/resume-interactive').then(
+        (m) => m.ResumeInteractiveComponent
+      ),
+  },
+  {
+    path: 'resume-formal',
+    loadComponent: () =>
+      import('./pages/resume/resume-formal/resume-formal').then((m) => m.ResumeFormalComponent),
+  },
+  {
+    path: 'articles',
+    loadComponent: () => import('./pages/articles/articles').then((m) => m.ArticlesComponent),
+  },
   {
     path: 'admin',
-    component: AdminComponent,
+    loadComponent: () => import('./pages/admin/admin/admin').then((m) => m.AdminComponent),
     canActivate: [authGuard],
     children: [
       {
@@ -29,19 +33,21 @@ export const routes: Routes = [
       },
       {
         path: 'resume',
-        component: ResumeEditComponent,
+        loadComponent: () =>
+          import('./pages/admin/resume-edit/resume-edit').then((m) => m.ResumeEditComponent),
       },
       {
         path: 'users',
-        component: UsersComponent,
+        loadComponent: () => import('./pages/admin/users/users').then((m) => m.UsersComponent),
       },
       {
         path: 'roles',
-        component: RolesComponent,
+        loadComponent: () => import('./pages/admin/roles/roles').then((m) => m.RolesComponent),
       },
       {
         path: 'permissions',
-        component: PermissionsComponent,
+        loadComponent: () =>
+          import('./pages/admin/permissions/permissions').then((m) => m.PermissionsComponent),
       },
     ],
   },

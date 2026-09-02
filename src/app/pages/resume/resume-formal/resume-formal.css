@@ -27,7 +27,7 @@
 
 .resume-wrapper {
   max-width: 860px;
-  margin: 0 auto;
+  margin: 100px auto 0 auto;
   overflow: hidden;
 }
 
@@ -333,12 +333,6 @@
   word-wrap: break-word;
 }
 
-.two-column {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-}
-
 .entry-list {
   list-style: none;
   display: flex;
@@ -454,10 +448,6 @@
   .resume-content {
     padding: 28px 26px 34px;
   }
-
-  .two-column {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 560px) {
@@ -502,9 +492,5 @@
   .resume-content {
     padding-left: 0;
     padding-right: 0;
-  }
-
-  .two-column {
-    grid-template-columns: 1fr 1fr;
   }
 }

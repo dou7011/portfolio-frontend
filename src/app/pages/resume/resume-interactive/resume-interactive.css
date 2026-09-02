@@ -651,18 +651,9 @@
    響應式設計 (Responsive Design)
    ========================================= */
 @media (max-width: 860px) {
-  .nav-bar {
-    right: 24px;
-    transform: none;
-  }
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 80px 20px 120px;
-    gap: 80px;
-  }
-
   .timeline {
     padding-left: 10px;
   }

@@ -45,11 +45,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private loadFeaturedArticles(): void {
     this.articlesService
       //.getArticles({ type: 'portfolio', limit: 3 })
-      .getArticles({ limit: 3 })
+      .getArticles({ pageSize: 3 })
       .pipe(timeout(8000))
       .subscribe({
         next: (res) => {
-          const items = Array.isArray(res?.data) ? res.data : [];
+          const items = Array.isArray(res?.data?.data) ? res.data.data : [];
           this.articles.set(items.filter((article) => article?.is_published !== false));
           requestAnimationFrame(() => {
             document.querySelectorAll('.reveal').forEach((element) => {
