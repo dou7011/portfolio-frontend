@@ -18,19 +18,21 @@
                 分類 (Categories)
               </h3>
               <div class="type-menu">
-                @for (type of visibleTypes; track type) {
-                  <button 
-                    type="button" 
-                    class="type-btn filter-btn" 
-                    [class.active]="selectedType() === type" 
-                    (click)="changeType(type)"
-                  >
-                    <span>{{ type === 'all' ? '全部文章' : type }}</span>
-                    <span class="count-badge">
-                      {{ type === 'all' ? articles().length : articles().filter((article) => article.type === type).length }}
-                    </span>
-                  </button>
-                }
+                <div class="type-menu-list" [class.is-clipped]="!isTypesExpanded()">
+                  @for (type of typeOptions(); track type) {
+                    <button 
+                      type="button" 
+                      class="type-btn filter-btn" 
+                      [class.active]="selectedType() === type.name" 
+                      (click)="changeType(type.name)"
+                    >
+                      <span>{{ type.name === 'all' ? '全部文章' : type.name }}</span>
+                      <span class="count-badge">
+                        {{ type.name === 'all' ? articles().length : type.count }}
+                      </span>
+                    </button>
+                  }
+                </div>
                 @if (typeOptions().length > 3) {
                   <button type="button" class="collapse-btn" [class.is-expanded]="isTypesExpanded()" (click)="toggleTypes()">
                     <span>{{ isTypesExpanded() ? '收合分類' : '展開更多' }}</span>
@@ -50,36 +52,52 @@
                 期間 (Date)
               </h3>
               <div class="date-filter">
-                <div class="date-range-summary" aria-live="polite">
-                  <span>{{ formatFilterDate(startDate()) }}</span>
-                  <span class="range-arrow" aria-hidden="true">→</span>
-                  <span>{{ formatFilterDate(endDate()) }}</span>
+                <div class="date-picker-labels">
+                  <span>起始日期</span>
+                  <span>結束日期</span>
                 </div>
-                <div class="date-input-group">
-                  <label class="date-field">
-                    <span>起始日期</span>
+                <div class="date-range-summary" [class.has-selection]="startDate() || endDate()">
+                  <div class="date-picker-box" [class.is-active]="startDate()" (click)="openDatePicker(startInput)">
+                    <span class="picker-value">{{ startDate() ? formatFilterDate(startDate()) : 'YYYY.MM.DD' }}</span>
                     <input
+                      #startInput
                       type="date"
-                      class="date-input"
+                      class="date-picker-input"
                       [value]="startDate()"
                       [max]="endDate() || null"
                       (change)="changeDate('start', $any($event.target).value)"
+                      title="選擇起始日期"
                     />
-                  </label>
-                  <label class="date-field">
-                    <span>結束日期</span>
+                  </div>
+
+                  <div class="range-arrow-wrapper" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+
+                  <div class="date-picker-box" [class.is-active]="endDate()" (click)="openDatePicker(endInput)">
+                    <span class="picker-value">{{ endDate() ? formatFilterDate(endDate()) : 'YYYY.MM.DD' }}</span>
                     <input
+                      #endInput
                       type="date"
-                      class="date-input"
+                      class="date-picker-input"
                       [value]="endDate()"
                       [min]="startDate() || null"
                       (change)="changeDate('end', $any($event.target).value)"
+                      title="選擇結束日期"
                     />
-                  </label>
+                  </div>
                 </div>
+
                 @if (startDate() || endDate()) {
                   <button type="button" class="date-reset-btn" (click)="clearDateRange()">
-                    清除期間
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    清除期間重設
                   </button>
                 }
               </div>
@@ -87,25 +105,27 @@
 
             <hr class="divider" />
 
-            <div class="filter-section">
+            <div class="filter-section tag-filter-section">
               <h3 class="widget-title">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                 標籤 (Tags)
               </h3>
               <div class="tag-cloud">
-                @for (tag of visibleTags; track tag) {
-                  <button 
-                    type="button" 
-                    class="tag-btn" 
-                    [class.active]="selectedTag() === tag" 
-                    (click)="changeTag(tag)"
-                  >
-                    {{ tag === 'all' ? 'All' : tag }}
-                  </button>
-                }
+                <div class="tag-cloud-list" [class.is-clipped]="!isTagsExpanded()">
+                  @for (tag of tagOptions(); track tag) {
+                    <button 
+                      type="button" 
+                      class="tag-btn" 
+                      [class.active]="selectedTag() === tag.name" 
+                      (click)="changeTag(tag.name)"
+                    >
+                      {{ tag.name === 'all' ? 'All' : tag.name }}
+                    </button>
+                  }
+                </div>
                 @if (tagOptions().length > 8) {
-                  <button type="button" class="tag-btn tag-collapse-btn" (click)="toggleTags()">
-                    {{ isTagsExpanded() ? '− 收合標籤' : '+ 展開更多' }}
+                  <button type="button" class="tag-btn tag-more-btn" (click)="toggleTags()">
+                    {{ isTagsExpanded() ? '− 收合' : '+ 更多' }}
                   </button>
                 }
               </div>
@@ -118,7 +138,7 @@
       <main class="main-content">
         <div class="results-bar">
           <span>文章庫</span>
-          <span>{{ filteredArticles.length }} 篇結果</span>
+          <span>{{ totalCount() }} 篇結果</span>
         </div>
         @if (isLoading()) {
           <div class="loading-state">載入中...</div>

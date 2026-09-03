@@ -16,6 +16,7 @@ export class Articles {
     page?: number;
     pageSize?: number;
     type?: string;
+    tag?: string;
     is_published?: number;
     startTime?: string;
     endTime?: string;
@@ -33,6 +34,10 @@ export class Articles {
 
     if (params?.type) {
       query.set('type', params.type);
+    }
+    
+    if (params?.tag) {
+      query.set('tag', params.tag);
     }
 
     if (params?.is_published !== undefined) {

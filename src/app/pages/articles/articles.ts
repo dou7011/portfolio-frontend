@@ -14,14 +14,15 @@ export class ArticlesComponent {
   private readonly articlesService = inject(Articles);
 
   readonly articles = signal<ArticleData[]>([]);
-  readonly typeOptions = signal<string[]>(['all']);
-  readonly tagOptions = signal<string[]>(['all']);
+  readonly typeOptions = signal<{ name: string; count: number }[]>([{ name: 'all', count: 0 }]);
+  readonly tagOptions = signal<{ name: string; count: number }[]>([{ name: 'all', count: 0 }]);
   readonly selectedType = signal('all');
   readonly selectedTag = signal('all');
   readonly startDate = signal('');
   readonly endDate = signal('');
   readonly page = signal(1);
   readonly totalPages = signal(1);
+  readonly totalCount = signal(0);
   readonly isLoading = signal(false);
   readonly isTypesExpanded = signal(false);
   readonly isTagsExpanded = signal(false);
@@ -30,15 +31,6 @@ export class ArticlesComponent {
     this.loadArticles();
   }
 
-  get visibleTypes(): string[] {
-    const items = this.typeOptions();
-    return this.isTypesExpanded() ? items : items.slice(0, 3);
-  }
-
-  get visibleTags(): string[] {
-    const items = this.tagOptions();
-    return this.isTagsExpanded() ? items : items.slice(0, 8);
-  }
 
   get filteredArticles(): ArticleData[] {
     return this.articles().filter((article) => {
@@ -80,6 +72,7 @@ export class ArticlesComponent {
 
   changeType(type: string): void {
     this.selectedType.set(type);
+    console.log('Selected type changed to:', type);
     this.page.set(1);
     this.scrollToResults();
     this.loadArticles();
@@ -98,8 +91,22 @@ export class ArticlesComponent {
     }
 
     this.page.set(1);
-  this.scrollToResults();
+    this.scrollToResults();
     this.loadArticles();
+  }
+
+  openDatePicker(input: HTMLInputElement): void {
+    if (!input) return;
+    if (typeof input.showPicker === 'function') {
+      try {
+        input.showPicker();
+        return;
+      } catch {
+        // Fallback for browsers blocking showPicker
+      }
+    }
+    input.focus();
+    input.click();
   }
 
   clearDateRange(): void {
@@ -116,18 +123,18 @@ export class ArticlesComponent {
 
   formatFilterDate(value: string): string {
     if (!value) {
-      return '不限日期';
+      return '';
     }
 
     const date = new Date(`${value}T00:00:00Z`);
-    return Number.isNaN(date.getTime())
-      ? '不限日期'
-      : new Intl.DateTimeFormat('zh-TW', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          timeZone: 'UTC',
-        }).format(date);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const y = date.getUTCFullYear();
+    const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(date.getUTCDate()).padStart(2, '0');
+    return `${y}.${m}.${d}`;
   }
 
   changePage(page: number): void {
@@ -136,6 +143,7 @@ export class ArticlesComponent {
     }
 
     this.page.set(page);
+    this.scrollToResults();
     this.loadArticles();
   }
 
@@ -158,7 +166,7 @@ export class ArticlesComponent {
     return article.type || 'PROJECT';
   }
 
-  private loadArticles(): void {
+    private loadArticles(): void {
     this.isLoading.set(true);
 
     this.articlesService
@@ -171,48 +179,44 @@ export class ArticlesComponent {
       })
       .subscribe({
         next: (response) => {
-          const rawList = Array.isArray(response?.data)
-            ? response.data
-            : Array.isArray((response as any)?.data?.data)
-              ? (response as any).data.data
-              : [];
+          const responseData = response?.data;
 
-          const rawPagination = Array.isArray(response?.data)
-            ? (response as any).pagination ?? {
-                total: 0,
-                limit: 10,
-                offset: 0,
-                page: 1,
-                totalPages: 1,
-              }
-            : (response as any)?.data?.pagination ?? {
-                total: 0,
-                limit: 10,
-                offset: 0,
-                page: 1,
-                totalPages: 1,
-              };
+          if (!responseData) {
+            this.handleLoadError();
+            return;
+          }
 
-          const items = Array.isArray(rawList) ? rawList : [];
+          const { data: items, pagination, aggregations } = responseData;
+
           this.articles.set(items);
+          this.totalPages.set(pagination.totalPages > 0 ? pagination.totalPages : 1);
+          this.totalCount.set(pagination.total);
 
-          const totalPages = Number(rawPagination?.totalPages ?? 1);
-          this.totalPages.set(Number.isFinite(totalPages) && totalPages > 0 ? totalPages : 1);
-
-          const allTypes = ['all', ...new Set(items.map((item) => String(item.type ?? '').trim()).filter(Boolean))];
-          const allTags = ['all', ...new Set(items.flatMap((item) => (item.tags ?? []).map((tag: string) => String(tag).trim())).filter(Boolean))];
+          const allTypes = [
+            { name: 'all', count: pagination.total },
+            ...aggregations.categories
+          ];
+          const allTags = [
+            { name: 'all', count: pagination.total },
+            ...aggregations.tags
+          ];
 
           this.typeOptions.set(allTypes);
           this.tagOptions.set(allTags);
+          
           this.isLoading.set(false);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Failed to load articles:', error);
-          this.articles.set([]);
-          this.totalPages.set(1);
-          this.isLoading.set(false);
+          this.handleLoadError();
         },
       });
+  }
+
+  private handleLoadError(): void {
+    this.articles.set([]);
+    this.totalPages.set(1);
+    this.isLoading.set(false);
   }
 
   private normalizeText(value: string | null | undefined): string {

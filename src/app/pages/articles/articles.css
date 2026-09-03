@@ -106,7 +106,7 @@
   border: 1px solid var(--articles-panel-border);
   box-shadow: var(--articles-panel-shadow);
   border-radius: var(--articles-radius-lg);
-  padding: 24px 0;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -163,6 +163,12 @@
   flex-shrink: 0;
 }
 
+/* 標籤區塊自動填滿側邊欄剩餘空間，容不下的項目不固定高度裁切 */
+.tag-filter-section {
+  flex: 1 1 auto;
+  min-height: 88px;
+}
+
 .widget-title {
   display: flex;
   align-items: center;
@@ -173,6 +179,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--articles-text-main);
+  flex-shrink: 0;
 }
 .widget-title svg {
   width: 16px;
@@ -182,7 +189,19 @@
 .type-menu {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+
+.type-menu-list {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
+}
+
+/* 未展開時只保留前幾列，容不下的項目直接裁切 */
+.type-menu-list.is-clipped {
+  max-height: 124px;
+  overflow: hidden;
 }
 
 .type-btn, .tag-btn, .collapse-btn {
@@ -197,7 +216,7 @@
   border: 1px solid transparent;
   color: var(--articles-text-sub);
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
@@ -226,91 +245,150 @@
 .date-filter {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-.date-range-summary {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
   gap: 8px;
-  padding: 7px 10px;
+}
+
+.date-picker-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--articles-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.date-range-summary {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
   border: 1px solid var(--articles-card-border);
   border-radius: var(--articles-radius-md);
   background: var(--articles-card-bg-soft);
-  color: var(--articles-text-main);
-  font-size: 12px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+  transition: border-color var(--articles-transition), box-shadow var(--articles-transition);
 }
-.date-range-summary span:not(.range-arrow) {
+
+.date-range-summary.has-selection {
+  border-color: color-mix(in srgb, var(--articles-accent) 40%, transparent);
+}
+
+.date-picker-box {
+  position: relative;
+  flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.range-arrow {
-  color: var(--articles-accent);
-  font-size: 15px;
-  line-height: 1;
-}
-.date-input-group {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.date-field {
-  display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  padding: 7px 8px;
+  background: var(--articles-card-bg);
+  border: 1px solid color-mix(in srgb, var(--articles-card-border) 60%, transparent);
+  border-radius: 8px;
+  transition: all var(--articles-transition);
+  cursor: pointer;
+  user-select: none;
+}
+
+.date-picker-box:hover {
+  border-color: var(--articles-accent);
+  background: var(--articles-card-hover-bg);
+}
+
+.date-picker-box:focus-within {
+  border-color: var(--articles-accent);
+  box-shadow: 0 0 0 2px var(--articles-accent-soft);
+}
+
+.date-picker-box.is-active {
+  background: color-mix(in srgb, var(--articles-accent) 12%, var(--articles-card-bg));
+  border-color: color-mix(in srgb, var(--articles-accent) 50%, transparent);
+}
+
+.picker-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--articles-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  transition: color var(--articles-transition);
+}
+
+.date-picker-box.is-active .picker-value {
+  color: var(--articles-accent-strong);
+  font-weight: 700;
+}
+
+.date-picker-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.range-arrow-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--articles-text-muted);
+  flex-shrink: 0;
+  padding: 0 2px;
+  opacity: 0.7;
+}
+
+.date-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  align-self: flex-end;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--articles-text-muted);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-.date-input {
-  width: 100%;
-  background: var(--articles-card-bg);
-  border: 1px solid var(--articles-card-border);
-  color: var(--articles-text-main);
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-family: inherit;
-  font-variant-numeric: tabular-nums;
-  outline: none;
-  transition: var(--articles-transition);
-}
-.date-input::-webkit-calendar-picker-indicator {
+  font-weight: 600;
   cursor: pointer;
-  opacity: 0.65;
+  border-radius: 6px;
+  transition: all var(--articles-transition);
 }
-.date-input:focus {
-  border-color: var(--articles-accent);
-  box-shadow: 0 0 0 3px var(--articles-accent-soft);
-}
-.date-reset-btn {
-  align-self: flex-end;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--articles-accent-strong);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
+
 .date-reset-btn:hover {
-  color: var(--articles-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--articles-accent-strong);
+  background: var(--articles-accent-soft);
+  border-color: color-mix(in srgb, var(--articles-accent) 25%, transparent);
 }
 
 .tag-cloud {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   gap: 8px;
+}
+
+.tag-cloud-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-content: flex-start;
+  gap: 8px;
+}
+
+/* 未展開時自動填滿剩餘空間，容不下的直接裁切，不使用固定高度 */
+.tag-cloud-list.is-clipped {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 .tag-btn {
   background: var(--articles-card-bg);
@@ -331,13 +409,28 @@
   color: var(--articles-accent-strong);
 }
 
-.tag-collapse-btn, .collapse-btn {
+.tag-more-btn {
+  align-self: flex-start;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--articles-accent) 50%, transparent);
+  color: var(--articles-accent-strong);
+  font-weight: 600;
+}
+
+.tag-more-btn:hover {
+  background: var(--articles-accent-soft);
+  border-color: var(--articles-accent);
+  color: var(--articles-accent-strong);
+}
+
+.collapse-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  min-height: 42px;
+  min-height: 35px;
   background: transparent;
   border: 1px dashed var(--articles-card-border);
   color: var(--articles-text-sub);
