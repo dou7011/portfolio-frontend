@@ -191,7 +191,7 @@
           <button type="button" class="page-btn" [disabled]="page() === 1" (click)="changePage(page() - 1)">
             上一頁
           </button>
-          @for (pageNumber of [].constructor(totalPages()); track pageNumber; let i = $index) {
+          @for (pageNumber of [].constructor(totalPages()); track $index; let i = $index) {
             <button
               type="button"
               class="page-num"
