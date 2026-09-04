@@ -15,7 +15,8 @@ export interface ArticleData {
 }
 
 export interface PaginationInfo {
-  total: number;
+  totalFiltered: number;
+  totalAll: number;
   limit: number;
   offset: number;
   page: number;
@@ -23,6 +24,8 @@ export interface PaginationInfo {
 }
 
 export interface Aggregations {
+  totalCategories: number;
+  totalTags: number;
   categories: CategoriesAggregation[];
   tags: TagsAggregation[];
 }

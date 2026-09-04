@@ -31,23 +31,6 @@ export class ArticlesComponent {
     this.loadArticles();
   }
 
-
-  get filteredArticles(): ArticleData[] {
-    return this.articles().filter((article) => {
-      const typeMatch =
-        this.selectedType() === 'all' ||
-        this.normalizeText(article.type) === this.normalizeText(this.selectedType());
-
-      const selectedTagText = this.normalizeText(this.selectedTag());
-      const tagMatch =
-        this.selectedTag() === 'all' ||
-        (article.tags ?? []).some((tag) => this.normalizeText(tag) === selectedTagText);
-
-      const dateMatch = this.matchesDateRange(article);
-      return typeMatch && tagMatch && dateMatch;
-    });
-  }
-
   toggleTypes(): void {
     this.isTypesExpanded.update((value) => !value);
     // 展開時加入面板內部微捲動
@@ -72,7 +55,7 @@ export class ArticlesComponent {
 
   changeType(type: string): void {
     this.selectedType.set(type);
-    console.log('Selected type changed to:', type);
+    this.selectedTag.set('all');
     this.page.set(1);
     this.scrollToResults();
     this.loadArticles();
@@ -80,7 +63,9 @@ export class ArticlesComponent {
 
   changeTag(tag: string): void {
     this.selectedTag.set(tag);
+    this.page.set(1);
     this.scrollToResults();
+    this.loadArticles();
   }
 
   changeDate(boundary: 'start' | 'end', value: string): void {
@@ -90,6 +75,7 @@ export class ArticlesComponent {
       this.endDate.set(value);
     }
 
+    this.selectedTag.set('all');
     this.page.set(1);
     this.scrollToResults();
     this.loadArticles();
@@ -166,61 +152,62 @@ export class ArticlesComponent {
     return article.type || 'PROJECT';
   }
 
-    private loadArticles(): void {
+  private loadArticles(): void {
     this.isLoading.set(true);
 
     this.articlesService
-      .getArticles({
-        page: this.page(),
-        pageSize: 10,
-        type: this.selectedType() === 'all' ? undefined : this.selectedType(),
-        startTime: this.toStartTime(this.startDate()),
-        endTime: this.toEndTime(this.endDate()),
-      })
-      .subscribe({
-        next: (response) => {
-          const responseData = response?.data;
-
-          if (!responseData) {
-            this.handleLoadError();
-            return;
-          }
-
-          const { data: items, pagination, aggregations } = responseData;
-
-          this.articles.set(items);
-          this.totalPages.set(pagination.totalPages > 0 ? pagination.totalPages : 1);
-          this.totalCount.set(pagination.total);
-
-          const allTypes = [
-            { name: 'all', count: pagination.total },
-            ...aggregations.categories
-          ];
-          const allTags = [
-            { name: 'all', count: pagination.total },
-            ...aggregations.tags
-          ];
-
-          this.typeOptions.set(allTypes);
-          this.tagOptions.set(allTags);
-          
-          this.isLoading.set(false);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Failed to load articles:', error);
+    .getArticles({
+      page: this.page(),
+      pageSize: 10,
+      type: this.selectedType() === 'all' ? undefined : this.selectedType(),
+      tag: this.selectedTag() === 'all' ? undefined : this.selectedTag(),
+      startTime: this.toStartTime(this.startDate()),
+      endTime: this.toEndTime(this.endDate()),
+    })
+    .subscribe({
+      next: (response) => {
+        const responseData = response?.data;
+        if (!responseData) {
           this.handleLoadError();
-        },
-      });
+          return;
+        }
+
+        const { data: items, pagination, aggregations } = responseData;
+
+        this.articles.set(items);
+        this.totalPages.set(pagination.totalPages > 0 ? pagination.totalPages : 1);
+        
+        // 1. 頂部「文章庫 X 篇結果」：綁定實際過濾後的結果
+        this.totalCount.set(pagination.totalFiltered); 
+
+        // 2. 左側「全部文章」：綁定不受 Type/Tag 影響的日期總數
+        const allTypes = [
+          { name: 'all', count: aggregations.totalCategories },
+          ...aggregations.categories
+        ];
+
+        // 3. 左側「All 標籤」：綁定不受 Tag 影響的分類/日期總數
+        const allTags = [
+          { name: 'all', count: aggregations.totalTags },
+          ...aggregations.tags
+        ];
+
+        this.typeOptions.set(allTypes);
+        this.tagOptions.set(allTags);
+        
+        this.isLoading.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Failed to load articles:', error);
+        this.handleLoadError();
+      },
+    });
   }
 
   private handleLoadError(): void {
     this.articles.set([]);
     this.totalPages.set(1);
     this.isLoading.set(false);
-  }
-
-  private normalizeText(value: string | null | undefined): string {
-    return (value ?? '').trim().toLowerCase();
   }
 
   private scrollToResults(): void {
@@ -234,33 +221,6 @@ export class ArticlesComponent {
     const offset = Number.isFinite(sidebarTop) ? sidebarTop : 24;
     const top = layout.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
-  }
-
-  private matchesDateRange(article: ArticleData): boolean {
-    const start = this.startDate();
-    const end = this.endDate();
-
-    if (!start && !end) {
-      return true;
-    }
-
-    const created = article.published_at ? new Date(article.published_at) : null;
-    if (!created || Number.isNaN(created.getTime())) {
-      return false;
-    }
-
-    const startDate = this.toStartTime(start) ? new Date(this.toStartTime(start)!) : null;
-    const endDate = this.toEndTime(end) ? new Date(this.toEndTime(end)!) : null;
-
-    if (startDate && created < startDate) {
-      return false;
-    }
-
-    if (endDate && created > endDate) {
-      return false;
-    }
-
-    return true;
   }
 
   private toStartTime(value: string): string | undefined {
