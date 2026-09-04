@@ -63,7 +63,6 @@ export class ResumeFormalComponent implements OnInit {
     this.errorMessage.set('');
     this.resumeService.getResumeData(lang).pipe(timeout(8000)).subscribe({
       next: (res) => {
-        console.log('API 呼叫成功：', res);
         this.resumeData.set(res?.data ?? null);
         if (!this.resumeData()) {
           this.errorMessage.set(lang === 'en'
