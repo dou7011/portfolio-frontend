@@ -112,7 +112,7 @@
                 標籤 (Tags)
               </h3>
               <div class="tag-cloud">
-                <div class="tag-cloud-list" [class.is-clipped]="!isTagsExpanded()">
+                <div #tagList class="tag-cloud-list" [class.is-clipped]="!isTagsExpanded()">
                   @for (tag of tagOptions(); track tag) {
                     <button 
                       type="button" 
@@ -124,9 +124,12 @@
                     </button>
                   }
                 </div>
-                @if (tagOptions().length > 8) {
-                  <button type="button" class="tag-btn tag-more-btn" (click)="toggleTags()">
+                @if (isTagsOverflowing()) {
+                  <button #tagMoreButton type="button" class="tag-btn tag-more-btn" [class.is-expanded]="isTagsExpanded()" (click)="toggleTags()">
                     {{ isTagsExpanded() ? '− 收合' : '+ 更多' }}
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
                   </button>
                 }
               </div>

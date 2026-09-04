@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ArticleData } from '../../models/article.interface';
 import { Articles } from '../../services/articles.service';
@@ -10,8 +10,12 @@ import { Articles } from '../../services/articles.service';
   templateUrl: './articles.html',
   styleUrl: './articles.css',
 })
-export class ArticlesComponent {
+export class ArticlesComponent implements AfterViewInit, OnDestroy {
   private readonly articlesService = inject(Articles);
+  private tagListResizeObserver?: ResizeObserver;
+
+  @ViewChild('tagList') private tagList?: ElementRef<HTMLDivElement>;
+  @ViewChild('tagMoreButton') private tagMoreButton?: ElementRef<HTMLButtonElement>;
 
   readonly articles = signal<ArticleData[]>([]);
   readonly typeOptions = signal<{ name: string; count: number }[]>([{ name: 'all', count: 0 }]);
@@ -26,36 +30,44 @@ export class ArticlesComponent {
   readonly isLoading = signal(false);
   readonly isTypesExpanded = signal(false);
   readonly isTagsExpanded = signal(false);
+  readonly isTagsOverflowing = signal(false);
 
   ngOnInit(): void {
     this.loadArticles();
   }
 
+  ngAfterViewInit(): void {
+    const tagList = this.tagList?.nativeElement;
+    if (!tagList) return;
+
+    this.tagListResizeObserver = new ResizeObserver(() => this.updateTagOverflow());
+    this.tagListResizeObserver.observe(tagList);
+    requestAnimationFrame(() => this.updateTagOverflow());
+  }
+
+  ngOnDestroy(): void {
+    this.tagListResizeObserver?.disconnect();
+  }
+
   toggleTypes(): void {
     this.isTypesExpanded.update((value) => !value);
-    // 展開時加入面板內部微捲動
-    if (this.isTypesExpanded()) {
-      requestAnimationFrame(() => {
-        const panel = document.querySelector('.glass-panel-content');
-        if (panel) panel.scrollBy({ top: 180, behavior: 'smooth' });
-      });
-    }
   }
 
   toggleTags(): void {
     this.isTagsExpanded.update((value) => !value);
-    // 展開時直接捲動到底部
-    if (this.isTagsExpanded()) {
-      requestAnimationFrame(() => {
-        const panel = document.querySelector('.glass-panel-content');
-        if (panel) panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' });
-      });
-    }
+    requestAnimationFrame(() => {
+      this.updateTagOverflow();
+      if (this.isTagsExpanded()) {
+        this.tagMoreButton?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
   }
 
   changeType(type: string): void {
     this.selectedType.set(type);
     this.selectedTag.set('all');
+    this.isTagsExpanded.set(false);
+    this.isTagsOverflowing.set(false);
     this.page.set(1);
     this.scrollToResults();
     this.loadArticles();
@@ -76,6 +88,8 @@ export class ArticlesComponent {
     }
 
     this.selectedTag.set('all');
+    this.isTagsExpanded.set(false);
+    this.isTagsOverflowing.set(false);
     this.page.set(1);
     this.scrollToResults();
     this.loadArticles();
@@ -194,6 +208,7 @@ export class ArticlesComponent {
 
         this.typeOptions.set(allTypes);
         this.tagOptions.set(allTags);
+        requestAnimationFrame(() => this.updateTagOverflow());
         
         this.isLoading.set(false);
       },
@@ -229,5 +244,14 @@ export class ArticlesComponent {
 
   private toEndTime(value: string): string | undefined {
     return value ? `${value}T23:59:59.999Z` : undefined;
+  }
+
+  private updateTagOverflow(): void {
+    if (this.isTagsExpanded()) return;
+
+    const tagList = this.tagList?.nativeElement;
+    if (!tagList) return;
+
+    this.isTagsOverflowing.set(tagList.scrollHeight > tagList.clientHeight + 1);
   }
 }

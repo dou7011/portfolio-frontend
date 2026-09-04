@@ -98,6 +98,7 @@
   flex-shrink: 0;
   position: sticky;
   top: calc(var(--articles-header-height) + var(--articles-sticky-gap));
+  height: calc(100dvh - var(--articles-header-height) - (var(--articles-sticky-gap) * 2));
   max-height: calc(100dvh - var(--articles-header-height) - (var(--articles-sticky-gap) * 2));
 }
 
@@ -110,6 +111,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 100%;
   max-height: inherit;
 }
 
@@ -198,10 +200,14 @@
   gap: 4px;
 }
 
-/* 未展開時只保留前幾列，容不下的項目直接裁切 */
+.type-menu-list {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .type-menu-list.is-clipped {
   max-height: 124px;
-  overflow: hidden;
 }
 
 .type-btn, .tag-btn, .collapse-btn {
@@ -382,13 +388,15 @@
   flex-shrink: 0;
   align-content: flex-start;
   gap: 8px;
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* 未展開時自動填滿剩餘空間，容不下的直接裁切，不使用固定高度 */
 .tag-cloud-list.is-clipped {
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  max-height: 100%;
 }
 .tag-btn {
   background: var(--articles-card-bg);
@@ -410,12 +418,23 @@
 }
 
 .tag-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   align-self: flex-start;
   flex-shrink: 0;
   background: transparent;
   border: 1px dashed color-mix(in srgb, var(--articles-accent) 50%, transparent);
   color: var(--articles-accent-strong);
   font-weight: 600;
+}
+
+.tag-more-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.tag-more-btn.is-expanded svg {
+  transform: rotate(180deg);
 }
 
 .tag-more-btn:hover {
@@ -656,10 +675,12 @@
   .sidebar {
     width: 100%;
     position: static;
+    height: auto;
     max-height: none;
   }
   .glass-panel {
     padding: 24px 0;
+    min-height: 0;
     max-height: none;
   }
   .glass-panel-content {
