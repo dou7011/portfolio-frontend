@@ -85,7 +85,6 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
       .pipe(timeout(8000))
       .subscribe({
         next: (res) => {
-          console.log('API 呼叫成功：', res);
           this.resumeData.set(res?.data ?? null);
 
           if (!this.resumeData()) {
