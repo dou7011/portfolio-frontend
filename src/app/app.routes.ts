@@ -22,6 +22,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/articles/articles').then((m) => m.ArticlesComponent),
   },
   {
+    path: 'articles/:slug',
+    loadComponent: () =>
+      import('./pages/article-detail/article-detail').then((m) => m.ArticleDetailComponent),
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin/admin').then((m) => m.AdminComponent),
     canActivate: [authGuard],

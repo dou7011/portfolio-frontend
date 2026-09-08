@@ -152,7 +152,7 @@
           } @else {
             <div class="article-list">
               @for (article of articles(); track article.id ?? article.slug) {
-                <a [href]="'#' + article.slug" class="article-card">
+                <a [routerLink]="['/articles', article.slug]" class="article-card">
                   <div class="card-visual">
                     @if (article.cover_image) {
                       <img [src]="article.cover_image" [alt]="article.title" class="cover-img" />

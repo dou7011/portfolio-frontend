@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { ArticleData } from '../../models/article.interface';
 import { Articles } from '../../services/articles.service';
 
 @Component({
   selector: 'app-articles',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './articles.html',
   styleUrl: './articles.css',
 })
