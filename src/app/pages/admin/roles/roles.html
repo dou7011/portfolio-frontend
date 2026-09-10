@@ -4,7 +4,9 @@
       <h2>角色管理</h2>
       <p>建立與維護角色與對應權限綁定</p>
     </div>
-    <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增角色</button>
+    <div class="header-actions">
+      <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增角色</button>
+    </div>
   </div>
 
   @if (isLoading) {

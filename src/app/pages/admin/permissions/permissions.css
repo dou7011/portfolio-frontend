@@ -20,18 +20,18 @@
 }
 
 .page-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .page-header h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 
 .page-header p {
-  margin: 6px 0 0;
-  font-size: 0.82rem;
+  margin: 4px 0 0;
+  font-size: 0.78rem;
   color: var(--text-sub);
 }
 
@@ -46,7 +46,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 18px;
+  padding: 13px 16px;
   border-bottom: 1px solid var(--line);
   background: var(--admin-control-muted);
   font-weight: 600;
@@ -68,10 +68,10 @@ table {
 
 th,
 td {
-  padding: 14px 18px;
+  padding: 10px 16px;
   text-align: left;
   border-bottom: 1px solid var(--line);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
 
 th {

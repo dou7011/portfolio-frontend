@@ -54,7 +54,7 @@ export class AdminComponent {
         { name: '權限管理', path: 'permissions' },
       ],
     },
-    // { name: '文章管理', path: 'articles' }, // 之後新增只要解開註解
+    { name: '文章管理', path: 'articles' },
     // { name: '系統設定', path: 'settings' }
   ];
 

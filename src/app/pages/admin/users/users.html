@@ -4,7 +4,9 @@
       <h2>使用者管理</h2>
       <p>管理後台帳號、啟用狀態與角色綁定</p>
     </div>
-    <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增使用者</button>
+    <div class="header-actions">
+      <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增使用者</button>
+    </div>
   </div>
 
   @if (isLoading) {

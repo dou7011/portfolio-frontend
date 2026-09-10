@@ -1,0 +1,359 @@
+.article-editor-page {
+  --editor-panel: var(--color-surface);
+  --editor-panel-alt: var(--color-surface-soft);
+  --editor-input: var(--color-bg-soft);
+  --editor-border: var(--color-line);
+  --editor-border-strong: var(--color-line-strong);
+  --editor-text: var(--color-text-main);
+  --editor-sub: var(--color-text-sub);
+  --editor-accent: #d3a77c;
+  --editor-accent-soft: #c89565;
+  --editor-shadow: var(--shadow-soft);
+
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 22px 16px 42px;
+  color: var(--editor-text);
+  font-size: 14px;
+}
+
+:root[data-theme='light'] .article-editor-page {
+  --editor-panel: #f7f3ee;
+  --editor-panel-alt: #f1e7dc;
+  --editor-input: #fffdfb;
+  --editor-border: #e0cbb8;
+  --editor-border-strong: #d0b298;
+  --editor-text: #3d2b22;
+  --editor-sub: #7a6253;
+  --editor-accent: #c69263;
+  --editor-accent-soft: #b77d4c;
+  --editor-shadow: 0 18px 30px rgba(130, 96, 70, 0.08);
+}
+
+:root[data-theme='dark'] .article-editor-page {
+  --editor-panel: #1d2329;
+  --editor-panel-alt: #171d22;
+  --editor-input: #141b20;
+  --editor-border: #3a444d;
+  --editor-border-strong: #4e5966;
+  --editor-text: #edf2f7;
+  --editor-sub: #a8b3bf;
+  --editor-accent: #d3a77c;
+  --editor-accent-soft: #c89565;
+  --editor-shadow: 0 18px 30px rgba(0, 0, 0, 0.25);
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.page-header h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.55rem, 2.3vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.back-link {
+  color: var(--editor-accent);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.header-toggle {
+  min-height: 0;
+  padding: 8px 14px;
+  gap: 10px;
+}
+
+.primary-btn,
+.cancel-btn {
+  border: 1px solid var(--editor-border);
+  border-radius: 9px;
+  font: inherit;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 11px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.primary-btn {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--color-button-text);
+  box-shadow: var(--shadow-soft);
+}
+
+.primary-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+}
+
+.cancel-btn {
+  background: var(--admin-control-bg);
+  color: var(--editor-sub);
+  border-color: var(--editor-border);
+}
+
+.cancel-btn:hover {
+  background: var(--admin-control-hover);
+  border-color: var(--editor-border-strong);
+  color: var(--editor-text);
+  transform: translateY(-1px);
+}
+
+.message {
+  margin-bottom: 16px;
+  padding: 0.8rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--editor-border);
+  background: var(--editor-panel-alt);
+  color: var(--editor-text);
+  font-size: 0.9rem;
+}
+
+.message.error {
+  background: color-mix(in srgb, var(--color-danger-soft) 72%, transparent);
+  border-color: var(--color-danger-line);
+  color: var(--color-danger-text);
+}
+
+.loading-box {
+  background: var(--editor-panel);
+  border: 1px solid var(--editor-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--editor-sub);
+}
+
+.article-editor {
+  display: grid;
+  gap: 22px;
+  background: var(--editor-panel);
+  border: 1px solid var(--editor-border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--editor-shadow);
+}
+
+.form-grid,
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field span {
+  color: var(--editor-sub);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--editor-input);
+  border: 1px solid var(--editor-border);
+  color: var(--editor-text);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--editor-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--editor-accent) 18%, transparent);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--editor-sub);
+  opacity: 0.58;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8b3bf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: end;
+  min-height: 36px;
+  background: var(--editor-panel-alt);
+  border: 1px solid var(--editor-border);
+  border-radius: 10px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+.checkbox-field span {
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--editor-text);
+}
+
+.checkbox-field input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 40px;
+  height: 22px;
+  flex: none;
+  position: relative;
+  border-radius: 999px;
+  background: var(--editor-border-strong);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-field input::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.checkbox-field input:checked {
+  background: var(--editor-accent);
+}
+
+.checkbox-field input:checked::before {
+  transform: translateX(18px);
+}
+
+.checkbox-field input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--editor-accent) 25%, transparent);
+}
+
+.editor-wrap {
+  display: grid;
+  gap: 8px;
+}
+
+.quill-editor {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+:host ::ng-deep .ql-toolbar {
+  background: var(--editor-panel-alt);
+  border: 1px solid var(--editor-border);
+  border-bottom: none;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+:host ::ng-deep .ql-container {
+  background: var(--editor-input);
+  border: 1px solid var(--editor-border);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  min-height: 320px;
+}
+
+:host ::ng-deep .ql-editor {
+  min-height: 300px;
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--editor-text);
+}
+
+:host ::ng-deep .ql-toolbar button,
+:host ::ng-deep .ql-picker,
+:host ::ng-deep .ql-picker-label {
+  color: var(--editor-text);
+}
+
+:host ::ng-deep .ql-stroke,
+:host ::ng-deep .ql-fill {
+  stroke: var(--editor-text);
+}
+
+@media (max-width: 720px) {
+  .page-header {
+    display: grid;
+    gap: 12px;
+  }
+
+  .header-actions,
+  .form-grid,
+  .link-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions button {
+    width: 100%;
+  }
+
+  .header-toggle {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .article-editor {
+    padding: 14px;
+  }
+}

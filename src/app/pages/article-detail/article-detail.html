@@ -72,9 +72,26 @@
 			</main>
 		</div>
 	} @else {
-		<div class="article-status article-error">
+		<div class="article-status article-error" role="alert">
+			<div class="error-mark" aria-hidden="true">
+				@if (errorType() === 'not-found') {
+					<span>?</span>
+				} @else {
+					<span>!</span>
+				}
+			</div>
+			<span class="error-label">{{ errorType() === 'not-found' ? 'ARTICLE NOT FOUND' : 'TEMPORARY ERROR' }}</span>
+			<h1>{{ errorType() === 'not-found' ? '這篇文章走丟了' : '文章暫時無法載入' }}</h1>
 			<p>{{ errorMessage() }}</p>
-			<a routerLink="/articles">返回文章列表</a>
+			@if (errorType() === 'not-found') {
+				<span class="error-hint">文章可能已被移除、尚未發布，或網址已經變更。</span>
+			} @else {
+				<span class="error-hint">請稍後再試，或先回到文章列表瀏覽其他內容。</span>
+			}
+			<a class="error-action" routerLink="/articles">
+				<span aria-hidden="true">←</span>
+				返回文章列表
+			</a>
 		</div>
 	}
 </section>

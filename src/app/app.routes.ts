@@ -54,6 +54,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/admin/permissions/permissions').then((m) => m.PermissionsComponent),
       },
+      {
+        path: 'articles',
+        loadComponent: () =>
+          import('./pages/admin/articles/articles').then((m) => m.ArticlesComponent),
+      },
+      {
+        path: 'articles/new',
+        loadComponent: () =>
+          import('./pages/admin/article-detail/article-detail').then((m) => m.ArticleDetailComponent),
+      },
+      {
+        path: 'articles/:slug/edit',
+        loadComponent: () =>
+          import('./pages/admin/article-detail/article-detail').then((m) => m.ArticleDetailComponent),
+      },
     ],
   },
 

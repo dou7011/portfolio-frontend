@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ArticleData } from '../../models/article.interface';
-import { Articles } from '../../services/articles.service';
+import { ArticlesService } from '../../services/articles.service';
 
 @Component({
   selector: 'app-article-detail',
@@ -12,24 +12,25 @@ import { Articles } from '../../services/articles.service';
 })
 export class ArticleDetailComponent {
   private readonly route = inject(ActivatedRoute);
-  private readonly articlesService = inject(Articles);
+  private readonly articlesService = inject(ArticlesService);
 
   readonly article = signal<ArticleData | null>(null);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
+  readonly errorType = signal<'not-found' | 'load-error'>('not-found');
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug');
 
     if (!slug) {
-      this.handleError('找不到指定的文章。');
+      this.handleError('找不到指定的文章。', 'not-found');
       return;
     }
 
     this.articlesService.getArticleBySlug(slug).subscribe({
       next: (response) => {
         if (!response.data) {
-          this.handleError('找不到指定的文章。');
+          this.handleError('找不到指定的文章。', 'not-found');
           return;
         }
 
@@ -38,7 +39,10 @@ export class ArticleDetailComponent {
       },
       error: (error: HttpErrorResponse) => {
         console.error('Failed to load article:', error);
-        this.handleError(error.status === 404 ? '找不到指定的文章。' : '文章載入失敗，請稍後再試。');
+        this.handleError(
+          error.status === 404 ? '找不到指定的文章。' : '文章載入失敗，請稍後再試。',
+          error.status === 404 ? 'not-found' : 'load-error',
+        );
       },
     });
   }
@@ -60,8 +64,9 @@ export class ArticleDetailComponent {
     return (content || '').split(/\n\s*\n/).filter((paragraph) => paragraph.trim());
   }
 
-  private handleError(message: string): void {
+  private handleError(message: string, type: 'not-found' | 'load-error'): void {
     this.errorMessage.set(message);
+    this.errorType.set(type);
     this.isLoading.set(false);
   }
 
