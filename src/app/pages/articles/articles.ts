@@ -1,17 +1,18 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { ArticleData } from '../../models/article.interface';
-import { Articles } from '../../services/articles.service';
+import { ArticlesService } from '../../services/articles.service';
 
 @Component({
   selector: 'app-articles',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './articles.html',
   styleUrl: './articles.css',
 })
 export class ArticlesComponent implements AfterViewInit, OnDestroy {
-  private readonly articlesService = inject(Articles);
+  private readonly articlesService = inject(ArticlesService);
   private tagListResizeObserver?: ResizeObserver;
 
   @ViewChild('tagList') private tagList?: ElementRef<HTMLDivElement>;
@@ -28,6 +29,7 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
   readonly totalPages = signal(1);
   readonly totalCount = signal(0);
   readonly isLoading = signal(false);
+  readonly loadError = signal(false);
   readonly isTypesExpanded = signal(false);
   readonly isTagsExpanded = signal(false);
   readonly isTagsOverflowing = signal(false);
@@ -121,6 +123,10 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
     this.loadArticles();
   }
 
+  retryLoadArticles(): void {
+    this.loadArticles();
+  }
+
   formatFilterDate(value: string): string {
     if (!value) {
       return '';
@@ -168,6 +174,7 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
 
   private loadArticles(): void {
     this.isLoading.set(true);
+    this.loadError.set(false);
 
     this.articlesService
     .getArticles({
@@ -175,6 +182,7 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
       pageSize: 10,
       type: this.selectedType() === 'all' ? undefined : this.selectedType(),
       tag: this.selectedTag() === 'all' ? undefined : this.selectedTag(),
+      is_published: 1,
       startTime: this.toStartTime(this.startDate()),
       endTime: this.toEndTime(this.endDate()),
     })
@@ -222,6 +230,7 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
   private handleLoadError(): void {
     this.articles.set([]);
     this.totalPages.set(1);
+    this.loadError.set(true);
     this.isLoading.set(false);
   }
 

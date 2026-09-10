@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http';
 import { timeout } from 'rxjs';
 import { ArticleData } from '../../models/article.interface';
-import { Articles } from '../../services/articles.service';
+import { ArticlesService } from '../../services/articles.service';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,7 @@ import { Articles } from '../../services/articles.service';
   styleUrl: './home.css'
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  private readonly articlesService = inject(Articles);
+  private readonly articlesService = inject(ArticlesService);
   public readonly articles = signal<ArticleData[]>([]);
 
   ngOnInit(): void {
@@ -44,8 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private loadFeaturedArticles(): void {
     this.articlesService
-      //.getArticles({ type: 'portfolio', limit: 3 })
-      .getArticles({ pageSize: 3 })
+      .getArticles({ pageSize: 3, is_published: 1 })
       .pipe(timeout(8000))
       .subscribe({
         next: (res) => {

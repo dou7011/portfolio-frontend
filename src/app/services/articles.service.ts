@@ -8,7 +8,7 @@ import { ArticleData, ArticlesListResponse } from '../models/article.interface';
 @Injectable({
   providedIn: 'root',
 })
-export class Articles {
+export class ArticlesService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/articles`;
 
@@ -58,7 +58,20 @@ export class Articles {
     );
   }
 
-  getArticleBySlug(slug: string): Observable<ApiSuccess<ArticleData>> {
-    return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}/${slug}`);
+  getArticleBySlug(slug: string, includeDrafts = false): Observable<ApiSuccess<ArticleData>> {
+    const queryString = includeDrafts ? '?includeDrafts=1' : '';
+    return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}/${slug}${queryString}`);
+  }
+
+  createArticle(payload: ArticleData): Observable<ApiSuccess<ArticleData>> {
+    return this.http.post<ApiSuccess<ArticleData>>(this.apiUrl, payload);
+  }
+
+  updateArticle(id: number, payload: ArticleData): Observable<ApiSuccess<ArticleData>> {
+    return this.http.put<ApiSuccess<ArticleData>>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  deleteArticle(id: number): Observable<ApiSuccess<void>> {
+    return this.http.delete<ApiSuccess<void>>(`${this.apiUrl}/${id}`);
   }
 }

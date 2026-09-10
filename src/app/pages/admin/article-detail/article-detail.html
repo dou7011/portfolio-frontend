@@ -1,0 +1,109 @@
+<section class="article-editor-page">
+  <div class="page-header">
+    <div>
+      <a class="back-link" routerLink="/admin/articles">← 返回文章列表</a>
+      <h1>{{ mode() === 'new' ? '新增文章' : '編輯文章' }}</h1>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="cancel-btn" (click)="cancel()">取消</button>
+      <button type="button" class="primary-btn" (click)="saveArticle()" [disabled]="isSaving()">
+        {{ isSaving() ? '儲存中...' : mode() === 'new' ? '建立文章' : '更新文章' }}
+      </button>
+      <label class="field checkbox-field header-toggle">
+        <span>立即發布</span>
+        <input type="checkbox" name="is_published_toggle" [(ngModel)]="form.is_published">
+      </label>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="message error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-box">載入中...</div>
+  } @else {
+    <form class="article-editor" (ngSubmit)="saveArticle()" #articleForm="ngForm">
+      <div class="form-grid">
+        <label class="field">
+          <span>Slug</span>
+          <input type="text" name="slug" [(ngModel)]="form.slug" placeholder="ex: ai-project-2026" required>
+        </label>
+
+        <label class="field">
+          <span>標題</span>
+          <input type="text" name="title" [(ngModel)]="form.title" placeholder="文章標題" required>
+        </label>
+
+        <label class="field">
+          <span>分類</span>
+          <select
+            class="type-select"
+            name="type"
+            [ngModel]="isCustomType() ? customTypeValue : form.type"
+            (ngModelChange)="onTypeSelectChange($event)"
+          >
+            @for (option of categoryOptions(); track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+            <option [value]="customTypeValue">其他（自行輸入）</option>
+          </select>
+        </label>
+
+        @if (isCustomType()) {
+          <label class="field">
+            <span>自訂分類名稱</span>
+            <input
+              type="text"
+              name="customType"
+              [ngModel]="customType"
+              (ngModelChange)="onCustomTypeInput($event)"
+              placeholder="輸入自訂分類名稱"
+              required
+            >
+          </label>
+        }
+      </div>
+
+      <label class="field">
+        <span>封面圖片 URL</span>
+        <input type="url" name="cover_image" [(ngModel)]="form.cover_image" placeholder="https://example.com/cover.jpg">
+      </label>
+
+      <label class="field">
+        <span>摘要</span>
+        <textarea name="excerpt" rows="3" [(ngModel)]="form.excerpt" placeholder="文章簡短摘要"></textarea>
+      </label>
+
+      <label class="field">
+        <span>標籤</span>
+        <input type="text" name="tags" [(ngModel)]="form.tags" placeholder="React, TypeScript, Angular">
+      </label>
+
+      <div class="link-grid">
+        <label class="field">
+          <span>GitHub</span>
+          <input type="url" name="github_url" [(ngModel)]="form.github_url" placeholder="https://github.com/...">
+        </label>
+
+        <label class="field">
+          <span>Demo</span>
+          <input type="url" name="demo_url" [(ngModel)]="form.demo_url" placeholder="https://example.com">
+        </label>
+      </div>
+
+      <div class="editor-wrap">
+        <label class="field">
+          <span>內容</span>
+        </label>
+        <quill-editor
+          [modules]="editorModules"
+          [(ngModel)]="form.content"
+          name="content"
+          theme="snow"
+          class="quill-editor"
+        ></quill-editor>
+      </div>
+    </form>
+  }
+</section>

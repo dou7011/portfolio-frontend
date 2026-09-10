@@ -22,6 +22,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/articles/articles').then((m) => m.ArticlesComponent),
   },
   {
+    path: 'articles/:slug',
+    loadComponent: () =>
+      import('./pages/article-detail/article-detail').then((m) => m.ArticleDetailComponent),
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin/admin').then((m) => m.AdminComponent),
     canActivate: [authGuard],
@@ -48,6 +53,21 @@ export const routes: Routes = [
         path: 'permissions',
         loadComponent: () =>
           import('./pages/admin/permissions/permissions').then((m) => m.PermissionsComponent),
+      },
+      {
+        path: 'articles',
+        loadComponent: () =>
+          import('./pages/admin/articles/articles').then((m) => m.ArticlesComponent),
+      },
+      {
+        path: 'articles/new',
+        loadComponent: () =>
+          import('./pages/admin/article-detail/article-detail').then((m) => m.ArticleDetailComponent),
+      },
+      {
+        path: 'articles/:slug/edit',
+        loadComponent: () =>
+          import('./pages/admin/article-detail/article-detail').then((m) => m.ArticleDetailComponent),
       },
     ],
   },
