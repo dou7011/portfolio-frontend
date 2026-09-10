@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, HostListener, OnInit, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, HostListener, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
-import { timeout } from 'rxjs';
+import { retry, timeout } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
 import { ResumeData } from '../../../models/resume.interface';
 import { ResumeService } from '../../../services/resume.service';
@@ -16,6 +17,8 @@ import { ResumeService } from '../../../services/resume.service';
 })
 export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
   private resumeService = inject(ResumeService);
+  private readonly destroyRef = inject(DestroyRef);
+  private requestVersion = 0;
   public resumeData = signal<ResumeData | null>(null);
   public errorMessage = signal('');
   public isLoading = signal(false);
@@ -76,15 +79,21 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
   }
 
   private fetchResumeData(lang: 'zh' | 'en'): void {
+    const requestVersion = ++this.requestVersion;
     this.isLoading.set(true);
     this.resumeData.set(null);
     this.errorMessage.set('');
 
     this.resumeService
       .getResumeData(lang)
-      .pipe(timeout(8000))
+      .pipe(
+        timeout(8000),
+        retry({ count: 2, delay: 500 }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (res) => {
+          if (requestVersion !== this.requestVersion) return;
           this.resumeData.set(res?.data ?? null);
 
           if (!this.resumeData()) {
@@ -99,6 +108,7 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
           requestAnimationFrame(() => this.observeRevealElements());
         },
         error: (err: HttpErrorResponse) => {
+          if (requestVersion !== this.requestVersion) return;
           console.error('API 呼叫失敗：', err);
           const apiError = err.error as ApiError | undefined;
           this.errorMessage.set(

@@ -1,6 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { retry } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { timeout } from 'rxjs';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
@@ -14,6 +17,7 @@ import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 export class ArticleDetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly articlesService = inject(ArticlesService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly article = signal<ArticleData | null>(null);
   readonly isLoading = signal(true);
@@ -28,7 +32,11 @@ export class ArticleDetailComponent {
       return;
     }
 
-    this.articlesService.getArticleBySlug(slug).subscribe({
+    this.articlesService.getArticleBySlug(slug).pipe(
+      timeout(8000),
+      retry({ count: 2, delay: 500 }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (response) => {
         if (!response.data) {
           this.handleError('找不到指定的文章。', 'not-found');

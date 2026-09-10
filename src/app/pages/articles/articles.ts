@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { retry } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
 
@@ -13,7 +15,9 @@ import { ArticlesService } from '../../services/articles.service';
 })
 export class ArticlesComponent implements AfterViewInit, OnDestroy {
   private readonly articlesService = inject(ArticlesService);
+  private readonly destroyRef = inject(DestroyRef);
   private tagListResizeObserver?: ResizeObserver;
+  private requestVersion = 0;
 
   @ViewChild('tagList') private tagList?: ElementRef<HTMLDivElement>;
   @ViewChild('tagMoreButton') private tagMoreButton?: ElementRef<HTMLButtonElement>;
@@ -173,6 +177,7 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
   }
 
   private loadArticles(): void {
+    const requestVersion = ++this.requestVersion;
     this.isLoading.set(true);
     this.loadError.set(false);
 
@@ -186,8 +191,13 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
       startTime: this.toStartTime(this.startDate()),
       endTime: this.toEndTime(this.endDate()),
     })
+    .pipe(
+      retry({ count: 2, delay: 500 }),
+      takeUntilDestroyed(this.destroyRef),
+    )
     .subscribe({
       next: (response) => {
+        if (requestVersion !== this.requestVersion) return;
         const responseData = response?.data;
         if (!responseData) {
           this.handleLoadError();
@@ -221,6 +231,7 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
         this.isLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
+        if (requestVersion !== this.requestVersion) return;
         console.error('Failed to load articles:', error);
         this.handleLoadError();
       },

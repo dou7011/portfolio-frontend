@@ -424,6 +424,11 @@
   background: var(--home-surface-strong);
 }
 
+.project-card:focus-visible {
+  outline: 3px solid var(--home-accent-strong);
+  outline-offset: 5px;
+}
+
 .project-card:hover::after {
   opacity: 1;
 }

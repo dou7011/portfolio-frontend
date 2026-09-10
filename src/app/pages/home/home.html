@@ -101,7 +101,7 @@
 
       <div class="project-grid">
         @for (article of articles(); track article.slug; let i = $index) {
-          <article class="project-card reveal">
+          <a class="project-card reveal" [routerLink]="['/articles', article.slug]" [attr.aria-label]="'查看文章：' + article.title">
             <div class="project-visual" [class.visual-auth]="!hasCoverImage(article) && i % 2 === 0" [class.visual-notes]="!hasCoverImage(article) && i % 2 === 1" [class.has-cover]="hasCoverImage(article)">
               @if (hasCoverImage(article)) {
                 <img class="project-cover-image" [src]="getCoverImageUrl(article)" [alt]="article.title" loading="lazy" />
@@ -174,7 +174,7 @@
                 }
               </div>
             </div>
-          </article>
+          </a>
         }
       </div>
     </div>

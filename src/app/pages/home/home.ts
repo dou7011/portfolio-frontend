@@ -1,19 +1,23 @@
-import { AfterViewInit, Component, OnInit, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { timeout } from 'rxjs';
+import { retry, timeout } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   private readonly articlesService = inject(ArticlesService);
+  private readonly destroyRef = inject(DestroyRef);
   public readonly articles = signal<ArticleData[]>([]);
+  public readonly isLoadingArticles = signal(false);
 
   ngOnInit(): void {
     this.loadFeaturedArticles();
@@ -43,13 +47,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private loadFeaturedArticles(): void {
+    this.isLoadingArticles.set(true);
     this.articlesService
       .getArticles({ pageSize: 3, is_published: 1 })
-      .pipe(timeout(8000))
+      .pipe(
+        timeout(8000),
+        retry({ count: 2, delay: 500 }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (res) => {
           const items = Array.isArray(res?.data?.data) ? res.data.data : [];
           this.articles.set(items.filter((article) => article?.is_published !== false));
+          this.isLoadingArticles.set(false);
           requestAnimationFrame(() => {
             document.querySelectorAll('.reveal').forEach((element) => {
               element.classList.add('is-visible');
@@ -60,6 +70,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         },
         error: (err: HttpErrorResponse) => {
           console.error('Failed to load featured articles', err);
+          this.isLoadingArticles.set(false);
           this.articles.set([]);
         }
       });

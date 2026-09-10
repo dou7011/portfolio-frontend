@@ -1,10 +1,11 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { ResumeService } from '../../../services/resume.service';
 import { ResumeData } from '../../../models/resume.interface';
-import { timeout } from 'rxjs';
+import { retry, timeout } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
 
 @Component({
@@ -15,6 +16,8 @@ import { ApiError } from '../../../models/api.interface';
 })
 export class ResumeFormalComponent implements OnInit {
   private resumeService = inject(ResumeService);
+  private readonly destroyRef = inject(DestroyRef);
+  private requestVersion = 0;
   private readonly labels = {
     zh: {
       skills: '專業技能',
@@ -58,11 +61,17 @@ export class ResumeFormalComponent implements OnInit {
   }
 
   private fetchResumeData(lang: 'zh' | 'en'): void {
+    const requestVersion = ++this.requestVersion;
     this.isLoading.set(true);
     this.resumeData.set(null);
     this.errorMessage.set('');
-    this.resumeService.getResumeData(lang).pipe(timeout(8000)).subscribe({
+    this.resumeService.getResumeData(lang).pipe(
+      timeout(8000),
+      retry({ count: 2, delay: 500 }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (res) => {
+        if (requestVersion !== this.requestVersion) return;
         this.resumeData.set(res?.data ?? null);
         if (!this.resumeData()) {
           this.errorMessage.set(lang === 'en'
@@ -72,6 +81,7 @@ export class ResumeFormalComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err: HttpErrorResponse) => {
+        if (requestVersion !== this.requestVersion) return;
         console.error('API 呼叫失敗：', err);
         const apiError = err.error as ApiError | undefined;
         if (apiError?.message) {
