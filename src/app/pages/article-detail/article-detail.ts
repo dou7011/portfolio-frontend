@@ -3,10 +3,11 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 
 @Component({
   selector: 'app-article-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, SafeHtmlPipe],
   templateUrl: './article-detail.html',
   styleUrl: './article-detail.css',
 })
@@ -58,10 +59,6 @@ export class ArticleDetailComponent {
       month: 'short',
       day: '2-digit',
     }).format(date);
-  }
-
-  contentParagraphs(content?: string): string[] {
-    return (content || '').split(/\n\s*\n/).filter((paragraph) => paragraph.trim());
   }
 
   private handleError(message: string, type: 'not-found' | 'load-error'): void {

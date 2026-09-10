@@ -216,6 +216,16 @@ export class ArticleDetailComponent implements OnInit {
     this.router.navigate(['/admin/articles']);
   }
 
+  openPreview(): void {
+    const slug = this.form.slug.trim();
+    if (!slug) {
+      this.errorMessage.set('請先填寫 slug 才能預覽文章。');
+      return;
+    }
+
+    window.open(`/articles/${encodeURIComponent(slug)}`, '_blank', 'noopener');
+  }
+
   private parseTags(value: string): string[] {
     return value
       .split(',')

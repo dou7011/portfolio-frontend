@@ -6,6 +6,7 @@
     </div>
     <div class="header-actions">
       <button type="button" class="cancel-btn" (click)="cancel()">取消</button>
+      <button type="button" class="preview-btn" (click)="openPreview()">預覽</button>
       <button type="button" class="primary-btn" (click)="saveArticle()" [disabled]="isSaving()">
         {{ isSaving() ? '儲存中...' : mode() === 'new' ? '建立文章' : '更新文章' }}
       </button>
@@ -106,4 +107,5 @@
       </div>
     </form>
   }
+
 </section>

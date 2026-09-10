@@ -48,7 +48,7 @@
 			</aside>
 
 			<main class="article-main">
-				<header class="article-hero">
+				<header class="article-hero" [class.has-media]="currentArticle.cover_image">
 					<div class="hero-content">
 						<h1>{{ currentArticle.title }}</h1>
 						@if (currentArticle.excerpt) {
@@ -62,13 +62,11 @@
 					}
 				</header>
 
-				@if (contentParagraphs(currentArticle.content).length) {
-					<article class="article-content">
-						@for (paragraph of contentParagraphs(currentArticle.content); track $index) {
-							<p>{{ paragraph }}</p>
-						}
-					</article>
-				}
+				@if (currentArticle.content) {
+                    <article class="article-content ql-snow">
+                        <div class="ql-editor" [innerHTML]="currentArticle.content | safeHtml"></div>
+                    </article>
+                }
 			</main>
 		</div>
 	} @else {

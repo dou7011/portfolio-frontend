@@ -10,9 +10,10 @@
   --editor-accent-soft: #c89565;
   --editor-shadow: var(--shadow-soft);
 
-  max-width: 1024px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 22px 16px 42px;
+  padding: 22px 24px 42px;
   color: var(--editor-text);
   font-size: 14px;
 }
@@ -79,7 +80,8 @@
 }
 
 .primary-btn,
-.cancel-btn {
+.cancel-btn,
+.preview-btn {
   border: 1px solid var(--editor-border);
   border-radius: 9px;
   font: inherit;
@@ -124,6 +126,19 @@
   background: var(--admin-control-hover);
   border-color: var(--editor-border-strong);
   color: var(--editor-text);
+  transform: translateY(-1px);
+}
+
+.preview-btn {
+  background: transparent;
+  color: var(--editor-accent-soft);
+  border-color: color-mix(in srgb, var(--editor-accent) 52%, var(--editor-border));
+}
+
+.preview-btn:hover {
+  background: color-mix(in srgb, var(--editor-accent) 12%, var(--editor-panel));
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
   transform: translateY(-1px);
 }
 
@@ -332,6 +347,8 @@
 }
 
 @media (max-width: 720px) {
+  .article-editor-page { padding: 18px 16px 32px; }
+
   .page-header {
     display: grid;
     gap: 12px;
@@ -356,4 +373,5 @@
   .article-editor {
     padding: 14px;
   }
+
 }
