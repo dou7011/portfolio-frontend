@@ -24,14 +24,25 @@ export interface Certification {
   description: string;
 }
 
+export interface Project {
+  name: string;
+  description: string;
+  techStack: string[];
+  githubUrl?: string;
+  demoUrl?: string;
+}
+
 export interface ResumeData {
   id: number;
   lang: 'zh' | 'en';
   title: string;
+  email?: string;
+  github?: string;
   summary: string;
   skills: Skill[];
   experience: Experience[];
   education: Education[];
   certifications: Certification[];
+  projects: Project[];
   updated_at: string;
 }

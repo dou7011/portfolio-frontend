@@ -24,20 +24,28 @@ export class ResumeEditComponent implements OnInit {
 
   public resumeForm: FormGroup = this.fb.group({
     title: ['', Validators.required],
+    email: [''],
+    github: [''],
     summary: ['', Validators.required],
     skills: this.fb.array([]),
     experience: this.fb.array([]),
     education: this.fb.array([]),
     certifications: this.fb.array([]),
+    projects: this.fb.array([]),
   });
 
   get skills(): FormArray { return this.resumeForm.get('skills') as FormArray; }
   get experience(): FormArray { return this.resumeForm.get('experience') as FormArray; }
   get education(): FormArray { return this.resumeForm.get('education') as FormArray; }
   get certifications(): FormArray { return this.resumeForm.get('certifications') as FormArray; }
+  get projects(): FormArray { return this.resumeForm.get('projects') as FormArray; }
 
   getSkillItems(skillIndex: number): FormArray {
     return this.skills.at(skillIndex).get('items') as FormArray;
+  }
+
+  getProjectTechStack(projectIndex: number): FormArray {
+    return this.projects.at(projectIndex).get('techStack') as FormArray;
   }
 
   private normalizeDateForInput(value: string | null | undefined): string {
@@ -81,8 +89,9 @@ export class ResumeEditComponent implements OnInit {
         this.experience.clear();
         this.education.clear();
         this.certifications.clear();
+        this.projects.clear();
 
-        this.resumeForm.patchValue({ title: data.title, summary: data.summary });
+        this.resumeForm.patchValue({ title: data.title, email: data.email ?? '', github: data.github ?? '', summary: data.summary });
 
         (data.skills ?? []).forEach(s => {
           const itemsArray = this.fb.array(
@@ -115,6 +124,19 @@ export class ResumeEditComponent implements OnInit {
             name: [c.name, Validators.required],
             credentialId: [c.credentialId],
             description: [c.description],
+          }));
+        });
+
+        (data.projects ?? []).forEach(p => {
+          const techStackArray = this.fb.array(
+            (p.techStack ?? []).map(t => this.fb.control(t, Validators.required))
+          );
+          this.projects.push(this.fb.group({
+            name: [p.name, Validators.required],
+            description: [p.description],
+            techStack: techStackArray,
+            githubUrl: [p.githubUrl ?? ''],
+            demoUrl: [p.demoUrl ?? ''],
           }));
         });
 
@@ -154,6 +176,20 @@ export class ResumeEditComponent implements OnInit {
   }
   removeCertification(i: number) { this.certifications.removeAt(i); }
 
+  // ── Projects ─────────────────────────────────────────────
+  addProject() {
+    this.projects.push(this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      techStack: this.fb.array([this.fb.control('', Validators.required)]),
+      githubUrl: [''],
+      demoUrl: [''],
+    }));
+  }
+  removeProject(i: number) { this.projects.removeAt(i); }
+  addProjectTech(i: number) { this.getProjectTechStack(i).push(this.fb.control('', Validators.required)); }
+  removeProjectTech(pi: number, ti: number) { this.getProjectTechStack(pi).removeAt(ti); }
+
   // ── Submit ───────────────────────────────────────────────
   onSubmit() {
     if (this.resumeForm.invalid) {
@@ -168,6 +204,8 @@ export class ResumeEditComponent implements OnInit {
     const payload = {
       lang: this.currentLang,
       title: rawValue.title,
+      email: rawValue.email,
+      github: rawValue.github,
       summary: rawValue.summary,
       skills: rawValue.skills ?? [],
       experience: (rawValue.experience ?? []).map((exp: any) => ({
@@ -181,6 +219,7 @@ export class ResumeEditComponent implements OnInit {
         endDate: this.normalizeDateForSave(edu.endDate),
       })),
       certifications: rawValue.certifications ?? [],
+      projects: rawValue.projects ?? [],
     };
 
     this.resumeService.updateResume(payload).subscribe({
