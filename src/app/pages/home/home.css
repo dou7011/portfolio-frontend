@@ -20,6 +20,11 @@
   --home-grid: rgba(60, 44, 35, 0.04);
   --home-shadow: rgba(130, 96, 70, 0.08);
   --home-button-text: #fffdf9;
+  --home-card-copy: rgba(255, 254, 250, 0.86);
+  --home-more-border: var(--color-line-strong);
+  --home-more-bg: rgba(255, 255, 255, 0.34);
+  --home-more-hover-border: var(--home-accent-soft);
+  --home-more-hover-bg: rgba(255, 255, 255, 0.62);
   --cta-bg: linear-gradient(135deg, rgba(255, 254, 250, 0.98), rgba(248, 237, 226, 0.96));
   --cta-border: rgba(182, 143, 111, 0.38);
   --cta-line-color: rgba(155, 115, 87, 0.46);
@@ -29,6 +34,10 @@
   position: relative;
   color: var(--home-text);
   overflow-x: clip;
+  background:
+    radial-gradient(circle at 50% -10%, var(--home-hero-glow), transparent 32%),
+    radial-gradient(circle at 90% 35%, rgba(155, 115, 87, 0.07), transparent 25%),
+    var(--home-bg);
 }
 
 .home-page::before {
@@ -62,6 +71,11 @@
   --home-grid: rgba(255, 255, 255, 0.04);
   --home-shadow: rgba(0, 0, 0, 0.22);
   --home-button-text: #17191c;
+  --home-card-copy: rgba(23, 28, 34, 0.9);
+  --home-more-border: rgba(255, 255, 255, 0.08);
+  --home-more-bg: rgba(255, 255, 255, 0.02);
+  --home-more-hover-border: rgba(255, 255, 255, 0.18);
+  --home-more-hover-bg: rgba(255, 255, 255, 0.04);
   --cta-bg: linear-gradient(135deg, rgba(31, 36, 40, 0.98), rgba(17, 21, 24, 0.98));
   --cta-border: rgba(224, 173, 126, 0.3);
   --cta-line-color: rgba(240, 189, 140, 0.58);
@@ -354,8 +368,8 @@
   gap: 8px;
   padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--home-more-border);
+  background: var(--home-more-bg);
   color: var(--home-text-soft);
   text-decoration: none;
   font-size: 11px;
@@ -367,8 +381,8 @@
 
 .more-link:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--home-more-hover-border);
+  background: var(--home-more-hover-bg);
 }
 
 .more-link svg {
@@ -748,6 +762,7 @@
   flex: 1;
   flex-direction: column;
   padding: 24px 26px 28px;
+  background: var(--home-card-copy);
 }
 
 .project-head {
