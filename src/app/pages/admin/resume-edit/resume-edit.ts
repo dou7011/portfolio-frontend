@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ResumeService } from '../../../services/resume.service';
+import { ToastService } from '../../../services/toast.service';
 import { ApiError } from '../../../models/api.interface';
 
 @Component({
@@ -15,11 +16,11 @@ import { ApiError } from '../../../models/api.interface';
 export class ResumeEditComponent implements OnInit {
   private fb = inject(FormBuilder);
   private resumeService = inject(ResumeService);
+  private toastService = inject(ToastService);
 
   public currentLang: 'zh' | 'en' = 'zh';
   public isLoading = false;
   public isSaving = false;
-  public saveMessage = '';
   public saveError = '';
 
   public resumeForm: FormGroup = this.fb.group({
@@ -75,7 +76,6 @@ export class ResumeEditComponent implements OnInit {
 
   loadResumeData() {
     this.isLoading = true;
-    this.saveMessage = '';
     this.saveError = '';
     this.resumeService.getResumeData(this.currentLang).subscribe({
       next: (res) => {
@@ -194,10 +194,10 @@ export class ResumeEditComponent implements OnInit {
   onSubmit() {
     if (this.resumeForm.invalid) {
       this.resumeForm.markAllAsTouched();
+      this.toastService.show('請確認表單內容是否填寫完整。', 'error', '儲存失敗');
       return;
     }
     this.isSaving = true;
-    this.saveMessage = '';
     this.saveError = '';
 
     const rawValue = this.resumeForm.getRawValue();
@@ -225,13 +225,14 @@ export class ResumeEditComponent implements OnInit {
     this.resumeService.updateResume(payload).subscribe({
       next: () => {
         this.isSaving = false;
-        this.saveMessage = '🎉 儲存成功！';
-        setTimeout(() => (this.saveMessage = ''), 3000);
+        this.toastService.show('履歷內容已成功更新。', 'success', '更新成功');
+        this.loadResumeData();
       },
       error: (err: HttpErrorResponse) => {
         this.isSaving = false;
         const apiError = err.error as ApiError | undefined;
         this.saveError = apiError?.message ?? '儲存失敗，請稍後再試。';
+        this.toastService.show(this.saveError, 'error', '更新失敗');
       },
     });
   }
