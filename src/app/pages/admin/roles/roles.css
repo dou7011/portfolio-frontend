@@ -238,6 +238,7 @@ tbody tr:hover {
   tbody tr {
     display: grid;
     gap: 7px;
+    box-sizing: border-box;
     padding: 13px 14px;
     border-bottom: 1px solid var(--line);
   }

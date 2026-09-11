@@ -147,12 +147,12 @@ export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateTagOverflow(): void {
+    // 展開時容器已無裁切，維持現狀避免誤判
+    if (this.isTagsExpanded) return;
+
     const tagList = this.tagList?.nativeElement;
     if (!tagList) return;
 
-    this.isTagsOverflowing = tagList.scrollHeight > 72;
-    if (!this.isTagsOverflowing) {
-      this.isTagsExpanded = false;
-    }
+    this.isTagsOverflowing = tagList.scrollHeight > tagList.clientHeight + 1;
   }
 }

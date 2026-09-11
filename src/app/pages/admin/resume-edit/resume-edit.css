@@ -549,7 +549,7 @@ form.loading {
 @media (max-width: 480px) {
   .edit-container {
     max-width: none;
-    padding-bottom: 28px;
+    padding-bottom: 88px;
   }
 
   .section-card {
@@ -567,8 +567,30 @@ form.loading {
     flex-basis: calc(100% - 32px);
   }
 
+  /* 表單很長，儲存列固定在底部避免捲到底才能存 */
+  .form-footer {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 30;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 6px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .msg-success,
+  .msg-error {
+    text-align: center;
+  }
+
   .save-btn,
   .page-header .save-btn {
     width: 100%;
+    min-height: 46px;
+    justify-content: center;
   }
 }

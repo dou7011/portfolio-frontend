@@ -12,6 +12,7 @@
 
   width: 100%;
   max-width: none;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 22px 24px 42px;
   color: var(--editor-text);
@@ -354,24 +355,59 @@
     gap: 12px;
   }
 
-  .header-actions,
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* 取消/預覽/儲存同一列，發布切換單獨一列 */
+  .header-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .header-actions button {
+    width: 100%;
+    min-height: 42px;
+    padding-inline: 8px;
+  }
+
+  .header-toggle {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 42px;
+    justify-content: space-between;
+  }
+
   .form-grid,
   .link-grid {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .header-actions button {
-    width: 100%;
-  }
-
-  .header-toggle {
-    width: 100%;
-    justify-content: space-between;
-  }
-
   .article-editor {
     padding: 14px;
   }
 
+  .field input,
+  .field select,
+  .field textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  :host ::ng-deep .ql-toolbar {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+  }
+
+  :host ::ng-deep .ql-toolbar .ql-formats {
+    display: inline-flex;
+    margin-right: 10px;
+  }
+
+  :host ::ng-deep .ql-editor {
+    font-size: 16px;
+  }
 }

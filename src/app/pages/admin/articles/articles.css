@@ -680,14 +680,21 @@
   }
   .header-actions {
     width: 100%;
+    flex-wrap: wrap;
   }
   .status-filter {
-    flex: 1;
+    flex: 1 1 100%;
     min-width: 0;
   }
   .status-filter button {
-    min-height: 36px;
+    min-height: 38px;
+    padding-inline: 6px;
     font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .page-header .primary-btn {
+    flex: 1 1 100%;
+    min-height: 42px;
   }
   .primary-btn,
   .table-btn {
@@ -697,6 +704,12 @@
     min-height: 32px;
     padding-inline: 12px;
     font-size: 0.76rem;
+  }
+  .tag-filter-content {
+    max-height: 32px;
+  }
+  .tag-filter-content.expanded {
+    max-height: 600px;
   }
   .tag-toggle {
     height: 34px;

@@ -319,6 +319,27 @@
     padding: 24px 16px;
   }
 
+  /* 窄側欄：主題按鈕獨占一行，首頁/登出並排 */
+  .logout-box {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .theme-toggle-admin {
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .footer-links {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .footer-links > * {
+    flex: 1;
+    white-space: nowrap;
+  }
+
   .main-content {
     padding: 24px;
   }
@@ -418,8 +439,9 @@
     gap: 6px;
   }
 
+  /* 横向列中群組父項無功能，直接展示子選單 */
   .group-label {
-    gap: 6px;
+    display: none;
   }
 
   /* 子選單在橫向列中直接展開成並排 pill */
