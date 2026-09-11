@@ -176,6 +176,36 @@
   word-wrap: break-word;
 }
 
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--text-sub);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.contact-link svg {
+  flex-shrink: 0;
+}
+
+.contact-link:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+}
+
 .interactive-link {
   display: inline-flex;
   align-items: center;
@@ -213,6 +243,9 @@
   border-radius: 0 0 22px 22px;
   background: var(--surface);
   box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
 }
 
 .resume-section {
@@ -394,6 +427,48 @@
   line-height: 1.7;
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+.entry-item .tags {
+  margin-top: 6px;
+}
+
+.project-tags {
+  gap: 5px;
+}
+
+.project-tag {
+  padding: 1px 8px;
+  font-size: 0.72rem;
+}
+
+.project-links {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-sub);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: 3px 10px;
+  border-radius: 999px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.project-link svg {
+  flex-shrink: 0;
+}
+
+.project-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .loading {

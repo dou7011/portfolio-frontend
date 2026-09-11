@@ -45,6 +45,17 @@
         }
       </div>
 
+      <div class="field-row">
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" formControlName="email" placeholder="例如：you@example.com">
+        </div>
+        <div class="field-group">
+          <label>GitHub</label>
+          <input type="url" formControlName="github" placeholder="例如：https://github.com/your-account">
+        </div>
+      </div>
+
       <div class="field-group">
         <label>個人簡介 / Summary</label>
         <textarea rows="5" formControlName="summary" placeholder="簡短介紹自己的專業背景與核心能力..."></textarea>
@@ -212,6 +223,62 @@
 
       @if (experience.length === 0) {
         <p class="empty-hint">尚無工作經歷，點擊「新增」開始新增</p>
+      }
+    </div>
+
+    <!-- ── 專案作品 ──────────────────────────────── -->
+    <div class="section-card full-width">
+      <div class="section-head">
+        <span class="section-icon">❖</span>
+        <h3>專案作品 Projects</h3>
+        <button type="button" class="add-btn" (click)="addProject()">＋ 新增</button>
+      </div>
+
+      @for (projectGroup of projects.controls; track $index; let pi = $index) {
+        <div class="sub-card" [formGroup]="$any(projectGroup)">
+          <div class="sub-card-head">
+            <span class="item-index">{{ pi + 1 }}</span>
+            <button type="button" class="remove-btn" (click)="removeProject(pi)" title="移除此筆">✕</button>
+          </div>
+
+          <div class="field-group">
+            <label>專案名稱</label>
+            <input type="text" formControlName="name" placeholder="專案名稱">
+          </div>
+          <div class="field-group">
+            <label>專案描述</label>
+            <textarea rows="3" formControlName="description" placeholder="描述此專案的功能與亮點..."></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>GitHub 連結</label>
+              <input type="url" formControlName="githubUrl" placeholder="https://github.com/...">
+            </div>
+            <div class="field-group">
+              <label>Demo 連結</label>
+              <input type="url" formControlName="demoUrl" placeholder="https://...">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>技術棧</label>
+            <div class="tags-row">
+              @for (tech of getProjectTechStack(pi).controls; track $index; let ti = $index) {
+                <div class="tag-input-wrap">
+                  <input type="text" [formControl]="$any(tech)" placeholder="技術名稱">
+                  @if (getProjectTechStack(pi).length > 1) {
+                    <button type="button" class="tag-remove-btn" (click)="removeProjectTech(pi, ti)">✕</button>
+                  }
+                </div>
+              }
+              <button type="button" class="tag-add-btn" (click)="addProjectTech(pi)">＋ 新增</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (projects.length === 0) {
+        <p class="empty-hint">尚無專案作品，點擊「新增」開始新增</p>
       }
     </div>
 

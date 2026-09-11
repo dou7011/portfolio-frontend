@@ -280,6 +280,41 @@
   text-align: justify;
 }
 
+.hero-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--resume-card-bg);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border: 1px solid var(--resume-card-border);
+  color: var(--resume-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.contact-pill svg {
+  flex-shrink: 0;
+}
+
+.contact-pill:hover {
+  border-color: var(--resume-card-border-hover);
+  color: var(--resume-text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px var(--resume-card-shadow);
+}
+
 .section-header-icon {
   display: flex;
   align-items: center;
@@ -645,6 +680,64 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 12px;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.project-header .job-title {
+  margin-bottom: 0;
+  font-size: 1.2rem;
+}
+
+.project-links {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--resume-text-secondary);
+  text-decoration: none;
+  border: 1px solid var(--resume-card-border);
+  padding: 4px 12px;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.project-link svg {
+  flex-shrink: 0;
+}
+
+.project-link:hover {
+  border-color: var(--resume-accent-orange);
+  color: var(--resume-accent-orange);
+}
+
+.project-tech {
+  margin-top: 18px;
+}
+
+.project-tag {
+  padding: 3px 10px;
+  font-size: 0.74rem;
 }
 
 /* =========================================
