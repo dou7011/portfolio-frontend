@@ -4,6 +4,7 @@ import { retry, timeout } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
+import { ResumeService } from '../../services/resume.service';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -15,9 +16,11 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   private readonly articlesService = inject(ArticlesService);
+  private readonly resumeService = inject(ResumeService);
   private readonly destroyRef = inject(DestroyRef);
   public readonly articles = signal<ArticleData[]>([]);
   public readonly isLoadingArticles = signal(false);
+  public readonly resumeData = this.resumeService.resumeData;
 
   ngOnInit(): void {
     this.loadFeaturedArticles();

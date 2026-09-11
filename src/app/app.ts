@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { ToastComponent } from './components/toast/toast.component';
+import { ResumeService } from './services/resume.service';
 
 @Component({
   selector: 'app-root',
@@ -9,16 +10,24 @@ import { ToastComponent } from './components/toast/toast.component';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   private readonly router = inject(Router);
+  private readonly resumeService = inject(ResumeService);
 
   protected readonly title = signal('Ho-Tai Lin');
   protected readonly currentYear = new Date().getFullYear();
   protected readonly isDarkMode = signal(false);
+  protected readonly resumeData = this.resumeService.resumeData;
 
   constructor() {
     const savedTheme = localStorage.getItem('portfolio-theme');
     this.setTheme(savedTheme === 'dark' || savedTheme === null);
+  }
+
+  ngOnInit(): void {
+    this.resumeService.getResumeData('zh').subscribe({
+      error: (error) => console.error('Failed to load resume contact details', error),
+    });
   }
 
   protected toggleTheme(): void {

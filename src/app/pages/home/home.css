@@ -172,6 +172,8 @@
 }
 
 .hero-summary p {
+  flex: 1 1 auto;
+  min-width: 0;
   max-width: 650px;
   margin: 0;
   font-size: 1.05rem;
@@ -227,6 +229,41 @@
 .project-head svg {
   width: 16px;
   height: 16px;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--home-border-strong);
+  border-radius: 50%;
+  color: var(--home-text-soft);
+  background: var(--home-more-bg);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover,
+.social-icon:focus-visible {
+  color: var(--home-accent-strong);
+  border-color: var(--home-accent);
+  background: var(--home-more-hover-bg);
+  transform: translateY(-2px);
+}
+
+.social-icon svg {
+  width: 19px;
+  height: 19px;
 }
 
 .tech-tag-list {
