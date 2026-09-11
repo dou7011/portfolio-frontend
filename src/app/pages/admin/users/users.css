@@ -236,7 +236,7 @@ tbody tr:hover {
 }
 
 .modal-panel {
-  width: min(660px, 100%);
+  width: min(660px, calc(100% - 32px));
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   background: var(--surface);
@@ -244,6 +244,74 @@ tbody tr:hover {
   border: 1px solid var(--line);
   box-shadow: var(--color-shadow-dark);
   padding: 20px 20px 16px;
+}
+
+@media (max-width: 640px) {
+  .table-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+
+  .table-wrap { overflow: visible; }
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  table { min-width: 0; }
+  thead { display: none; }
+  tbody tr {
+    display: grid;
+    gap: 7px;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child { border-bottom: 0; }
+  td {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0;
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+  td::before {
+    flex: 0 0 64px;
+    color: var(--text-sub);
+    content: '';
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  td:nth-child(1)::before { content: 'Email'; }
+  td:nth-child(2)::before { content: '狀態'; }
+  td:nth-child(3)::before { content: '角色'; }
+  td:nth-child(4)::before { content: '建立時間'; }
+  td.actions {
+    width: auto;
+    display: flex;
+    gap: 8px;
+    padding-top: 6px;
+  }
+  td.actions::before { display: none; }
+  td.actions .table-btn {
+    flex: 1 1 0;
+    min-height: 40px;
+    margin: 0;
+  }
+  .primary-btn { min-height: 40px; }
+  .empty-row { display: block; padding: 20px 14px; }
+  .empty-row::before { display: none; }
+  .modal-backdrop { padding: 12px; }
+  .modal-panel { width: 100%; padding: 16px 14px 14px; }
+  .modal-head { margin: -16px -14px 16px; padding: 13px 14px 11px; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions button { width: 100%; }
 }
 
 .modal-head {

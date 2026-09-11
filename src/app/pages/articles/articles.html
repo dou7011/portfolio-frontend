@@ -8,8 +8,22 @@
 
     <div class="layout-wrapper">
       
-      <aside class="sidebar">
-        <div class="glass-panel">
+      <aside class="sidebar" [class.is-open]="isFilterPanelOpen()">
+        <button
+          type="button"
+          class="filter-toggle"
+          [attr.aria-expanded]="isFilterPanelOpen()"
+          aria-controls="articles-filter-panel"
+          (click)="toggleFilterPanel()"
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+          <span class="filter-toggle-label">篩選文章</span>
+          @if (activeFilterCount() > 0) {
+            <span class="filter-toggle-badge">{{ activeFilterCount() }}</span>
+          }
+          <svg class="filter-toggle-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="glass-panel" id="articles-filter-panel">
           <div class="glass-panel-content">
             
             <div class="filter-section">

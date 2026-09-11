@@ -324,17 +324,162 @@
   }
 }
 
+/* 手機/直立平板：側欄改為頂部精簡列，選單橫向捲動 */
 @media (max-width: 760px) {
   .admin-wrapper {
     flex-direction: column;
+    max-height: none;
   }
 
   .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'brand actions'
+      'menu menu';
+    align-items: center;
+    gap: 10px 12px;
     width: 100%;
+    flex: 0 0 auto;
+    padding: 12px 14px 10px;
+    border-right: 0;
+    border-bottom: 1px solid var(--sidebar-line);
+    background: color-mix(in srgb, var(--sidebar-bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .brand {
+    grid-area: brand;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+
+  .brand h2 {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .brand p {
+    display: none;
+  }
+
+  .menu {
+    grid-area: menu;
+    flex: 0 0 auto;
+    display: block;
+    max-height: none;
+    padding: 0;
+    margin: 0 -14px;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .menu > ul {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .menu > ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menu li {
+    flex: 0 0 auto;
+  }
+
+  .menu a,
+  .group-label {
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid var(--menu-button-border);
+    border-radius: 999px;
+    background: var(--menu-button-bg);
+    white-space: nowrap;
+    font-size: 0.84rem;
+  }
+
+  .menu a.active {
+    border-color: var(--color-accent);
+  }
+
+  .nav-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .group-label {
+    gap: 6px;
+  }
+
+  /* 子選單在橫向列中直接展開成並排 pill */
+  .submenu-outer {
+    display: block;
+    grid-template-rows: none;
+    opacity: 1;
+    overflow: visible;
+  }
+
+  .submenu-outer .submenu {
+    flex-direction: row;
+    gap: 6px;
+    padding: 0;
+    transform: none;
+  }
+
+  .submenu a {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  .submenu a.active {
+    background: var(--menu-active-bg);
+    border-color: var(--color-accent);
+  }
+
+  .group-chevron {
+    display: none;
+  }
+
+  .logout-box {
+    grid-area: actions;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  .home-btn,
+  .logout-btn,
+  .theme-toggle-admin {
+    min-height: 36px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 
   .logout-modal {
     padding: 18px 14px 14px;
+  }
+
+  .modal-actions .modal-btn {
+    min-height: 40px;
+    flex: 1;
+  }
+
+  .main-content {
+    min-width: 0;
+    padding: 18px 16px 32px;
+    overflow: visible;
   }
 }
 

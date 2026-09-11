@@ -420,27 +420,41 @@
 }
 
 @media (max-width: 640px) {
-	.article-detail-page { padding: 48px 20px 80px; }
-	.article-meta-panel { display: block; padding: 2px 0 0; border-bottom: 0; }
-	.back-link { margin-bottom: 28px; }
+	.article-detail-page { padding: 40px 16px 64px; }
+	.article-detail-layout { gap: 28px; }
+	/* 手機：中繼資料改為緊湊橫列，讓標題更早出現 */
+	.article-meta-panel { display: block; padding: 0; border-bottom: 0; }
+	.back-link { min-height: 40px; margin-bottom: 18px; }
 	.article-meta-list {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 24px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 24px;
+		padding-bottom: 16px;
 	}
-	.article-links { grid-column: 1 / -1; }
-	.article-tags-block { display: block; padding-top: 20px; }
-	.tag-list { margin-top: 12px; }
+	.article-meta-item { gap: 4px; }
+	.article-meta-item dd { font-size: 13px; }
+	.article-links dd { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+	.article-links { flex: 1 1 100%; }
+	.article-tags-block { display: block; padding-top: 14px; }
+	.tag-list { margin-top: 8px; }
 	.article-hero,
-	.article-hero.has-media { display: flex; flex-direction: column; gap: 28px; margin-bottom: 48px; }
+	.article-hero.has-media { display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; }
 	.hero-content,
-	.article-hero.has-media .hero-content { padding: 4px 0 28px; }
-	.hero-content h1 { margin-bottom: 18px; font-size: 2.5rem; }
+	.article-hero.has-media .hero-content { padding: 0 0 24px; }
+	.hero-content h1 { margin-bottom: 14px; font-size: clamp(1.8rem, 7.8vw, 2.4rem); line-height: 1.2; }
 	.hero-content p { font-size: 1rem; line-height: 1.8; }
-	.hero-media { width: 100%; }
-	.hero-image { min-height: 0; aspect-ratio: 4 / 3; }
-	.article-content { padding: 0; border-left: 0; font-size: 1rem; }
-	.article-content .ql-editor h1 { font-size: 1.7rem; }
-	.article-content .ql-editor h2 { font-size: 1.32rem; }
+	.hero-media { width: 100%; border-radius: 10px; }
+	.hero-image { min-height: 0; aspect-ratio: 16 / 10; }
+	.article-content { padding: 0; border-left: 0; font-size: 1rem; line-height: 1.9; }
+	.article-content .ql-editor h1 { font-size: 1.6rem; }
+	.article-content .ql-editor h2 { font-size: 1.3rem; }
+	.article-content .ql-editor h3 { font-size: 1.12rem; }
 	.article-error { min-height: 300px; padding: 40px 24px; }
+}
+
+@media (max-width: 420px) {
+	.article-content { font-size: 0.96rem; line-height: 1.85; }
+	.article-content .ql-editor pre,
+	.article-content .ql-editor .ql-syntax { padding: 0.9em; font-size: 0.82em; }
+	.article-error { padding: 32px 18px; }
 }

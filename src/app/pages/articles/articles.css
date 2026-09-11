@@ -743,41 +743,213 @@
   box-shadow: 0 8px 18px color-mix(in srgb, var(--articles-accent) 22%, transparent);
 }
 
+/* 手機/平板的篩選收合按鈕，桌機不顯示 */
+.filter-toggle {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--articles-panel-border);
+  border-radius: var(--articles-radius-md);
+  background: var(--articles-panel-bg);
+  box-shadow: var(--articles-panel-shadow);
+  color: var(--articles-text-main);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color var(--articles-transition), background-color var(--articles-transition);
+}
+.filter-toggle:hover {
+  border-color: var(--articles-card-hover-border);
+}
+.filter-toggle-label {
+  flex: 1;
+  text-align: left;
+}
+.filter-toggle-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--articles-accent);
+  color: var(--color-button-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+.filter-toggle-chevron {
+  transition: transform 0.3s ease;
+}
+.sidebar.is-open .filter-toggle {
+  border-color: color-mix(in srgb, var(--articles-accent) 45%, transparent);
+}
+.sidebar.is-open .filter-toggle-chevron {
+  transform: rotate(180deg);
+}
+
 @media (max-width: 992px) {
   .layout-wrapper {
     flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
+  }
+  .main-content {
+    width: 100%;
   }
   .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     width: 100%;
     position: static;
     height: auto;
     max-height: none;
   }
+  .filter-toggle {
+    display: flex;
+  }
   .glass-panel {
-    padding: 24px 0;
+    display: none;
+    padding: 22px 0;
     min-height: 0;
     max-height: none;
   }
+  .sidebar.is-open .glass-panel {
+    display: flex;
+    animation: filter-panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* 平板：分類與期間並排，標籤佈滿整列 */
   .glass-panel-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 32px;
     flex: initial;
     overflow: visible;
     padding: 0 24px;
   }
+  .glass-panel-content .divider {
+    display: none;
+  }
+  .tag-filter-section {
+    grid-column: 1 / -1;
+    min-height: 0;
+  }
+  .tag-cloud-list.is-clipped {
+    max-height: 88px;
+  }
+  .type-btn,
+  .tag-btn {
+    min-height: 40px;
+  }
+  .tag-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .date-picker-box {
+    min-height: 40px;
+  }
 }
+
+@keyframes filter-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
   .container {
-    padding-top: 52px;
+    width: 100%;
+    padding: 52px 16px 0;
+  }
+  .page-header {
+    margin-bottom: 36px;
+  }
+  .page-intro {
+    font-size: 0.95rem;
   }
   .article-card {
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
+    padding: 16px;
   }
   .card-visual {
     width: 100%;
     height: 200px;
   }
+  .card-content {
+    padding: 0;
+  }
+  .card-title {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+  .card-excerpt {
+    font-size: 0.92rem;
+  }
   .card-footer {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
+  }
+  .card-arrow {
+    flex-shrink: 0;
+  }
+  .page-btn,
+  .page-num {
+    min-height: 42px;
+    min-width: 42px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    margin-bottom: 28px;
+  }
+
+  .layout-wrapper {
+    gap: 22px;
+  }
+
+  .glass-panel-content {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 0 16px;
+  }
+
+  .glass-panel {
+    padding: 18px 0;
+  }
+
+  .date-range-summary {
+    gap: 2px;
+  }
+
+  .date-picker-box {
+    padding-inline: 4px;
+  }
+
+  .article-list {
+    gap: 18px;
+  }
+
+  .card-visual {
+    height: 168px;
+  }
+
+  .pagination {
+    gap: 5px;
+  }
+
+  .page-btn,
+  .page-num {
+    padding: 8px 10px;
   }
 }

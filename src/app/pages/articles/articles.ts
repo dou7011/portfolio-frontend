@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { retry } from 'rxjs';
@@ -37,6 +37,19 @@ export class ArticlesComponent implements AfterViewInit, OnDestroy {
   readonly isTypesExpanded = signal(false);
   readonly isTagsExpanded = signal(false);
   readonly isTagsOverflowing = signal(false);
+  readonly isFilterPanelOpen = signal(false);
+  readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.selectedType() !== 'all') count++;
+    if (this.selectedTag() !== 'all') count++;
+    if (this.startDate() || this.endDate()) count++;
+    return count;
+  });
+
+  toggleFilterPanel(): void {
+    this.isFilterPanelOpen.update((value) => !value);
+    requestAnimationFrame(() => this.updateTagOverflow());
+  }
 
   ngOnInit(): void {
     this.loadArticles();

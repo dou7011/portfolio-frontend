@@ -685,24 +685,50 @@
     flex: 1;
     min-width: 0;
   }
+  .status-filter button {
+    min-height: 36px;
+    font-size: 0.8rem;
+  }
+  .primary-btn,
+  .table-btn {
+    min-height: 40px;
+  }
+  .tag-filter {
+    min-height: 32px;
+    padding-inline: 12px;
+    font-size: 0.76rem;
+  }
+  .tag-toggle {
+    height: 34px;
+  }
   .tag-filter-bar {
     gap: 6px;
     padding: 8px 10px;
   }
   .tag-filter-content {
-    gap: 4px;
+    gap: 6px;
   }
   .article-row {
     grid-template-columns: 44px minmax(0, 1fr);
-    gap: 9px;
+    gap: 9px 12px;
     min-height: 78px;
-    padding: 8px 10px;
+    padding: 12px 12px;
   }
   .article-cover {
     width: 44px;
   }
   .article-actions {
     grid-column: 2;
+    display: flex;
+    gap: 8px;
+  }
+  .article-actions .table-btn {
+    flex: 1 1 0;
+  }
+  .page-btn,
+  .page-num {
+    min-height: 40px;
+    min-width: 40px;
   }
   .field-grid {
     display: block;
@@ -713,6 +739,50 @@
   .modal-head {
     margin: -18px -18px 18px;
     padding: 16px 18px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-card {
+    min-height: 0;
+  }
+
+  .page-shell {
+    min-height: 0;
+  }
+
+  .header-actions,
+  .header-actions > * {
+    width: 100%;
+  }
+
+  .status-filter {
+    min-height: 38px;
+  }
+
+  .article-row {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .article-cover {
+    width: 40px;
+  }
+
+  .modal-backdrop {
+    padding: 10px;
+  }
+
+  .modal-panel {
+    width: 100%;
+    max-height: calc(100vh - 20px);
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions > * {
+    width: 100%;
   }
 }
 

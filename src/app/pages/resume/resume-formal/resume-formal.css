@@ -548,6 +548,26 @@
   .skill-cat {
     width: auto;
   }
+
+  .resume-wrapper {
+    margin-top: 76px;
+  }
+
+  .resume-header,
+  .resume-content {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .header-top,
+  .entry-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .lang-switch {
+    align-self: flex-start;
+  }
 }
 
 @media print {

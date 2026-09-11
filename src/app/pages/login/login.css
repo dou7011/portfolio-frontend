@@ -32,6 +32,7 @@
 .login-wrapper {
   width: 100%;
   max-width: 440px;
+  padding: 0 16px;
 }
 
 .login-card {
@@ -162,4 +163,14 @@
   color: var(--text-sub);
   cursor: not-allowed;
   box-shadow: none;
+}
+
+@media (max-width: 480px) {
+  :host { padding-top: 64px; align-items: flex-start; }
+  .login-card { border-radius: 16px; }
+  .login-header { padding: 26px 20px 18px; }
+  .login-header h2 { font-size: 1.25rem; }
+  .login-body { padding: 22px 20px 26px; }
+  .form-group input { min-height: 48px; font-size: 1rem; }
+  .submit-btn { min-height: 48px; font-size: 1rem; }
 }

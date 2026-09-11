@@ -118,6 +118,48 @@ tbody tr:hover {
   50% { opacity: 0.4; transform: scale(0.7); }
 }
 
+@media (max-width: 640px) {
+  .table-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+  .table-wrap { overflow: visible; }
+  table,
+  tbody,
+  tr,
+  td { display: block; width: 100%; }
+  table { min-width: 0; }
+  thead { display: none; }
+  tbody tr {
+    display: grid;
+    gap: 7px;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child { border-bottom: 0; }
+  td {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0;
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+  td::before {
+    flex: 0 0 64px;
+    color: var(--text-sub);
+    content: '';
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  td:nth-child(1)::before { content: 'Action'; }
+  td:nth-child(2)::before { content: '說明'; }
+  .empty-row { display: block; padding: 20px 14px; }
+  .empty-row::before { display: none; }
+}
+
 .msg-error {
   display: inline-block;
   margin-top: 10px;

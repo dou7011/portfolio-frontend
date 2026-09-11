@@ -545,3 +545,30 @@ form.loading {
   .field-row { flex-direction: column; gap: 0; }
   .page-header { flex-direction: column; align-items: flex-start; }
 }
+
+@media (max-width: 480px) {
+  .edit-container {
+    max-width: none;
+    padding-bottom: 28px;
+  }
+
+  .section-card {
+    padding: 14px 12px;
+    border-radius: 11px;
+  }
+
+  .section-head,
+  .sub-card-head {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .inline-input {
+    flex-basis: calc(100% - 32px);
+  }
+
+  .save-btn,
+  .page-header .save-btn {
+    width: 100%;
+  }
+}

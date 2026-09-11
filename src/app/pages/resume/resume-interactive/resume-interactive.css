@@ -787,4 +787,28 @@
   .span-2 {
     grid-column: span 1;
   }
+
+  .resume-interactive {
+    padding-inline: 12px;
+  }
+
+  .glass-card,
+  .bento-item {
+    padding: 18px;
+  }
+
+  .timeline-item {
+    padding-left: 16px;
+  }
+
+  .project-head,
+  .project-meta,
+  .project-links {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .project-links {
+    gap: 8px;
+  }
 }
