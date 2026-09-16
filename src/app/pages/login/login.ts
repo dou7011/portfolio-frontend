@@ -28,21 +28,15 @@ export class LoginComponent implements OnInit {
   });
 
   ngOnInit() {
-    // 如果已經有 token，直接轉回首頁
-    const token = this.authService.getToken();
-    if (token) {
-      this.authService.verifyPermissions().subscribe({
-        next: (res) => {
-          if (res.success) {
-            this.router.navigate(['/']);
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-          // 請求失敗（例如 401）視為 token 無效，直接登出
-          this.authService.logout();
+    // The auth cookie is HttpOnly, so ask the API whether this browser is signed in.
+    this.authService.verifyPermissions().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.router.navigate(['/']);
         }
-      });
-    }
+      },
+      error: (_err: HttpErrorResponse) => undefined,
+    });
   }
 
   onSubmit() {

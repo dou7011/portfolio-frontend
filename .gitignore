@@ -45,3 +45,5 @@ Thumbs.db
 # Local environment variables
 *.env
 .env
+
+健檢報告.md

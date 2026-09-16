@@ -43,7 +43,8 @@ portfolio-frontend/
 │   │   │   │   ├── roles/                   # 角色管理頁
 │   │   │   │   └── users/                   # 使用者管理頁
 │   │   │   ├── home/                        # 首頁
-│   │   │   │   ├── home.ts                  # 首頁資料載入與 UI 邏輯
+│   │   │   ├── articles/                    # 文章列表頁
+│   │   │   ├── article-detail/              # 文章詳細頁
 │   │   │   │   ├── home.html                # 首頁版型
 │   │   │   │   └── home.css                 # 首頁樣式
 │   │   │   ├── login/                       # 管理員登入頁
@@ -90,13 +91,17 @@ portfolio-frontend/
 - `/resume`：互動式履歷頁
 - `/resume-formal`：正式履歷頁
 - `/login`：後台登入頁
+- `/articles`：公開文章與作品列表，支援類型、標籤、日期篩選與分頁
+- `/articles/:slug`：公開文章詳細頁
 - `/admin`：受保護管理頁面，預設導向 `/admin/resume`
   - `/admin/resume`
   - `/admin/users`
   - `/admin/roles`
   - `/admin/permissions`
 
-> 目前沒有單獨的 `/articles` 前端頁面；首頁上的作品卡片是由後端文章資料匯入，不會導向不存在的路由。
+  - `/admin/articles`
+  - `/admin/articles/new`
+  - `/admin/articles/:slug/edit`
 
 ## 本機開發
 
@@ -139,17 +144,21 @@ npm test
 - [x] 管理者登入與 JWT 保存
 - [x] `AuthInterceptor` 自動附加 Bearer Token
 - [x] `authGuard` 保護管理路由
+- [x] 公開文章列表、詳細頁與管理文章頁
 - [x] 使用者 / 角色 / 權限 CRUD 管理
 - [x] 履歷內容編輯
 - [x] 亮暗主題切換
-- [x] Toast 通知與全域錯誤處理
+- [x] Toast 通知與頁面層級錯誤處理
+
+目前尚未註冊全域 HTTP error interceptor；401、403、429 與各頁資料錯誤仍由 auth service、interceptor 或頁面個別處理。
 
 ## 專案維護重點
 
-這次整理修正了幾個過時點：
+目前文件與路由狀態：
 
 - 移除未使用的靜態原型 HTML
 - 刪除過時的註冊型別與錯誤路由假設
-- 修正首頁與導覽中不存在的 `/articles` 連結
-- README 現在與實際架構一致
+- `/articles` 與 `/articles/:slug` 已是實際存在的公開路由
+- `/admin/articles` 與新增／編輯文章路由已納入管理區
+- production API 使用 HTTPS；development 使用本機 `http://localhost:8787/api`
 

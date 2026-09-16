@@ -8,13 +8,7 @@ export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // 1. 初步檢查：如果本地連 Token 都沒有，直接省下 API 請求，踢回登入頁
-  if (!authService.getToken()) {
-    router.navigate(['/']);
-    return false;
-  }
-
-  // 2. 🌟 實作你的最高安全標準：每次切換路由，都即時打 API 驗證最新權限！
+  // The auth cookie is HttpOnly, so /me is the authentication check.
   return authService.verifyPermissions().pipe(
     map(res => {
       if (res.success) {

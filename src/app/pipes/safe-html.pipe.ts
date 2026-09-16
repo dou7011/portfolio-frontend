@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 
@@ -17,6 +17,6 @@ export class SafeHtmlPipe implements PipeTransform {
       ? value
       : marked.parse(value.replace(/\\n/g, '\n'), { async: false, breaks: true });
 
-    return this.sanitizer.bypassSecurityTrustHtml(content);
+    return this.sanitizer.sanitize(SecurityContext.HTML, content) ?? '';
   }
 }
