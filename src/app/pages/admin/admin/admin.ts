@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class AdminComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
   public isLogoutModalOpen = false;
   public readonly isDarkMode = signal(false);
   public readonly expandedMenus = new Set<string>(['identity']);
@@ -69,6 +71,11 @@ export class AdminComponent {
   confirmLogout() {
     this.isLogoutModalOpen = false;
 
-    this.authService.logout();
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => {
+        this.isLogoutModalOpen = false;
+      },
+    });
   }
 }

@@ -18,7 +18,7 @@ export const authGuard: CanActivateFn = () => {
       }
     }),
     catchError(() => {
-      authService.logout(); // 驗證失敗，直接登出並踢回首頁
+      router.navigate(['/login']);
       return of(false);
     })
   );
