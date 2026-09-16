@@ -9,7 +9,7 @@
 - TypeScript
 - RxJS
 - Angular Router + HttpClient
-- JWT auth flow through backend API
+- HttpOnly cookie JWT auth flow through backend API
 
 ## 專案結構
 
@@ -23,7 +23,7 @@ portfolio-frontend/
 │   │   ├── guards/                          # 路由守衛
 │   │   │   └── auth.guard.ts                # 檢查是否已登入並保護 admin 路由
 │   │   ├── interceptors/                    # HTTP 攔截器
-│   │   │   └── auth.interceptor.ts          # 自動附加 Authorization header
+│   │   │   └── auth.interceptor.ts          # 帶 credentials 並附加 CSRF header
 │   │   ├── models/                          # API / 資料結構型別
 │   │   │   ├── api.interface.ts             # API 回應通用型別
 │   │   │   ├── article.interface.ts         # 文章資料介面
@@ -56,7 +56,7 @@ portfolio-frontend/
 │   │   │       └── resume-formal/           # 正式履歷版型
 │   │   ├── services/                        # API 服務層
 │   │   │   ├── articles.service.ts          # 文章資料 API
-│   │   │   ├── auth.service.ts              # 登入 / logout / JWT 驗證
+│   │   │   ├── auth.service.ts              # 登入 / logout / HttpOnly cookie 驗證
 │   │   │   ├── permission.service.ts        # 權限資料 API
 │   │   │   ├── resume.service.ts            # 履歷 API
 │   │   │   ├── role.service.ts              # 角色 API
@@ -141,8 +141,8 @@ npm test
 
 - [x] 首頁展示與精選作品區塊
 - [x] 互動式與正式履歷頁
-- [x] 管理者登入與 JWT 保存
-- [x] `AuthInterceptor` 自動附加 Bearer Token
+- [x] 管理者登入與 HttpOnly cookie 認證
+- [x] `AuthInterceptor` 自動帶 credentials 與 CSRF header
 - [x] `authGuard` 保護管理路由
 - [x] 公開文章列表、詳細頁與管理文章頁
 - [x] 使用者 / 角色 / 權限 CRUD 管理
@@ -150,7 +150,7 @@ npm test
 - [x] 亮暗主題切換
 - [x] Toast 通知與頁面層級錯誤處理
 
-目前尚未註冊全域 HTTP error interceptor；401、403、429 與各頁資料錯誤仍由 auth service、interceptor 或頁面個別處理。
+目前尚未註冊全域 HTTP error interceptor；401、403、429 與各頁資料錯誤仍由 auth service、interceptor 或頁面個別處理。JWT 不會保存於 `localStorage`；登入 cookie 由後端設定為 HttpOnly，前端只能讀取非敏感的 CSRF cookie。
 
 ## 專案維護重點
 
