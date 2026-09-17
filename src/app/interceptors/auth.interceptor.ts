@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const csrfToken = readCookie('portfolio_csrf');
+  const csrfToken = sessionStorage.getItem('portfolio_csrf') ?? readCookie('portfolio_csrf');
   return next(req.clone({
     withCredentials: true,
     ...(csrfToken ? { setHeaders: { 'X-CSRF-Token': csrfToken } } : {}),
