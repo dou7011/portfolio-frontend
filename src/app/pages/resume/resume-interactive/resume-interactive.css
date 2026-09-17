@@ -509,12 +509,21 @@
 }
 
 .edu-timeline .job-date {
-  box-sizing: content-box;
-  justify-content: center;
-  width: 17ch;
   color: #3b82f6;
   background: rgba(59, 130, 246, 0.1);
   border-color: rgba(59, 130, 246, 0.2);
+}
+
+.edu-date-range {
+  display: inline-grid;
+  grid-template-columns: 7ch auto 7ch;
+  column-gap: 0.55ch;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.edu-date-end {
+  text-align: right;
 }
 
 .job-title {
