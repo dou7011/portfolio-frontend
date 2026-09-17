@@ -637,3 +637,163 @@ tbody tr:hover {
     flex: 0 1 auto;
   }
 }
+
+.page-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.page-header {
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.title-block {
+  display: grid;
+  gap: 3px;
+}
+
+.page-kicker {
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.page-header h2 {
+  color: var(--admin-heading);
+  font-size: 1.22rem;
+}
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 8px 13px;
+}
+
+.table-card {
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.table-head {
+  background: linear-gradient(180deg, var(--surface), var(--admin-control-muted));
+}
+
+.table-head > div {
+  display: grid;
+  gap: 2px;
+}
+
+.table-head span {
+  color: var(--admin-heading);
+}
+
+th {
+  text-align: left;
+  background: var(--admin-control-muted);
+  letter-spacing: 0;
+}
+
+td {
+  vertical-align: middle;
+}
+
+tbody tr {
+  transition: background-color 0.18s ease;
+}
+
+.primary-cell {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.muted-cell {
+  color: var(--text-sub);
+}
+
+.count-chip,
+.permission-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  padding: 4px 8px;
+  border: 1px solid var(--admin-control-border);
+  border-radius: 8px;
+  background: var(--admin-control-muted);
+  color: var(--text-sub);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.table-btn,
+.modal-panel,
+.permission-group,
+.permission-name,
+.field-group input {
+  border-radius: 8px;
+}
+
+.permission-group-head {
+  background: var(--admin-control-muted);
+}
+
+.permission-option:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--admin-control-hover);
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    gap: 14px;
+  }
+
+  .table-card {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .table-head {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  tbody tr {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+  }
+
+  td::before {
+    flex: 0 0 72px;
+    content: attr(data-label);
+  }
+
+  td.actions {
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .permission-copy {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .permission-option {
+    padding: 12px 14px;
+  }
+}

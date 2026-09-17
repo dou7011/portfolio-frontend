@@ -16,6 +16,9 @@
   --accent: var(--color-accent);
   --accent-soft: var(--color-accent-soft);
   --accent-hover: var(--color-accent-hover);
+  --control-bg: var(--admin-control-bg);
+  --control-border: var(--admin-control-border);
+  --placeholder: var(--color-control-placeholder);
   --shadow: var(--shadow-soft);
   font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   line-height: 1.6;
@@ -92,19 +95,20 @@
 .form-group input {
   width: 100%;
   padding: 11px 14px;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--control-border);
   border-radius: 10px;
   font-size: 0.95rem;
   font-family: inherit;
   color: var(--text-main);
-  background: var(--bg-soft);
+  background: var(--control-bg);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
 
 .form-group input::placeholder {
-  color: var(--accent-soft);
+  color: var(--placeholder);
   font-size: 0.88rem;
+  opacity: 0.72;
 }
 
 .form-group input:focus {

@@ -1,6 +1,7 @@
 <div class="page-shell">
   <div class="page-header">
-    <div>
+    <div class="title-block">
+      <span class="page-kicker">Access</span>
       <h2>權限管理</h2>
       <p>檢視系統可用權限與對應功能範圍</p>
     </div>
@@ -19,7 +20,10 @@
 
   <div class="permission-card">
     <div class="table-head">
-      <span>權限列表</span>
+      <div>
+        <span>權限列表</span>
+        <small>Action 與功能說明</small>
+      </div>
       <small>{{ permissions.length }} 個權限</small>
     </div>
 
@@ -27,20 +31,31 @@
       <table>
         <thead>
           <tr>
+            <th>分類</th>
             <th>Action</th>
             <th>說明</th>
           </tr>
         </thead>
         <tbody>
-          @for (permission of permissions; track permission.id) {
-            <tr>
-              <td>{{ permission.action }}</td>
-              <td>{{ permission.description || '—' }}</td>
-            </tr>
+          @for (group of getPermissionGroups(); track group.scope) {
+            @for (permission of group.permissions; track permission.id; let isFirst = $first) {
+              <tr>
+                @if (isFirst) {
+                  <td class="scope-cell" data-label="分類" [attr.rowspan]="group.permissions.length">
+                    <span class="scope-badge">{{ group.scope }}</span>
+                  </td>
+                }
+                <td data-label="Action">
+                  <span class="mobile-scope">{{ group.scope }}</span>
+                  <span class="action-cell">{{ getPermissionActionName(permission.action) }}</span>
+                </td>
+                <td data-label="說明" class="muted-cell">{{ permission.description || '—' }}</td>
+              </tr>
+            }
           }
           @if (permissions.length === 0 && !isLoading) {
             <tr>
-              <td colspan="2" class="empty-row">目前沒有權限資料</td>
+              <td colspan="3" class="empty-row">目前沒有權限資料</td>
             </tr>
           }
         </tbody>

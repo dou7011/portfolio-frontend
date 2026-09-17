@@ -250,4 +250,5 @@ export class RolesComponent implements OnInit {
   countPermissions(role: Role): number {
     return role.permissions?.length ?? 0;
   }
+
 }

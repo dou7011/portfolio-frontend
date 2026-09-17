@@ -1,11 +1,15 @@
 <div class="page-shell">
   <div class="page-header">
-    <div>
+    <div class="title-block">
+      <span class="page-kicker">Access</span>
       <h2>使用者管理</h2>
       <p>管理後台帳號、啟用狀態與角色綁定</p>
     </div>
     <div class="header-actions">
-      <button type="button" class="primary-btn" (click)="openCreateForm()">＋ 新增使用者</button>
+      <button type="button" class="primary-btn" (click)="openCreateForm()">
+        <span aria-hidden="true">＋</span>
+        新增使用者
+      </button>
     </div>
   </div>
 
@@ -22,7 +26,10 @@
 
   <div class="table-card">
     <div class="table-head">
-      <span>帳號列表</span>
+      <div>
+        <span>帳號列表</span>
+        <small>後台登入與授權對象</small>
+      </div>
       <small>{{ users.length }} 位使用者</small>
     </div>
 
@@ -40,15 +47,19 @@
         <tbody>
           @for (user of users; track user.id) {
             <tr>
-              <td>{{ user.email }}</td>
-              <td>
+              <td data-label="Email">
+                <span class="primary-cell">{{ user.email }}</span>
+              </td>
+              <td data-label="狀態">
                 <span class="status-badge" [class.inactive]="user.is_active !== 1">
                   {{ getStatusText(user.is_active) }}
                 </span>
               </td>
-              <td>{{ getRoleNames(user) }}</td>
-              <td>{{ user.created_at }}</td>
-              <td class="actions">
+              <td data-label="角色">
+                <span class="role-chip">{{ getRoleNames(user) }}</span>
+              </td>
+              <td data-label="建立時間" class="muted-cell">{{ user.created_at }}</td>
+              <td data-label="操作" class="actions">
                 <button type="button" class="table-btn edit" (click)="openEditForm(user)">編輯</button>
                 <button type="button" class="table-btn danger" (click)="deleteUser(user)">刪除</button>
               </td>
