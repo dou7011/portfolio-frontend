@@ -415,6 +415,9 @@
 }
 
 .mini-date {
+  display: inline-flex;
+  justify-content: center;
+  width: 17ch;
   flex-shrink: 0;
   font-size: 0.76rem;
   color: var(--text-sub);
