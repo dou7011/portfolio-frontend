@@ -416,8 +416,8 @@
 
 .mini-date {
   display: inline-grid;
-  grid-template-columns: 7ch auto 7ch;
-  column-gap: 0.55ch;
+  grid-template-columns: 8ch 1.4ch 8ch;
+  column-gap: 0.6ch;
   align-items: center;
   white-space: nowrap;
   flex-shrink: 0;
@@ -425,8 +425,23 @@
   color: var(--text-sub);
 }
 
+.edu-date-start,
+.edu-date-separator,
 .edu-date-end {
+  display: block;
+  min-width: 0;
+}
+
+.edu-date-start {
+  text-align: left;
+}
+
+.edu-date-separator {
   text-align: center;
+}
+
+.edu-date-end {
+  text-align: right;
 }
 
 .cert-desc {
