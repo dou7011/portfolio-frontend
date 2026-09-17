@@ -62,6 +62,11 @@ export class ResumeFormalComponent implements OnInit {
     this.fetchResumeData(nextLang);
   }
 
+  public formatEducationDate(startDate: string, endDate: string): string {
+    const displayEndDate = endDate?.trim() || (this.currentLang() === 'en' ? 'Present' : '至今');
+    return `${startDate} - ${displayEndDate}`;
+  }
+
   private fetchResumeData(lang: 'zh' | 'en'): void {
     const requestVersion = ++this.requestVersion;
     this.isLoading.set(true);

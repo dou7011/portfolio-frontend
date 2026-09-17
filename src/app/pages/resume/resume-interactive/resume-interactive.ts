@@ -64,6 +64,11 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
     this.fetchResumeData(nextLang);
   }
 
+  formatEducationDate(startDate: string, endDate: string): string {
+    const displayEndDate = endDate?.trim() || (this.currentLang() === 'en' ? 'Present' : '至今');
+    return `${startDate} - ${displayEndDate}`;
+  }
+
   private observeRevealElements(): void {
     const observer = new IntersectionObserver(
       (entries, obs) => {

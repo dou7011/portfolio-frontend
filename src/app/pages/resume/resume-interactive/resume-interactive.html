@@ -114,7 +114,7 @@
                 (mouseleave)="onCardMouseLeave(eduCard)"
               >
                 <div class="job-meta">
-                  <span class="job-date">{{ edu.startDate }} - {{ edu.endDate }}</span>
+                  <span class="job-date">{{ formatEducationDate(edu.startDate, edu.endDate) }}</span>
                 </div>
                 <h3 class="job-title">{{ edu.degree }}</h3>
                 <div class="job-company job-company--compact">{{ edu.school }}</div>
