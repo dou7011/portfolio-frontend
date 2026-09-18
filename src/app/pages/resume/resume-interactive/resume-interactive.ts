@@ -7,11 +7,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
 import { ResumeData } from '../../../models/resume.interface';
 import { ResumeService } from '../../../services/resume.service';
+import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 
 @Component({
   selector: 'app-resume-interactive',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe],
   templateUrl: './resume-interactive.html',
   styleUrl: './resume-interactive.css',
 })

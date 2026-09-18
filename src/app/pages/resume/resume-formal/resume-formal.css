@@ -454,12 +454,53 @@
 }
 
 .entry-item .tags {
-  margin-top: 6px;
+  margin-top: 15px;
 }
 
 .project-tags {
   gap: 5px;
 }
+
+.project-description {
+  margin-top: 5px;
+  color: var(--text-sub);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+
+::ng-deep .project-description .ql-editor {
+  min-height: 0;
+  padding: 0;
+  font: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+
+::ng-deep .project-description .ql-editor > *:first-child { margin-top: 0; }
+::ng-deep .project-description .ql-editor > *:last-child { margin-bottom: 0; }
+::ng-deep .project-description .ql-editor p { margin: 0 0 0.8em; }
+::ng-deep .project-description .ql-editor h1,
+::ng-deep .project-description .ql-editor h2,
+::ng-deep .project-description .ql-editor h3,
+::ng-deep .project-description .ql-editor h4,
+::ng-deep .project-description .ql-editor h5,
+::ng-deep .project-description .ql-editor h6 {
+  color: var(--text-main);
+  line-height: 1.35;
+}
+::ng-deep .project-description .ql-editor ul,
+::ng-deep .project-description .ql-editor ol { margin: 0 0 0.8em; }
+::ng-deep .project-description .ql-editor li { padding-left: 0.25em; }
+::ng-deep .project-description .ql-editor li.ql-list-ordered {
+  display: list-item;
+  list-style-type: decimal;
+}
+::ng-deep .project-description .ql-editor li.ql-list-bullet {
+  display: list-item;
+  list-style-type: disc;
+}
+::ng-deep .project-description .ql-editor .ql-ui { display: none; }
+::ng-deep .project-description .ql-editor a { color: var(--accent); }
 
 .project-tag {
   padding: 1px 8px;

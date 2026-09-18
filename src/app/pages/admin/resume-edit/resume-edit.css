@@ -278,6 +278,30 @@ form.loading {
   color: var(--color-control-placeholder);
 }
 
+::ng-deep .project-editor .ql-toolbar.ql-snow,
+::ng-deep .project-editor .ql-container.ql-snow {
+  border-color: var(--line);
+}
+
+::ng-deep .project-editor .ql-toolbar.ql-snow {
+  border-radius: 9px 9px 0 0;
+  background: var(--surface);
+}
+
+::ng-deep .project-editor .ql-container.ql-snow {
+  min-height: 180px;
+  border-radius: 0 0 9px 9px;
+  background: var(--surface);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.88rem;
+}
+
+::ng-deep .project-editor .ql-editor.ql-blank::before {
+  color: var(--color-control-placeholder);
+  font-style: normal;
+}
+
 .field-row {
   display: flex;
   gap: 16px;

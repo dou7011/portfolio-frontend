@@ -247,7 +247,12 @@
           </div>
           <div class="field-group">
             <label>專案描述</label>
-            <textarea rows="3" formControlName="description" placeholder="描述此專案的功能與亮點..."></textarea>
+            <quill-editor
+              formControlName="description"
+              [modules]="projectEditorModules"
+              theme="snow"
+              class="project-editor"
+            ></quill-editor>
           </div>
           <div class="field-row">
             <div class="field-group">

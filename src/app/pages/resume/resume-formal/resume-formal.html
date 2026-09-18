@@ -108,7 +108,9 @@
                     }
                   </div>
                 </div>
-                <p class="cert-desc">{{ project.description }}</p>
+                <div class="project-description ql-snow">
+                  <div class="ql-editor" [innerHTML]="project.description | safeHtml"></div>
+                </div>
                 @if (project.techStack.length) {
                   <div class="tags project-tags">
                     @for (tech of project.techStack; track tech) {

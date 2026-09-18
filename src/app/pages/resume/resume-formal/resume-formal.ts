@@ -4,13 +4,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { ResumeService } from '../../../services/resume.service';
 import { ResumeData } from '../../../models/resume.interface';
+import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { retry, timeout } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
 
 @Component({
   selector: 'app-resume-formal',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe],
   templateUrl: './resume-formal.html',
   styleUrl: './resume-formal.css',
 })

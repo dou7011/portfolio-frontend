@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 import { ResumeService } from '../../../services/resume.service';
 import { ToastService } from '../../../services/toast.service';
 import { ApiError } from '../../../models/api.interface';
@@ -9,7 +10,7 @@ import { ApiError } from '../../../models/api.interface';
 @Component({
   selector: 'app-resume-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, QuillModule],
   templateUrl: './resume-edit.html',
   styleUrl: './resume-edit.css'
 })
@@ -22,6 +23,24 @@ export class ResumeEditComponent implements OnInit {
   public isLoading = false;
   public isSaving = false;
   public saveError = '';
+  public readonly projectEditorModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ header: 1 }, { header: 2 }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ direction: 'rtl' }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ color: [] }, { background: [] }],
+      [{ font: [] }],
+      [{ align: [] }],
+      ['link'],
+      ['clean'],
+    ],
+  };
 
   public resumeForm: FormGroup = this.fb.group({
     title: ['', Validators.required],

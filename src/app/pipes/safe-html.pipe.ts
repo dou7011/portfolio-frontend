@@ -14,9 +14,17 @@ export class SafeHtmlPipe implements PipeTransform {
 
     const isHtml = /<\/?[a-z][\s\S]*>/i.test(value);
     const content = isHtml
-      ? value
+      ? this.preserveQuillListType(value)
       : marked.parse(value.replace(/\\n/g, '\n'), { async: false, breaks: true });
 
     return this.sanitizer.sanitize(SecurityContext.HTML, content) ?? '';
+  }
+
+  private preserveQuillListType(content: string): string {
+    return content.replace(
+      /<li\b([^>]*?)\sdata-list=(["'])(ordered|bullet)\2([^>]*)>/gi,
+      (_match, before: string, _quote: string, listType: string, after: string) =>
+        `<li${before}${after} class="ql-list-${listType}">`,
+    );
   }
 }

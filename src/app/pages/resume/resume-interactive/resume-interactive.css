@@ -564,6 +564,8 @@
   line-height: 1.8;
   font-size: 0.95rem;
   text-align: justify;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .job-desc--compact {
@@ -761,6 +763,40 @@
 .project-tech {
   margin-top: 18px;
 }
+
+::ng-deep .project-description .ql-editor {
+  min-height: 0;
+  padding: 0;
+  font: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+
+::ng-deep .project-description .ql-editor > *:first-child { margin-top: 0; }
+::ng-deep .project-description .ql-editor > *:last-child { margin-bottom: 0; }
+::ng-deep .project-description .ql-editor p { margin: 0 0 0.9em; }
+::ng-deep .project-description .ql-editor h1,
+::ng-deep .project-description .ql-editor h2,
+::ng-deep .project-description .ql-editor h3,
+::ng-deep .project-description .ql-editor h4,
+::ng-deep .project-description .ql-editor h5,
+::ng-deep .project-description .ql-editor h6 {
+  color: var(--resume-text-primary);
+  line-height: 1.35;
+}
+::ng-deep .project-description .ql-editor ul,
+::ng-deep .project-description .ql-editor ol { margin: 0 0 0.9em; }
+::ng-deep .project-description .ql-editor li { padding-left: 0.25em; }
+::ng-deep .project-description .ql-editor li.ql-list-ordered {
+  display: list-item;
+  list-style-type: decimal;
+}
+::ng-deep .project-description .ql-editor li.ql-list-bullet {
+  display: list-item;
+  list-style-type: disc;
+}
+::ng-deep .project-description .ql-editor .ql-ui { display: none; }
+::ng-deep .project-description .ql-editor a { color: var(--resume-accent-orange); }
 
 .project-tag {
   padding: 3px 10px;
