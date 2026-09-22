@@ -408,7 +408,7 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 16px;
+  top: calc(10px + 0.65em);
   width: 5px;
   height: 5px;
   border-radius: 50%;
@@ -492,13 +492,17 @@
   min-height: 0;
   padding: 0;
   font: inherit;
-  line-height: inherit;
+  line-height: 1.7;
   overflow: visible;
 }
 
 ::ng-deep .project-description .ql-editor > *:first-child { margin-top: 0; }
 ::ng-deep .project-description .ql-editor > *:last-child { margin-bottom: 0; }
-::ng-deep .project-description .ql-editor p { margin: 0 0 0.8em; }
+::ng-deep .project-description .ql-editor p { margin: 0 0 0.7em; }
+::ng-deep .project-description .ql-editor p.ql-blank {
+  min-height: 0.4em;
+  margin-bottom: 0.25em;
+}
 ::ng-deep .project-description .ql-editor h1,
 ::ng-deep .project-description .ql-editor h2,
 ::ng-deep .project-description .ql-editor h3,
@@ -508,19 +512,47 @@
   color: var(--text-main);
   line-height: 1.35;
 }
+::ng-deep .project-description .ql-editor h1,
+::ng-deep .project-description .ql-editor h2 { margin: 1.2em 0 0.5em; }
+::ng-deep .project-description .ql-editor h3,
+::ng-deep .project-description .ql-editor h4 { margin: 0.9em 0 0.35em; }
+::ng-deep .project-description .ql-editor h1 { font-size: 1.22rem; }
+::ng-deep .project-description .ql-editor h2 { font-size: 1.08rem; }
+::ng-deep .project-description .ql-editor h3 { font-size: 1rem; }
 ::ng-deep .project-description .ql-editor ul,
-::ng-deep .project-description .ql-editor ol { margin: 0 0 0.8em; }
-::ng-deep .project-description .ql-editor li { padding-left: 0.25em; }
-::ng-deep .project-description .ql-editor li.ql-list-ordered {
-  display: list-item;
-  list-style-type: decimal;
+::ng-deep .project-description .ql-editor ol {
+  margin: 0 0 0.7em;
+  padding-left: 1.4em;
 }
-::ng-deep .project-description .ql-editor li.ql-list-bullet {
+::ng-deep .project-description .ql-editor ul > li { list-style-type: disc; }
+::ng-deep .project-description .ql-editor ol > li { list-style-type: decimal; }
+::ng-deep .project-description .ql-editor li {
   display: list-item;
-  list-style-type: disc;
+  padding-left: 0.2em;
+  margin-bottom: 0.18em;
+}
+::ng-deep .project-description .ql-editor li::before { content: none !important; }
+::ng-deep .project-description .ql-editor li::marker {
+  color: var(--accent);
+  font-weight: 700;
 }
 ::ng-deep .project-description .ql-editor .ql-ui { display: none; }
 ::ng-deep .project-description .ql-editor a { color: var(--accent); }
+::ng-deep .project-description .ql-editor img,
+::ng-deep .project-description .ql-editor iframe.ql-video,
+::ng-deep .project-description .ql-editor video.ql-video-file {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em 0;
+  border-radius: 4px;
+}
+::ng-deep .project-description .ql-editor iframe.ql-video,
+::ng-deep .project-description .ql-editor video.ql-video-file {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
 
 .project-tag {
   padding: 1px 8px;

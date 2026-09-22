@@ -837,7 +837,7 @@
   transform: translateX(4px);
 }
 
-.project-copy h3 {
+.project-copy h4 {
   margin: 0;
   font-size: clamp(1.7rem, 2vw, 2.3rem);
   line-height: 1.25;

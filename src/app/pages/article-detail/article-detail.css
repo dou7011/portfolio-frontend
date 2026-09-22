@@ -79,7 +79,11 @@
 	border-bottom: 1px solid var(--detail-line);
 }
 
-.article-meta-item { display: grid; gap: 7px; }
+.article-meta-item {
+	display: grid;
+	min-width: 0;
+	gap: 7px;
+}
 
 .article-meta-item dt,
 .meta-label {
@@ -130,11 +134,18 @@
 
 .article-tags-block { padding-top: 24px; }
 
-.tag-list { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 12px; }
+.tag-list {
+	display: flex;
+	min-width: 0;
+	flex-wrap: wrap;
+	gap: 7px 12px;
+	margin-top: 12px;
+}
 
 .tag {
 	display: inline-flex;
 	align-items: center;
+	max-width: 100%;
 	padding: 0;
 	color: var(--color-tag-text);
 	background: transparent;
@@ -143,6 +154,7 @@
 	font-size: 11px;
 	font-weight: 600;
 	letter-spacing: 0.04em;
+	overflow-wrap: anywhere;
 }
 
 .tag::before {
@@ -150,6 +162,213 @@
 	margin-right: 2px;
 	color: var(--color-accent-soft);
 	font-weight: 700;
+}
+
+@keyframes toc-fade-in {
+	from { opacity: 0; transform: translateY(6px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.toc-dock {
+	position: fixed;
+	top: 50%;
+	right: clamp(28px, 3.6vw, 64px);
+	z-index: 30;
+	display: none;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 12px;
+	transform: translateY(-50%);
+	animation: toc-fade-in 0.5s ease both;
+}
+
+.toc-rail {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 12px;
+	width: max-content;
+	max-width: 220px;
+	height: min(42vh, 340px);
+	max-height: calc(100vh - 260px);
+}
+
+.toc-top-row {
+	padding-top: 10px;
+	border-top: 1px solid var(--detail-line);
+	opacity: 0.65;
+	transition: opacity 0.25s ease;
+}
+
+.toc-top-row .toc-rail-label {
+	opacity: 1;
+}
+
+.toc-top-row:hover {
+	opacity: 1;
+}
+
+.toc-top-row:hover .toc-rail-label {
+	color: var(--color-accent-hover);
+}
+
+.toc-rail-arrow {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	color: var(--detail-text-muted);
+	transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.toc-rail-arrow svg {
+	width: 14px;
+	height: 14px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.toc-top-row:hover .toc-rail-arrow {
+	color: var(--color-accent-hover);
+	transform: translateY(-3px);
+}
+
+.toc-rail-segment {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-shrink: 0;
+	min-height: 10px;
+	width: 100%;
+	padding: 0;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	appearance: none;
+}
+
+.toc-rail-label {
+	overflow: hidden;
+	max-width: 168px;
+	margin-right: 12px;
+	color: var(--detail-text-muted);
+	font-size: 11.5px;
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: 0.01em;
+	text-align: right;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	opacity: 0.4;
+	transition: opacity 0.3s ease, color 0.3s ease, font-size 0.3s ease, font-weight 0.3s ease, transform 0.3s ease;
+}
+
+.toc-rail-segment.read .toc-rail-label {
+	color: var(--color-text-sub);
+	opacity: 0.75;
+}
+
+.toc-rail-segment:hover .toc-rail-label {
+	opacity: 0.85;
+	color: var(--color-text-main);
+}
+
+.toc-rail-segment.active .toc-rail-label {
+	color: var(--color-accent-hover);
+	font-size: 13.5px;
+	font-weight: 700;
+	opacity: 1;
+	transform: scale(1.02);
+}
+
+.toc-rail-track {
+	position: relative;
+	display: block;
+	flex-shrink: 0;
+	width: 3px;
+	height: 100%;
+	border-radius: 3px;
+	background: var(--detail-line);
+	overflow: hidden;
+	transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.toc-rail-fill {
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: var(--toc-fill, 0%);
+	border-radius: 3px;
+	background: var(--color-accent);
+	transition: height 0.2s linear;
+}
+
+.toc-rail-segment:hover .toc-rail-track,
+.toc-rail-segment.active .toc-rail-track {
+	width: 5px;
+	background: color-mix(in srgb, var(--color-accent) 22%, var(--detail-line));
+}
+
+.toc-rail-segment.active .toc-rail-fill {
+	box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 65%, transparent);
+}
+
+.toc-rail-segment:focus-visible .toc-rail-track {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+}
+
+@media (min-width: 1361px) {
+	.toc-dock { display: flex; }
+}
+
+/* 中等寬度（雙欄版面 1121-1360、單欄版面 841-992）：改為無文字的迷你進度軌，避免蓋住內文；
+   993-1120 與 <=840 這兩段可用寬度不足以放下，故維持隱藏 */
+@media (min-width: 1121px) and (max-width: 1360px),
+	(min-width: 841px) and (max-width: 992px) {
+	.toc-dock {
+		display: flex;
+		right: clamp(14px, 1.8vw, 28px);
+		gap: 8px;
+	}
+
+	.toc-rail {
+		gap: 10px;
+		width: 14px;
+		max-width: 14px;
+	}
+
+	.toc-rail-label {
+		display: none;
+	}
+
+	.toc-rail-segment {
+		justify-content: center;
+		min-height: 14px;
+		padding: 4px 0;
+	}
+
+	.toc-rail-track {
+		width: 4px;
+	}
+
+	.toc-rail-segment:hover .toc-rail-track,
+	.toc-rail-segment.active .toc-rail-track {
+		width: 6px;
+	}
+
+	.toc-top-row {
+		justify-content: center;
+		padding-top: 8px;
+	}
+
+	.toc-rail-arrow {
+		width: 14px;
+	}
 }
 
 .article-hero {
@@ -169,11 +388,11 @@
 	font-weight: 800;
 	letter-spacing: 0;
 	line-height: 1.08;
+	overflow-wrap: anywhere;
 	text-wrap: balance;
 }
 
 .hero-content p {
-	max-width: 600px;
 	margin: 0;
 	color: var(--color-text-sub);
 	font-size: 1.12rem;
@@ -217,74 +436,173 @@
 	border-left: 1px solid color-mix(in srgb, var(--color-accent) 50%, var(--detail-line));
 	color: var(--color-text-sub);
 	font-size: 1.02rem;
-	line-height: 2;
+	line-height: 1.78;
 }
 
 .article-content .ql-editor {
 	min-height: 0;
+	min-width: 0;
 	padding: 0;
 	font: inherit;
 	line-height: inherit;
+	overflow-wrap: anywhere;
 	overflow: visible;
 }
 
-.article-content .ql-editor > *:first-child { margin-top: 0; }
-.article-content .ql-editor > *:last-child { margin-bottom: 0; }
+/* 內文是透過 [innerHTML] 動態插入，不受 Angular 樣式封裝管轄，
+   以下規則一律加上 ::ng-deep 才能真正套用到文章內容的元素上 */
+.article-content ::ng-deep .ql-editor > *:first-child { margin-top: 0; }
+.article-content ::ng-deep .ql-editor > *:last-child { margin-bottom: 0; }
 
-.article-content .ql-editor p {
-	margin: 0 0 1.8em;
+.article-content ::ng-deep .ql-editor p {
+	margin: 0 0 1.15em;
 	white-space: pre-line;
 }
 
-.article-content .ql-editor h1,
-.article-content .ql-editor h2,
-.article-content .ql-editor h3,
-.article-content .ql-editor h4 {
+.article-content ::ng-deep .ql-editor p.ql-blank {
+	min-height: 0.5em;
+	margin-bottom: 0.35em;
+}
+
+.article-content ::ng-deep .ql-editor h1,
+.article-content ::ng-deep .ql-editor h2,
+.article-content ::ng-deep .ql-editor h3,
+.article-content ::ng-deep .ql-editor h4 {
 	margin: 2.4em 0 0.72em;
 	color: var(--color-text-main);
 	font-weight: 700;
 	line-height: 1.35;
 }
 
-.article-content .ql-editor h1 { font-size: 2rem; }
-.article-content .ql-editor h2 {
+.article-content ::ng-deep .ql-editor h1 {
+	position: relative;
+	display: table;
+	max-width: 100%;
+	margin: 3rem 0 1.35em;
+	padding-bottom: 0.36em;
+	font-size: 1.9rem;
+	letter-spacing: -0.01em;
+}
+
+.article-content ::ng-deep .ql-editor h1::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: calc(100% + clamp(12px, 2vw, 24px));
+	height: 4px;
+	border-radius: 4px;
+	background: linear-gradient(
+		90deg,
+		var(--color-accent) 0%,
+		var(--color-accent) 54%,
+		color-mix(in srgb, var(--color-accent) 42%, transparent) 78%,
+		transparent 100%
+	);
+}
+
+.article-content ::ng-deep .ql-editor h1:first-child { margin-top: 0; }
+
+.article-content ::ng-deep .ql-editor h2 {
 	padding-bottom: 0.55em;
 	border-bottom: 1px solid var(--detail-line);
 	font-size: 1.5rem;
 }
-.article-content .ql-editor h3 { font-size: 1.2rem; }
-.article-content .ql-editor h4 { font-size: 1.05rem; }
+.article-content ::ng-deep .ql-editor h3 { font-size: 1.2rem; }
+.article-content ::ng-deep .ql-editor h4 { font-size: 1.05rem; }
 
-.article-content .ql-editor ul,
-.article-content .ql-editor ol {
-	margin: 0 0 1.8em;
+.article-content ::ng-deep .ql-editor ul,
+.article-content ::ng-deep .ql-editor ol {
+	margin: 0 0 1.25em;
 	padding-left: 1.6em;
 }
 
-.article-content .ql-editor li {
+.article-content ::ng-deep .ql-editor ul > li { list-style-type: disc; }
+.article-content ::ng-deep .ql-editor ol > li { list-style-type: decimal; }
+
+.article-content ::ng-deep .ql-editor li {
 	padding-left: 0.45em;
-	margin-bottom: 0.45em;
+	margin-bottom: 0.28em;
 }
 
-.article-content .ql-editor li::before { color: var(--color-accent); }
+.article-content ::ng-deep .ql-editor li::before { content: none !important; }
 
-.article-content .ql-editor blockquote {
+.article-content ::ng-deep .ql-editor li::marker {
+	color: var(--color-accent);
+	font-weight: 700;
+}
+
+.article-content ::ng-deep .ql-editor blockquote {
 	margin: 2em 0;
-	padding: 0.35em 0 0.35em 1.2em;
+	padding: 0.7em 1.3em;
 	border-left: 3px solid var(--color-accent);
+	border-radius: 0 8px 8px 0;
+	background: color-mix(in srgb, var(--color-accent) 6%, transparent);
 	color: var(--color-text-main);
 	font-size: 1.08em;
 	font-style: italic;
 }
 
-.article-content .ql-editor a {
+.article-content ::ng-deep .ql-editor strong { color: var(--color-text-main); font-weight: 700; }
+
+.article-content ::ng-deep .ql-editor a {
 	color: var(--color-accent-hover);
 	font-weight: 600;
 	text-decoration-color: var(--color-accent-soft);
 	text-underline-offset: 0.2em;
 }
 
-.article-content .ql-editor img {
+.article-content ::ng-deep .ql-editor code {
+	padding: 0.15em 0.45em;
+	border: 1px solid var(--detail-line);
+	border-radius: 5px;
+	background: var(--color-bg-soft);
+	color: var(--color-accent-hover);
+	font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+	font-size: 0.88em;
+}
+
+.article-content ::ng-deep .ql-editor pre code {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+}
+
+.article-content ::ng-deep .ql-editor hr {
+	margin: 2.6em 0;
+	border: none;
+	border-top: 1px solid var(--detail-line);
+}
+
+.article-content ::ng-deep .ql-editor table {
+	width: 100%;
+	margin: 2em 0;
+	border-collapse: collapse;
+	font-size: 0.94em;
+}
+
+.article-content ::ng-deep .ql-editor table {
+	display: block;
+	max-width: 100%;
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+.article-content ::ng-deep .ql-editor th,
+.article-content ::ng-deep .ql-editor td {
+	padding: 0.65em 0.9em;
+	border: 1px solid var(--detail-line);
+	text-align: left;
+}
+
+.article-content ::ng-deep .ql-editor th {
+	color: var(--color-text-main);
+	background: var(--color-bg-soft);
+	font-weight: 700;
+}
+
+.article-content ::ng-deep .ql-editor img {
 	display: block;
 	max-width: 100%;
 	height: auto;
@@ -293,8 +611,36 @@
 	border-radius: 6px;
 }
 
-.article-content .ql-editor pre,
-.article-content .ql-editor .ql-syntax {
+.article-content ::ng-deep .ql-editor iframe.ql-video,
+.article-content ::ng-deep .ql-editor video.ql-video-file {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	height: auto;
+	margin: 2em auto;
+	border: 1px solid var(--detail-line);
+	border-radius: 8px;
+	background: #000;
+}
+
+.article-content ::ng-deep .ql-editor video.ql-video-file {
+	object-fit: contain;
+}
+
+.article-content ::ng-deep .ql-editor .ql-video-fallback-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0.4em 0;
+	color: var(--color-accent-hover);
+	font-weight: 600;
+	text-decoration-color: var(--color-accent-soft);
+	text-underline-offset: 0.2em;
+}
+
+.article-content ::ng-deep .ql-editor pre,
+.article-content ::ng-deep .ql-editor .ql-syntax {
+	max-width: 100%;
 	margin: 2em 0;
 	padding: 1.1em 1.25em;
 	border: 1px solid var(--detail-line);
@@ -400,7 +746,7 @@
 }
 
 @media (max-width: 992px) {
-	.article-detail-layout { grid-template-columns: 1fr; gap: 36px; }
+	.article-detail-layout { grid-template-columns: minmax(0, 1fr); gap: 36px; }
 	.article-sidebar { position: static; }
 	.article-meta-panel {
 		display: grid;
@@ -432,6 +778,7 @@
 		padding-bottom: 16px;
 	}
 	.article-meta-item { gap: 4px; }
+	.article-meta-item { min-width: 0; }
 	.article-meta-item dd { font-size: 13px; }
 	.article-links dd { display: flex; flex-wrap: wrap; gap: 6px 16px; }
 	.article-links { flex: 1 1 100%; }
@@ -442,19 +789,57 @@
 	.hero-content,
 	.article-hero.has-media .hero-content { padding: 0 0 24px; }
 	.hero-content h1 { margin-bottom: 14px; font-size: clamp(1.8rem, 7.8vw, 2.4rem); line-height: 1.2; }
-	.hero-content p { font-size: 1rem; line-height: 1.8; }
+	.hero-content p { max-width: none; font-size: 1rem; line-height: 1.8; overflow-wrap: anywhere; }
 	.hero-media { width: 100%; border-radius: 10px; }
 	.hero-image { min-height: 0; aspect-ratio: 16 / 10; }
-	.article-content { padding: 0; border-left: 0; font-size: 1rem; line-height: 1.9; }
-	.article-content .ql-editor h1 { font-size: 1.6rem; }
-	.article-content .ql-editor h2 { font-size: 1.3rem; }
-	.article-content .ql-editor h3 { font-size: 1.12rem; }
+	.article-content { width: 100%; padding: 0; border-left: 0; font-size: 1rem; line-height: 1.9; }
+	.article-content ::ng-deep .ql-editor h1 { font-size: 1.6rem; }
+	.article-content ::ng-deep .ql-editor h2 { font-size: 1.3rem; }
+	.article-content ::ng-deep .ql-editor h3 { font-size: 1.12rem; }
+	.article-content ::ng-deep .ql-editor table { margin-right: 0; margin-left: 0; }
 	.article-error { min-height: 300px; padding: 40px 24px; }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+	.article-detail-page { padding-right: 20px; padding-left: 20px; }
+	.article-detail-layout { gap: 28px; }
+	.article-meta-panel {
+		display: block;
+		padding: 0;
+		border-bottom: 0;
+	}
+	.back-link { margin-bottom: 22px; }
+	.article-meta-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px 28px;
+		padding-bottom: 18px;
+	}
+	.article-meta-item { flex: 1 1 180px; }
+	.article-links { flex-basis: 100%; }
+	.article-tags-block { padding-top: 16px; }
+	.article-hero,
+	.article-hero.has-media {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+		margin-bottom: 48px;
+	}
+	.hero-content,
+	.article-hero.has-media .hero-content { padding-bottom: 28px; }
+	.hero-content h1 {
+		margin-bottom: 16px;
+		font-size: clamp(2.2rem, 7vw, 3rem);
+		line-height: 1.16;
+	}
+	.hero-media { width: 100%; }
+	.hero-image { min-height: 0; aspect-ratio: 16 / 10; }
+	.article-content { width: 100%; padding-left: 24px; }
 }
 
 @media (max-width: 420px) {
 	.article-content { font-size: 0.96rem; line-height: 1.85; }
-	.article-content .ql-editor pre,
-	.article-content .ql-editor .ql-syntax { padding: 0.9em; font-size: 0.82em; }
+	.article-content ::ng-deep .ql-editor pre,
+	.article-content ::ng-deep .ql-editor .ql-syntax { padding: 0.9em; font-size: 0.82em; }
 	.article-error { padding: 32px 18px; }
 }

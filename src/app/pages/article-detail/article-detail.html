@@ -64,11 +64,42 @@
 
 				@if (currentArticle.content) {
                     <article class="article-content ql-snow">
-                        <div class="ql-editor" [innerHTML]="currentArticle.content | safeHtml"></div>
+                        <div class="ql-editor" #articleBody [innerHTML]="currentArticle.content | safeHtml"></div>
                     </article>
                 }
 			</main>
 		</div>
+
+		@if (tocItems().length > 1) {
+			<div class="toc-dock">
+				<nav class="toc-rail" aria-label="文章大綱">
+					@for (item of tocItems(); track item.id; let i = $index) {
+						<button
+							type="button"
+							class="toc-rail-segment"
+							[style.flex]="item.weight + ' 0 0'"
+							[class.active]="activeTocIndex() === i"
+							[class.read]="tocProgress()[i] >= 1"
+							[style.--toc-fill.%]="tocProgress()[i] * 100"
+							(click)="scrollToHeading(item.id, $event)"
+							[attr.aria-current]="activeTocIndex() === i ? 'true' : null"
+							[attr.aria-label]="item.text"
+							[title]="item.text"
+						>
+							<span class="toc-rail-label" aria-hidden="true">{{ item.text }}</span>
+							<span class="toc-rail-track"><span class="toc-rail-fill"></span></span>
+						</button>
+					}
+			</nav>
+
+				<button type="button" class="toc-rail-segment toc-top-row" aria-label="回到頂部" (click)="scrollToTop()">
+					<span class="toc-rail-label">回到頂部</span>
+					<span class="toc-rail-arrow">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+					</span>
+				</button>
+			</div>
+		}
 	} @else {
 		<div class="article-status article-error" role="alert">
 			<div class="error-mark" aria-hidden="true">
