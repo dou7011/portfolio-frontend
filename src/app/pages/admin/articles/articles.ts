@@ -22,7 +22,6 @@ export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   articles: ArticleData[] = [];
   tagOptions: { name: string; count: number }[] = [];
-  totalTagCount = 0;
   page = 1;
   totalPages = 1;
   totalCount = 0;
@@ -74,7 +73,6 @@ export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.totalCount = data?.pagination.totalFiltered ?? 0;
         this.totalPages = data?.pagination.totalPages || 1;
         this.tagOptions = data?.aggregations.tags ?? [];
-        this.totalTagCount = data?.aggregations.totalTags ?? 0;
         this.isLoading = false;
         requestAnimationFrame(() => this.updateTagOverflow());
       },

@@ -28,7 +28,7 @@
   <section class="content-card">
     <div class="tag-filter-bar">
       <div #tagList class="tag-filter-content" [class.expanded]="isTagsExpanded">
-        <button type="button" class="tag-filter" [class.active]="selectedTag === 'all'" (click)="changeTag('all')">全部 <small>{{ totalTagCount }}</small></button>
+        <button type="button" class="tag-filter" [class.active]="selectedTag === 'all'" (click)="changeTag('all')">全部 <small>{{ totalCount }}</small></button>
         @for (tag of tagOptions; track tag.name) {
           <button type="button" class="tag-filter" [class.active]="selectedTag === tag.name" (click)="changeTag(tag.name)">{{ tag.name }} <small>{{ tag.count }}</small></button>
         }
