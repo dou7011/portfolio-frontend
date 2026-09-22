@@ -26,7 +26,7 @@
 }
 
 .resume-wrapper {
-  max-width: 860px;
+  max-width: 950px;
   margin: 100px auto 0 auto;
   overflow: hidden;
 }
@@ -250,6 +250,26 @@
 
 .resume-section {
   position: relative;
+}
+
+.section-experience {
+  order: 1;
+}
+
+.section-projects {
+  order: 2;
+}
+
+.section-skills {
+  order: 3;
+}
+
+.section-education {
+  order: 4;
+}
+
+.section-certifications {
+  order: 5;
 }
 
 .section-title {

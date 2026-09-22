@@ -46,7 +46,7 @@
         }
       </header>
 
-      <section class="reveal">
+      <section class="reveal section-experience">
         <h2 class="section-title">{{ uiText().experience }}</h2>
         <div class="timeline">
           @for (job of data.experience; track $index; let i = $index) {
@@ -70,7 +70,7 @@
         </div>
       </section>
 
-      <section class="reveal">
+      <section class="reveal section-skills">
         <div class="section-header-icon">
           <h2 class="section-title-icon">{{ uiText().technical }}</h2>
         </div>
@@ -101,7 +101,7 @@
         </div>
       </section>
 
-      <section class="reveal">
+      <section class="reveal section-education">
         <h2 class="section-title">{{ uiText().education }}</h2>
         <div class="timeline edu-timeline">
           @for (edu of data.education; track $index; let i = $index) {
@@ -129,7 +129,7 @@
       </section>
 
       @if (data.projects.length) {
-        <section class="reveal">
+        <section class="reveal section-projects">
           <h2 class="section-title">{{ uiText().projects }}</h2>
           <div class="project-list">
             @for (project of data.projects; track $index; let i = $index) {
@@ -173,7 +173,7 @@
         </section>
       }
 
-      <section class="reveal">
+      <section class="reveal section-certifications">
         <h2 class="section-title">{{ uiText().certifications }}</h2>
         <div class="cert-grid">
           @for (cert of data.certifications; track $index; let i = $index) {

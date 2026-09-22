@@ -21,7 +21,7 @@ export class ResumeFormalComponent implements OnInit {
   private requestVersion = 0;
   private readonly labels = {
     zh: {
-      skills: '專業技能',
+      skills: '技術棧',
       experience: '工作經歷',
       education: '學歷',
       certifications: '專業證照',
@@ -32,7 +32,7 @@ export class ResumeFormalComponent implements OnInit {
       interactiveLink: '切換到互動式履歷'
     },
     en: {
-      skills: 'Professional Skills',
+      skills: 'Technical Stack',
       experience: 'Work Experience',
       education: 'Education',
       certifications: 'Certifications',
