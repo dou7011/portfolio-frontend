@@ -14,7 +14,6 @@
   max-width: none;
   box-sizing: border-box;
   margin: 0 auto;
-  padding: 22px 24px 42px;
   color: var(--editor-text);
   font-size: 14px;
 }
@@ -327,10 +326,13 @@
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   min-height: 320px;
+  max-height: calc(100dvh - 76px);
 }
 
 :host ::ng-deep .ql-editor {
   min-height: 300px;
+  max-height: calc(100dvh - 76px);
+  overflow-y: auto;
   font-size: 0.97rem;
   line-height: 1.7;
   color: var(--editor-text);
