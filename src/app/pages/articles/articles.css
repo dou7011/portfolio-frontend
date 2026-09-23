@@ -517,6 +517,8 @@
 .card-visual {
   flex-shrink: 0;
   width: 200px;
+  aspect-ratio: 10 / 7;
+  align-self: flex-start;
   border-radius: var(--articles-radius-md);
   overflow: hidden;
   background: var(--articles-page-bg);
