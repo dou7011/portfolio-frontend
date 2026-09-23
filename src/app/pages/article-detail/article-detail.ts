@@ -24,6 +24,43 @@ interface TocItem {
   weight: number;
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function collectTocItems(container: HTMLElement): TocItem[] {
+  const headings = Array.from(container.querySelectorAll<HTMLElement>('h1'));
+  const usedIds = new Set<string>();
+
+  return headings.map((heading, index) => {
+    const level = Number(heading.tagName.charAt(1));
+    const text = heading.textContent?.trim() ?? `章節 ${index + 1}`;
+    const baseId = slugify(text) || `section-${index + 1}`;
+
+    let id = baseId;
+    let suffix = 1;
+    while (usedIds.has(id)) {
+      id = `${baseId}-${suffix++}`;
+    }
+    usedIds.add(id);
+    heading.id = id;
+
+    let node: Node | null = heading.nextSibling;
+    const nextHeading = headings[index + 1];
+    let charCount = 0;
+    while (node && node !== nextHeading) {
+      charCount += (node.textContent ?? '').length;
+      node = node.nextSibling;
+    }
+
+    return { id, text, level, weight: Math.max(charCount, 40) };
+  });
+}
+
 @Component({
   selector: 'app-article-detail',
   imports: [RouterLink, SafeHtmlPipe],
@@ -119,33 +156,8 @@ export class ArticleDetailComponent {
       return;
     }
 
-    const headings = Array.from(container.querySelectorAll<HTMLElement>('h1, h2, h3, h4'));
-    const usedIds = new Set<string>();
-
-    const items: TocItem[] = headings.map((heading, index) => {
-      const level = Number(heading.tagName.charAt(1));
-      const text = heading.textContent?.trim() ?? `章節 ${index + 1}`;
-      const baseId = this.slugify(text) || `section-${index + 1}`;
-
-      let id = baseId;
-      let suffix = 1;
-      while (usedIds.has(id)) {
-        id = `${baseId}-${suffix++}`;
-      }
-      usedIds.add(id);
-      heading.id = id;
-
-      // 以標題到下一個標題之間的文字量估算段落長度，作為右側刻度的比例權重
-      let node: Node | null = heading.nextSibling;
-      const nextHeading = headings[index + 1];
-      let charCount = 0;
-      while (node && node !== nextHeading) {
-        charCount += (node.textContent ?? '').length;
-        node = node.nextSibling;
-      }
-
-      return { id, text, level, weight: Math.max(charCount, 40) };
-    });
+    const items = collectTocItems(container);
+    const headings = Array.from(container.querySelectorAll<HTMLElement>('h1'));
 
     this.headingEls = headings;
     this.tocItems.set(items);
@@ -201,14 +213,6 @@ export class ArticleDetailComponent {
 
     this.tocProgress.set(progress);
     this.activeTocIndex.set(activeIndex);
-  }
-
-  private slugify(text: string): string {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^\p{L}\p{N}]+/gu, '-')
-      .replace(/^-+|-+$/g, '');
   }
 
   formatDate(value?: string | null): string {
