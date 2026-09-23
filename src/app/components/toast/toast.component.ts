@@ -14,10 +14,11 @@ import { ToastService } from '../../services/toast.service';
       [class.visible]="visible"
       [class.success]="type === 'success'"
       [class.error]="type === 'error'"
+      [class.info]="type === 'info'"
       aria-live="polite"
       aria-atomic="true"
     >
-      <span class="toast-icon" aria-hidden="true">{{ type === 'success' ? '✓' : '!' }}</span>
+      <span class="toast-icon" aria-hidden="true">{{ type === 'success' ? '✓' : type === 'error' ? '!' : 'i' }}</span>
       <div class="toast-copy">
         <strong>{{ title }}</strong>
         <span>{{ message }}</span>
@@ -72,6 +73,14 @@ import { ToastService } from '../../services/toast.service';
       --toast-accent: var(--color-danger-text);
       --toast-text: var(--color-danger-text);
       --toast-shadow: color-mix(in srgb, var(--color-danger-text) 16%, transparent);
+    }
+
+    .toast-container.info {
+      --toast-bg: color-mix(in srgb, rgba(148, 163, 184, 0.16) 88%, var(--color-surface));
+      --toast-border: rgba(148, 163, 184, 0.5);
+      --toast-accent: #cbd5e1;
+      --toast-text: #e2e8f0;
+      --toast-shadow: rgba(148, 163, 184, 0.18);
     }
 
     .toast-icon {
@@ -129,7 +138,7 @@ export class ToastComponent implements OnInit, OnDestroy {
   private readonly subscription = new Subscription();
 
   visible = false;
-  type: 'success' | 'error' = 'success';
+  type: 'success' | 'error' | 'info' = 'success';
   title = '更新成功';
   message = '';
 

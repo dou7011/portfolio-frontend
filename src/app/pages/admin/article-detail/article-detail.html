@@ -99,10 +99,12 @@
         </label>
         <quill-editor
           [modules]="editorModules"
+          [format]="'html'"
           [(ngModel)]="form.content"
           name="content"
           theme="snow"
           class="quill-editor"
+          (onEditorCreated)="onEditorCreated($event)"
         ></quill-editor>
       </div>
     </form>

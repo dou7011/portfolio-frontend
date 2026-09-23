@@ -10,6 +10,7 @@
 - RxJS
 - Angular Router + HttpClient
 - HttpOnly cookie JWT auth flow through backend API
+- Quill rich-text editor (`ngx-quill`)
 
 ## 專案結構
 
@@ -38,6 +39,8 @@ portfolio-frontend/
 │   │   │   │   │   ├── admin.ts             # 後台主容器元件
 │   │   │   │   │   ├── admin.html           # 後台版型
 │   │   │   │   │   └── admin.css            # 後台樣式
+│   │   │   │   ├── articles/                # 文章管理列表
+│   │   │   │   ├── article-detail/          # 文章新增與編輯頁
 │   │   │   │   ├── permissions/             # 權限管理頁
 │   │   │   │   ├── resume-edit/             # 履歷編輯頁
 │   │   │   │   ├── roles/                   # 角色管理頁
@@ -91,6 +94,7 @@ portfolio-frontend/
 - `/resume`：互動式履歷頁
 - `/resume-formal`：正式履歷頁
 - `/login`：後台登入頁
+- `/logout`：登出並導回首頁
 - `/articles`：公開文章與作品列表，支援類型、標籤、日期篩選與分頁
 - `/articles/:slug`：公開文章詳細頁
 - `/admin`：受保護管理頁面，預設導向 `/admin/resume`
@@ -147,10 +151,13 @@ npm test
 - [x] 公開文章列表、詳細頁與管理文章頁
 - [x] 使用者 / 角色 / 權限 CRUD 管理
 - [x] 履歷內容編輯
+- [x] 文章內容的 Quill 富文字編輯與公開 HTML 安全渲染
 - [x] 亮暗主題切換
 - [x] Toast 通知與頁面層級錯誤處理
 
 目前尚未註冊全域 HTTP error interceptor；401、403、429 與各頁資料錯誤仍由 auth service、interceptor 或頁面個別處理。JWT 不會保存於 `localStorage`；登入 cookie 由後端設定為 HttpOnly，前端只能讀取非敏感的 CSRF cookie。
+
+後端已提供 `POST /api/upload` 圖片上傳端點，但前端目前尚未建立對應的 upload service 或在 Quill 編輯器中整合自訂圖片上傳流程。串接時須以 `multipart/form-data` 的 `image` 欄位送出檔案；既有 HTTP interceptor 會附加 cookie 與 CSRF header。
 
 ## 專案維護重點
 
@@ -161,4 +168,5 @@ npm test
 - `/articles` 與 `/articles/:slug` 已是實際存在的公開路由
 - `/admin/articles` 與新增／編輯文章路由已納入管理區
 - production API 使用 HTTPS；development 使用本機 `http://localhost:8787/api`
+- 後端本機 `.dev.vars` 的 `ALLOWED_ORIGINS` 必須包含 `http://localhost:4200`，否則瀏覽器會因 CORS 拒絕 API 請求
 
