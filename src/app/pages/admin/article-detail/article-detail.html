@@ -68,7 +68,21 @@
 
       <label class="field">
         <span>封面圖片 URL</span>
-        <input type="url" name="cover_image" [(ngModel)]="form.cover_image" placeholder="https://example.com/cover.jpg">
+        <div class="cover-url-control">
+          <input type="url" name="cover_image" [(ngModel)]="form.cover_image" placeholder="https://example.com/cover.jpg">
+          <label class="upload-control" [class.is-uploading]="isUploadingCover()">
+            <span>{{ isUploadingCover() ? '封面圖片上傳中...' : '上傳封面圖片' }}</span>
+            <input
+              type="file"
+              accept="image/*"
+              [disabled]="isUploadingCover()"
+              (change)="onCoverImageSelected($event)"
+            >
+          </label>
+        </div>
+        @if (form.cover_image) {
+          <img class="cover-preview" [src]="form.cover_image" alt="封面圖片預覽">
+        }
       </label>
 
       <label class="field">

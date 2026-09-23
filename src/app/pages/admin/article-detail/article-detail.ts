@@ -41,6 +41,7 @@ export class ArticleDetailComponent implements OnInit {
   readonly articleId = signal<number | null>(null);
   readonly isLoading = signal(true);
   readonly isSaving = signal(false);
+  readonly isUploadingCover = signal(false);
   readonly errorMessage = signal('');
   readonly categoryOptions = signal<string[]>(['blog', 'portfolio']);
   readonly isCustomType = signal(false);
@@ -281,6 +282,35 @@ export class ArticleDetailComponent implements OnInit {
     }
 
     return document.body.innerHTML;
+  }
+
+  onCoverImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.isUploadingCover.set(true);
+    this.errorMessage.set('');
+    this.uploadService.uploadImage(file).subscribe({
+      next: (response) => {
+        const imageUrl = response.data?.url;
+        if (!imageUrl) {
+          this.errorMessage.set('封面圖片上傳失敗，回應未包含圖片網址。');
+          this.isUploadingCover.set(false);
+          return;
+        }
+
+        this.form.cover_image = imageUrl;
+        this.isUploadingCover.set(false);
+        input.value = '';
+        this.toastService.show('封面圖片上傳成功。', 'success');
+      },
+      error: (error) => {
+        console.error('封面圖片上傳失敗', error);
+        this.errorMessage.set('封面圖片上傳失敗，請檢查網路狀態後再試。');
+        this.isUploadingCover.set(false);
+      },
+    });
   }
 
   cancel(): void {
