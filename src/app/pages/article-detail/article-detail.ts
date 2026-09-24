@@ -87,6 +87,7 @@ export class ArticleDetailComponent {
   private headingEls: HTMLElement[] = [];
   private sectionStarts: number[] = [];
   private sectionEnds: number[] = [];
+  private contentResizeObserver?: ResizeObserver;
   private readonly onScroll = () => this.updateProgress();
   private readonly onResize = () => {
     this.measureSections();
@@ -99,6 +100,7 @@ export class ArticleDetailComponent {
     this.destroyRef.onDestroy(() => {
       window.removeEventListener('scroll', this.onScroll);
       window.removeEventListener('resize', this.onResize);
+      this.contentResizeObserver?.disconnect();
     });
   }
 
@@ -168,6 +170,14 @@ export class ArticleDetailComponent {
 
     this.measureSections();
     this.updateProgress();
+
+    // 內文圖片是非同步載入,高度會在渲染後才變動,需監聽容器尺寸變化重新量測區間
+    this.contentResizeObserver?.disconnect();
+    this.contentResizeObserver = new ResizeObserver(() => {
+      this.measureSections();
+      this.updateProgress();
+    });
+    this.contentResizeObserver.observe(container);
   }
 
   private measureSections(): void {
