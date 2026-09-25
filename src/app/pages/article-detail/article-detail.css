@@ -326,44 +326,68 @@
 	.toc-dock { display: flex; }
 }
 
-/* 中等寬度（雙欄版面 1121-1360、單欄版面 841-992）：改為無文字的迷你進度軌，避免蓋住內文；
-   993-1120 與 <=840 這兩段可用寬度不足以放下，故維持隱藏 */
-@media (min-width: 1121px) and (max-width: 1360px),
-	(min-width: 841px) and (max-width: 992px) {
+/* 平板寬度（901-1360，側邊資訊已提早收合到上方）：標題以純文字單行顯示，不裁切、不換行、不加底色；
+   為了保證單行文字不會蓋到內文，內文欄位在這個區間會自動讓出固定寬度給大綱使用。
+   993-1120 已併入此區間、<=900 真的放不下才隱藏 */
+@media (min-width: 901px) and (max-width: 1360px) {
+	/* 多一層祖先選擇器提高優先度，才能蓋過後面 <=1360px 區塊的 max-width:none；
+	   只保留右側大綱需要的安全淨空，不再限制成 760px 的閱讀寬度 */
+	.article-detail-layout .article-main .article-content,
+	.article-detail-layout .article-main .hero-content {
+		max-width: calc(100% - 150px);
+	}
+
 	.toc-dock {
 		display: flex;
-		right: clamp(14px, 1.8vw, 28px);
+		right: 12px;
 		gap: 8px;
 	}
 
 	.toc-rail {
 		gap: 10px;
-		width: 14px;
-		max-width: 14px;
-	}
-
-	.toc-rail-label {
-		display: none;
+		width: auto;
+		max-width: 160px;
 	}
 
 	.toc-rail-segment {
-		justify-content: center;
+		justify-content: flex-end;
 		min-height: 14px;
-		padding: 4px 0;
+		padding: 3px 0;
+	}
+
+	.toc-rail-label {
+		display: block;
+		max-width: 150px;
+		margin-right: 8px;
+		color: var(--color-text-sub);
+		font-size: 10.5px;
+		font-weight: 600;
+		white-space: nowrap;
+		opacity: 0.85;
+	}
+
+	.toc-rail-segment.active .toc-rail-label {
+		color: var(--color-accent-hover);
+		font-size: 11.5px;
+		opacity: 1;
 	}
 
 	.toc-rail-track {
-		width: 4px;
+		width: 3px;
 	}
 
 	.toc-rail-segment:hover .toc-rail-track,
 	.toc-rail-segment.active .toc-rail-track {
-		width: 6px;
+		width: 5px;
 	}
 
 	.toc-top-row {
-		justify-content: center;
+		justify-content: flex-end;
 		padding-top: 8px;
+	}
+
+	.toc-top-row .toc-rail-label {
+		display: none;
 	}
 
 	.toc-rail-arrow {
@@ -745,9 +769,13 @@
 	transform: translateY(-1px);
 }
 
-@media (max-width: 992px) {
+/* 提早收合為單欄（<=1360px）：讓側邊資訊先疊到上方，換取右側大綱有更寬的安全淨空可放標題 */
+@media (max-width: 1360px) {
 	.article-detail-layout { grid-template-columns: minmax(0, 1fr); gap: 36px; }
 	.article-sidebar { position: static; }
+	/* 資訊已收合到上方，標題、簡介與內文不再需要維持桌機雙欄時的閱讀寬度上限 */
+	.article-main .article-content,
+	.article-main .hero-content { max-width: none; }
 	.article-meta-panel {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -763,6 +791,11 @@
 	.article-tags-block { padding: 0; }
 	.tag-list { margin-top: 8px; }
 	.article-hero.has-media { grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr); }
+}
+
+/* 平板單欄範圍左邊留多一點呼吸空間，避免內容太貼齊螢幕邊緣 */
+@media (min-width: 769px) and (max-width: 1360px) {
+	.article-detail-page { padding-left: 50px; }
 }
 
 @media (max-width: 640px) {
