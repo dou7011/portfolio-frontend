@@ -41,7 +41,9 @@ export class ArticleDetailComponent implements OnInit {
   readonly articleId = signal<number | null>(null);
   readonly isLoading = signal(true);
   readonly isSaving = signal(false);
-  readonly isUploadingCover = signal(false);
+  readonly savingStatusText = signal('儲存中...');
+  readonly pendingCoverFile = signal<File | null>(null);
+  readonly coverImagePreviewUrl = signal('');
   readonly errorMessage = signal('');
   readonly categoryOptions = signal<string[]>(['blog', 'portfolio']);
   readonly isCustomType = signal(false);
@@ -194,13 +196,19 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   async saveArticle(): Promise<void> {
+    this.errorMessage.set('');
+    this.isSaving.set(true);
+    this.savingStatusText.set('圖片上傳中...');
+
     let normalizedContent = this.normalizeEditorContent(this.form.content);
 
     try {
       normalizedContent = await this.uploadEmbeddedImages(normalizedContent);
+      await this.uploadPendingCoverImage();
     } catch (error) {
-      console.error('嵌入圖片上傳失敗', error);
+      console.error('圖片上傳失敗', error);
       this.errorMessage.set('圖片上傳失敗，請稍後再試。');
+      this.isSaving.set(false);
       return;
     }
 
@@ -208,6 +216,7 @@ export class ArticleDetailComponent implements OnInit {
 
     if (!this.form.slug.trim() || !this.form.title.trim() || !normalizedContent.trim()) {
       this.errorMessage.set('請填寫 slug、標題與文章內容。');
+      this.isSaving.set(false);
       return;
     }
 
@@ -223,11 +232,11 @@ export class ArticleDetailComponent implements OnInit {
 
     if (lengthErrors.length > 0) {
       this.errorMessage.set(lengthErrors[0]);
+      this.isSaving.set(false);
       return;
     }
 
-    this.isSaving.set(true);
-    this.errorMessage.set('');
+    this.savingStatusText.set(this.mode() === 'new' ? '文章建立中...' : '文章更新中...');
 
     const payload: ArticleData = {
       slug: this.form.slug.trim(),
@@ -242,6 +251,7 @@ export class ArticleDetailComponent implements OnInit {
       is_published: this.form.is_published,
     };
 
+    const wasNewArticle = this.mode() === 'new';
     const request =
       this.mode() === 'edit' && this.articleId() !== null
         ? this.articlesService.updateArticle(this.articleId()!, payload)
@@ -250,10 +260,15 @@ export class ArticleDetailComponent implements OnInit {
     request.subscribe({
       next: (response) => {
         const savedArticle = response.data ?? payload;
-        const isNewArticle = this.mode() === 'new';
         this.isSaving.set(false);
-        this.toastService.show(isNewArticle ? '文章已成功新增。' : '文章已成功更新。', 'success', isNewArticle ? '新增成功' : '更新成功');
-        this.router.navigate(['/admin/articles']);
+        this.toastService.show(wasNewArticle ? '文章已成功新增。' : '文章已成功更新。', 'success', wasNewArticle ? '新增成功' : '更新成功');
+
+        // 建立成功後切換為編輯模式並更新網址，但停留在同一篇文章而非返回列表
+        if (wasNewArticle && savedArticle.id != null) {
+          this.mode.set('edit');
+          this.articleId.set(savedArticle.id);
+          this.router.navigate(['/admin/articles', savedArticle.slug, 'edit'], { replaceUrl: true });
+        }
       },
       error: (error: HttpErrorResponse) => {
         const apiError = error.error as ApiError | undefined;
@@ -289,28 +304,31 @@ export class ArticleDetailComponent implements OnInit {
     const file = input.files?.[0];
     if (!file) return;
 
-    this.isUploadingCover.set(true);
-    this.errorMessage.set('');
-    this.uploadService.uploadImage(file).subscribe({
-      next: (response) => {
-        const imageUrl = response.data?.url;
-        if (!imageUrl) {
-          this.errorMessage.set('封面圖片上傳失敗，回應未包含圖片網址。');
-          this.isUploadingCover.set(false);
-          return;
-        }
+    if (this.coverImagePreviewUrl()) {
+      URL.revokeObjectURL(this.coverImagePreviewUrl());
+    }
 
-        this.form.cover_image = imageUrl;
-        this.isUploadingCover.set(false);
-        input.value = '';
-        this.toastService.show('封面圖片上傳成功。', 'success');
-      },
-      error: (error) => {
-        console.error('封面圖片上傳失敗', error);
-        this.errorMessage.set('封面圖片上傳失敗，請檢查網路狀態後再試。');
-        this.isUploadingCover.set(false);
-      },
-    });
+    this.errorMessage.set('');
+    this.pendingCoverFile.set(file);
+    this.coverImagePreviewUrl.set(URL.createObjectURL(file));
+    input.value = '';
+  }
+
+  // 封面圖片實際上傳延後到儲存文章時才執行
+  private async uploadPendingCoverImage(): Promise<void> {
+    const file = this.pendingCoverFile();
+    if (!file) return;
+
+    const result = await firstValueFrom(this.uploadService.uploadImage(file));
+    const imageUrl = result.data?.url;
+    if (!imageUrl) throw new Error('封面圖片上傳回應缺少 URL');
+
+    this.form.cover_image = imageUrl;
+    this.pendingCoverFile.set(null);
+    if (this.coverImagePreviewUrl()) {
+      URL.revokeObjectURL(this.coverImagePreviewUrl());
+      this.coverImagePreviewUrl.set('');
+    }
   }
 
   cancel(): void {
@@ -343,28 +361,25 @@ export class ArticleDetailComponent implements OnInit {
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
     input.click();
- 
+
     input.onchange = () => {
       const file = input.files?.[0];
-      if (!file) return;
+      if (!file || !this.quillInstance) return;
 
-      this.toastService.show('圖片上傳中...', 'info');
+      // 先以本地預覽插入內文，實際上傳延後到儲存文章時才執行
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        if (typeof dataUrl !== 'string') return;
 
-      this.uploadService.uploadImage(file).subscribe({
-        next: (res) => {
-          const imageUrl = res.data?.url;
-          if (imageUrl && this.quillInstance) {
-            const range = this.quillInstance.getSelection(true);
-            this.quillInstance.insertEmbed(range.index, 'image', imageUrl);
-            this.quillInstance.setSelection(range.index + 1);
-            this.toastService.show('圖片上傳成功', 'success');
-          }
-        },
-        error: (err) => {
-          console.error('圖片上傳失敗', err);
-          this.toastService.show('圖片上傳失敗，請檢查網路狀態', 'error');
-        }
-      });
+        const range = this.quillInstance.getSelection(true);
+        this.quillInstance.insertEmbed(range.index, 'image', dataUrl);
+        this.quillInstance.setSelection(range.index + 1);
+      };
+      reader.onerror = () => {
+        this.toastService.show('圖片讀取失敗，請重新選擇圖片', 'error');
+      };
+      reader.readAsDataURL(file);
     };
   }
 }

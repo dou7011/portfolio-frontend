@@ -8,6 +8,9 @@
       <button type="button" class="cancel-btn" (click)="cancel()">取消</button>
       <button type="button" class="preview-btn" (click)="openPreview()">預覽</button>
       <button type="button" class="primary-btn" (click)="saveArticle()" [disabled]="isSaving()">
+        @if (isSaving()) {
+          <span class="btn-spinner"></span>
+        }
         {{ isSaving() ? '儲存中...' : mode() === 'new' ? '建立文章' : '更新文章' }}
       </button>
       <label class="field checkbox-field header-toggle">
@@ -24,7 +27,14 @@
   @if (isLoading()) {
     <div class="loading-box">載入中...</div>
   } @else {
-    <form class="article-editor" (ngSubmit)="saveArticle()" #articleForm="ngForm">
+    <div class="article-editor-wrap">
+      @if (isSaving()) {
+        <div class="saving-overlay">
+          <div class="saving-overlay-spinner"></div>
+          <p>{{ savingStatusText() }}</p>
+        </div>
+      }
+      <form class="article-editor" (ngSubmit)="saveArticle()" #articleForm="ngForm">
       <div class="form-grid">
         <label class="field">
           <span>Slug</span>
@@ -70,18 +80,18 @@
         <span>封面圖片 URL</span>
         <div class="cover-url-control">
           <input type="url" name="cover_image" [(ngModel)]="form.cover_image" placeholder="https://example.com/cover.jpg">
-          <label class="upload-control" [class.is-uploading]="isUploadingCover()">
-            <span>{{ isUploadingCover() ? '封面圖片上傳中...' : '上傳封面圖片' }}</span>
+          <label class="upload-control" [class.is-pending]="pendingCoverFile()">
+            <span>{{ pendingCoverFile() ? '已選擇，儲存時上傳' : '選擇封面圖片' }}</span>
             <input
               type="file"
               accept="image/*"
-              [disabled]="isUploadingCover()"
+              [disabled]="isSaving()"
               (change)="onCoverImageSelected($event)"
             >
           </label>
         </div>
-        @if (form.cover_image) {
-          <img class="cover-preview" [src]="form.cover_image" alt="封面圖片預覽">
+        @if (coverImagePreviewUrl() || form.cover_image) {
+          <img class="cover-preview" [src]="coverImagePreviewUrl() || form.cover_image" alt="封面圖片預覽">
         }
       </label>
 
@@ -121,7 +131,8 @@
           (onEditorCreated)="onEditorCreated($event)"
         ></quill-editor>
       </div>
-    </form>
+      </form>
+    </div>
   }
 
 </section>
