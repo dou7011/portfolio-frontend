@@ -10,7 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { retry } from 'rxjs';
+import { EMPTY, catchError, retry, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { timeout } from 'rxjs';
 import { ArticleData } from '../../models/article.interface';
@@ -105,16 +105,38 @@ export class ArticleDetailComponent {
   }
 
   ngOnInit(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
+    this.route.paramMap.pipe(
+      switchMap((params) => {
+        const slug = params.get('slug');
+        this.article.set(null);
+        this.isLoading.set(true);
+        this.errorMessage.set('');
+        this.errorType.set('not-found');
+        this.tocItems.set([]);
+        this.tocProgress.set([]);
+        this.activeTocIndex.set(0);
+        this.headingEls = [];
+        this.sectionStarts = [];
+        this.sectionEnds = [];
 
-    if (!slug) {
-      this.handleError('找不到指定的文章。', 'not-found');
-      return;
-    }
+        if (!slug) {
+          this.handleError('找不到指定的文章。', 'not-found');
+          return EMPTY;
+        }
 
-    this.articlesService.getArticleBySlug(slug).pipe(
-      timeout(8000),
-      retry({ count: 2, delay: 500 }),
+        return this.articlesService.getArticleBySlug(slug).pipe(
+          timeout(8000),
+          retry({ count: 2, delay: 500 }),
+          catchError((error: HttpErrorResponse) => {
+            console.error('Failed to load article:', error);
+            this.handleError(
+              error.status === 404 ? '找不到指定的文章。' : '文章載入失敗，請稍後再試。',
+              error.status === 404 ? 'not-found' : 'load-error',
+            );
+            return EMPTY;
+          }),
+        );
+      }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (response) => {
@@ -127,13 +149,6 @@ export class ArticleDetailComponent {
         this.isLoading.set(false);
         // 等內文的 innerHTML 實際渲染完成後再掃描標題，避免抓不到剛插入的節點
         afterNextRender(() => this.buildToc(), { injector: this.injector });
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Failed to load article:', error);
-        this.handleError(
-          error.status === 404 ? '找不到指定的文章。' : '文章載入失敗，請稍後再試。',
-          error.status === 404 ? 'not-found' : 'load-error',
-        );
       },
     });
   }
