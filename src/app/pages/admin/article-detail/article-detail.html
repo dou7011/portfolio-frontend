@@ -30,8 +30,10 @@
     <div class="article-editor-wrap">
       @if (isSaving()) {
         <div class="saving-overlay">
-          <div class="saving-overlay-spinner"></div>
-          <p>{{ savingStatusText() }}</p>
+          <div class="saving-dialog" role="status" aria-live="polite">
+            <div class="saving-overlay-spinner" aria-hidden="true"></div>
+            <p>{{ savingStatusText() }}</p>
+          </div>
         </div>
       }
       <form class="article-editor" (ngSubmit)="saveArticle()" #articleForm="ngForm">
