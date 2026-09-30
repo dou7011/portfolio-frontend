@@ -28,13 +28,13 @@
   font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   line-height: 1.6;
   color: var(--text-main);
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .admin-wrapper {
   display: flex;
-  min-height: 100vh;
-  max-height: 100vh;
+  min-height: 100dvh;
+  max-height: 100dvh;
   background-color: var(--bg);
   background-image: var(--background-grid);
   background-size: 30px 30px;
