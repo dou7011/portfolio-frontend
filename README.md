@@ -47,9 +47,11 @@ portfolio-frontend/
 │   │   │   │   └── users/                   # 使用者管理頁
 │   │   │   ├── home/                        # 首頁
 │   │   │   ├── articles/                    # 文章列表頁
-│   │   │   ├── article-detail/              # 文章詳細頁
-│   │   │   │   ├── home.html                # 首頁版型
-│   │   │   │   └── home.css                 # 首頁樣式
+│   │   │   ├── article-detail/              # 公開文章詳細頁
+│   │   │   │   ├── article-detail.ts
+│   │   │   │   ├── article-detail.html
+│   │   │   │   ├── article-detail.css
+│   │   │   │   └── article-detail.spec.ts
 │   │   │   ├── login/                       # 管理員登入頁
 │   │   │   │   ├── login.ts                 # 登入邏輯
 │   │   │   │   ├── login.html               # 登入表單
@@ -64,6 +66,7 @@ portfolio-frontend/
 │   │   │   ├── resume.service.ts            # 履歷 API
 │   │   │   ├── role.service.ts              # 角色 API
 │   │   │   ├── toast.service.ts             # 全域通知服務
+│   │   │   ├── upload.service.ts            # 文章圖片上傳 API
 │   │   │   └── user.service.ts              # 使用者 API
 │   │   ├── app.config.ts                    # Router / HTTP / provider 設定
 │   │   ├── app.routes.ts                    # 路由配置
@@ -102,7 +105,6 @@ portfolio-frontend/
   - `/admin/users`
   - `/admin/roles`
   - `/admin/permissions`
-
   - `/admin/articles`
   - `/admin/articles/new`
   - `/admin/articles/:slug/edit`
@@ -152,21 +154,16 @@ npm test
 - [x] 使用者 / 角色 / 權限 CRUD 管理
 - [x] 履歷內容編輯
 - [x] 文章內容的 Quill 富文字編輯與公開 HTML 安全渲染
+- [x] 文章封面、內文圖片與圖片集上傳
 - [x] 亮暗主題切換
 - [x] Toast 通知與頁面層級錯誤處理
 
-目前尚未註冊全域 HTTP error interceptor；401、403、429 與各頁資料錯誤仍由 auth service、interceptor 或頁面個別處理。JWT 不會保存於 `localStorage`；登入 cookie 由後端設定為 HttpOnly，前端只能讀取非敏感的 CSRF cookie。
+目前尚未註冊全域 HTTP error interceptor；401、403、429 與各頁資料錯誤由 auth service 或頁面個別處理。JWT 不會保存於 `localStorage`；登入 cookie 由後端設定為 HttpOnly。前端從登入或 `/api/auth/me` 回應取得非敏感的 CSRF token，暫存於 `sessionStorage`，HTTP interceptor 再附加 `X-CSRF-Token`；同源情境也會讀取可讀取的 CSRF cookie 作為 fallback。
 
-後端已提供 `POST /api/upload` 圖片上傳端點，但前端目前尚未建立對應的 upload service 或在 Quill 編輯器中整合自訂圖片上傳流程。串接時須以 `multipart/form-data` 的 `image` 欄位送出檔案；既有 HTTP interceptor 會附加 cookie 與 CSRF header。
+文章管理已整合 `UploadService` 與 `POST /api/upload`：封面、內文嵌入圖片及圖片集圖片會在儲存文章時上傳，並以 `multipart/form-data` 的 `image` 欄位傳送檔案；HTTP interceptor 會附加 cookie 與 CSRF header。圖片集 metadata 隨文章 payload 一併儲存。
 
-## 專案維護重點
+## 環境設定
 
-目前文件與路由狀態：
-
-- 移除未使用的靜態原型 HTML
-- 刪除過時的註冊型別與錯誤路由假設
-- `/articles` 與 `/articles/:slug` 已是實際存在的公開路由
-- `/admin/articles` 與新增／編輯文章路由已納入管理區
 - production API 使用 HTTPS；development 使用本機 `http://localhost:8787/api`
 - 後端本機 `.dev.vars` 的 `ALLOWED_ORIGINS` 必須包含 `http://localhost:4200`，否則瀏覽器會因 CORS 拒絕 API 請求
 
