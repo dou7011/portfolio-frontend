@@ -131,6 +131,66 @@
           (onEditorCreated)="onEditorCreated($event)"
         ></quill-editor>
       </div>
+
+      <div class="gallery-section">
+        <div class="gallery-section-header">
+          <span>圖片集</span>
+          <label class="gallery-upload-btn" [class.is-disabled]="isSaving()">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>新增圖片</span>
+            <input type="file" accept="image/*" multiple [disabled]="isSaving()" (change)="onGalleryFilesSelected($event)">
+          </label>
+        </div>
+        <p class="gallery-hint">上傳操作截圖等圖片，會顯示在文章內容最下方；可拖曳卡片調整順序，儲存文章時才會實際上傳。</p>
+
+        @if (galleryImages().length > 0) {
+          <div class="gallery-grid">
+            @for (image of galleryImages(); track image.localId; let i = $index) {
+              <div
+                class="gallery-item"
+                [class.is-dragging]="draggingGalleryIndex() === i"
+                draggable="true"
+                (dragstart)="onGalleryDragStart(i, $event)"
+                (dragover)="onGalleryDragOver(i, $event)"
+                (drop)="onGalleryDrop($event)"
+                (dragend)="onGalleryDragEnd()"
+              >
+                <span class="gallery-item-order">{{ i + 1 }}</span>
+                <button
+                  type="button"
+                  class="gallery-item-remove"
+                  (click)="removeGalleryImage(image.localId)"
+                  [disabled]="isSaving()"
+                  aria-label="移除這張圖片"
+                >×</button>
+                <div class="gallery-item-thumb">
+                  <img [src]="image.previewUrl || image.url" alt="圖片集預覽">
+                </div>
+                <input
+                  type="text"
+                  class="gallery-item-label"
+                  placeholder="圖片說明（選填）"
+                  [(ngModel)]="image.label"
+                  [name]="'gallery_label_' + i"
+                  [disabled]="isSaving()"
+                >
+                <div class="gallery-item-footer">
+                  <span class="gallery-item-drag-handle" aria-hidden="true" title="拖曳調整順序">⠿⠿</span>
+                  <div class="gallery-item-order-btns">
+                    <button type="button" (click)="moveGalleryImage(i, -1)" [disabled]="isSaving() || i === 0" aria-label="往前移動">‹</button>
+                    <button type="button" (click)="moveGalleryImage(i, 1)" [disabled]="isSaving() || i === galleryImages().length - 1" aria-label="往後移動">›</button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="gallery-empty">尚未新增任何圖片，點擊上方「新增圖片」開始建立圖片集。</div>
+        }
+      </div>
       </form>
     </div>
   }

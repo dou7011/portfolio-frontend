@@ -6,6 +6,7 @@ import {
   Injector,
   ViewChild,
   afterNextRender,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -74,11 +75,16 @@ export class ArticleDetailComponent {
   private readonly injector = inject(Injector);
 
   @ViewChild('articleBody') private readonly articleBodyRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('galleryThumbTrack') private readonly galleryThumbTrackRef?: ElementRef<HTMLDivElement>;
 
   readonly article = signal<ArticleData | null>(null);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
   readonly errorType = signal<'not-found' | 'load-error'>('not-found');
+
+  readonly galleryImages = computed(() => this.article()?.galleryImages ?? []);
+  readonly activeGalleryIndex = signal(0);
+  private touchStartX = 0;
 
   readonly tocItems = signal<TocItem[]>([]);
   readonly activeTocIndex = signal(0);
@@ -115,6 +121,7 @@ export class ArticleDetailComponent {
         this.tocItems.set([]);
         this.tocProgress.set([]);
         this.activeTocIndex.set(0);
+        this.activeGalleryIndex.set(0);
         this.headingEls = [];
         this.sectionStarts = [];
         this.sectionEnds = [];
@@ -146,6 +153,7 @@ export class ArticleDetailComponent {
         }
 
         this.article.set(response.data);
+        this.activeGalleryIndex.set(0);
         this.isLoading.set(false);
         // 等內文的 innerHTML 實際渲染完成後再掃描標題，避免抓不到剛插入的節點
         afterNextRender(() => this.buildToc(), { injector: this.injector });
@@ -164,6 +172,47 @@ export class ArticleDetailComponent {
 
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  setActiveGalleryImage(index: number): void {
+    if (index < 0 || index >= this.galleryImages().length) return;
+    this.activeGalleryIndex.set(index);
+    this.scrollActiveThumbIntoView(index);
+  }
+
+  showPrevGalleryImage(): void {
+    const total = this.galleryImages().length;
+    if (!total) return;
+    this.setActiveGalleryImage((this.activeGalleryIndex() - 1 + total) % total);
+  }
+
+  showNextGalleryImage(): void {
+    const total = this.galleryImages().length;
+    if (!total) return;
+    this.setActiveGalleryImage((this.activeGalleryIndex() + 1) % total);
+  }
+
+  onGalleryTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0]?.clientX ?? 0;
+  }
+
+  // 左右滑動切換上一張／下一張，滑動距離需超過門檻才視為有效手勢
+  onGalleryTouchEnd(event: TouchEvent): void {
+    const endX = event.changedTouches[0]?.clientX ?? this.touchStartX;
+    const deltaX = endX - this.touchStartX;
+    if (Math.abs(deltaX) < 40) return;
+
+    if (deltaX < 0) {
+      this.showNextGalleryImage();
+    } else {
+      this.showPrevGalleryImage();
+    }
+  }
+
+  private scrollActiveThumbIntoView(index: number): void {
+    const track = this.galleryThumbTrackRef?.nativeElement;
+    const thumb = track?.children[index] as HTMLElement | undefined;
+    thumb?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
   }
 
   private buildToc(): void {

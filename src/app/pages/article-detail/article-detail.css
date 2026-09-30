@@ -333,7 +333,8 @@
 	/* 多一層祖先選擇器提高優先度，才能蓋過後面 <=1360px 區塊的 max-width:none；
 	   只保留右側大綱需要的安全淨空，不再限制成 760px 的閱讀寬度 */
 	.article-detail-layout .article-main .article-content,
-	.article-detail-layout .article-main .hero-content {
+	.article-detail-layout .article-main .hero-content,
+	.article-detail-layout .article-main .article-gallery {
 		max-width: calc(100% - 150px);
 	}
 
@@ -456,6 +457,7 @@
 
 .article-content {
 	max-width: 760px;
+	margin: 0;
 	padding: 8px 0 8px clamp(24px, 4vw, 48px);
 	border-left: 1px solid color-mix(in srgb, var(--color-accent) 50%, var(--detail-line));
 	color: var(--color-text-sub);
@@ -677,6 +679,214 @@
 	overflow-x: auto;
 }
 
+.article-gallery {
+	max-width: 760px;
+	margin-top: 0;
+	padding: 64px 0 8px clamp(24px, 4vw, 48px);
+	border-left: 1px solid color-mix(in srgb, var(--color-accent) 50%, var(--detail-line));
+}
+
+.article-gallery-title {
+	position: relative;
+	display: table;
+	margin: 0 0 24px;
+	padding-bottom: 0.3em;
+	color: var(--color-text-main);
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.article-gallery-title::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: calc(100% + 20px);
+	height: 4px;
+	border-radius: 4px;
+	background: linear-gradient(
+		90deg,
+		var(--color-accent) 0%,
+		var(--color-accent) 54%,
+		color-mix(in srgb, var(--color-accent) 42%, transparent) 78%,
+		transparent 100%
+	);
+}
+
+.gallery-viewer {
+	border: 1px solid var(--detail-line);
+	border-radius: 16px;
+	background: var(--color-surface-soft);
+	box-shadow: var(--shadow-soft);
+	overflow: hidden;
+}
+
+.gallery-stage {
+	position: relative;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	height: clamp(300px, 38vw, 520px);
+	background: var(--color-surface-soft);
+	touch-action: pan-y;
+}
+
+.gallery-stage-image {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background: var(--color-surface-soft);
+}
+
+.gallery-nav-btn {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	width: 42px;
+	height: 42px;
+	border: 1px solid var(--color-line-strong);
+	border-radius: 50%;
+	background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+	backdrop-filter: blur(6px);
+	color: var(--color-text-main);
+	line-height: 0;
+	cursor: pointer;
+	transform: translateY(-50%);
+	transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.gallery-nav-btn svg {
+	display: block;
+	flex: none;
+	width: 20px;
+	height: 20px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2.2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.gallery-nav-btn:hover {
+	border-color: var(--color-accent);
+	background: var(--color-surface);
+	color: var(--color-accent-hover);
+	transform: translateY(-50%) scale(1.06);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.gallery-nav-btn { opacity: 0.1; }
+	.gallery-stage:hover .gallery-nav-btn,
+	.gallery-stage:focus-within .gallery-nav-btn,
+	.gallery-nav-btn:focus-visible { opacity: 1; }
+}
+
+.gallery-nav-btn:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+}
+
+.gallery-nav-prev { left: 14px; }
+.gallery-nav-next { right: 14px; }
+
+.gallery-counter {
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	z-index: 2;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+	backdrop-filter: blur(6px);
+	color: var(--color-text-sub);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+}
+
+.gallery-caption {
+	position: absolute;
+	inset: auto 0 0 0;
+	z-index: 2;
+	padding: 28px 20px 14px;
+	background: linear-gradient(to top, color-mix(in srgb, black 55%, transparent), transparent);
+	color: #fff;
+	font-size: 13.5px;
+	font-weight: 600;
+	text-align: center;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-thumb-track-wrap {
+	position: relative;
+	padding: 14px 16px 16px;
+}
+
+.gallery-thumb-track {
+	display: flex;
+	gap: 10px;
+	padding-bottom: 9px;
+	overflow-x: auto;
+	scroll-snap-type: x proximity;
+	scrollbar-width: thin;
+	scrollbar-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-line-strong)) transparent;
+}
+
+.gallery-thumb-track::-webkit-scrollbar {
+	height: 5px;
+}
+
+.gallery-thumb-track::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.gallery-thumb-track::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-accent) 55%, var(--color-line-strong));
+}
+
+.gallery-thumb-track::-webkit-scrollbar-thumb:hover {
+	background: var(--color-accent);
+}
+
+.gallery-thumb {
+	flex: 0 0 auto;
+	width: 84px;
+	height: 84px;
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: 10px;
+	background: var(--color-surface-soft);
+	cursor: pointer;
+	overflow: hidden;
+	scroll-snap-align: center;
+	opacity: 0.62;
+	transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.gallery-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	pointer-events: none;
+}
+
+.gallery-thumb:hover {
+	opacity: 0.9;
+}
+
+.gallery-thumb.active {
+	border-color: var(--color-accent);
+	opacity: 1;
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-soft);
+}
+
 .article-status {
 	display: grid;
 	place-items: center;
@@ -775,7 +985,8 @@
 	.article-sidebar { position: static; }
 	/* 資訊已收合到上方，標題、簡介與內文不再需要維持桌機雙欄時的閱讀寬度上限 */
 	.article-main .article-content,
-	.article-main .hero-content { max-width: none; }
+	.article-main .hero-content,
+	.article-main .article-gallery { max-width: none; }
 	.article-meta-panel {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -825,12 +1036,39 @@
 	.hero-content p { max-width: none; font-size: 1rem; line-height: 1.8; overflow-wrap: anywhere; }
 	.hero-media { width: 100%; border-radius: 10px; }
 	.hero-image { min-height: 0; aspect-ratio: 16 / 10; }
-	.article-content { width: 100%; padding: 0; border-left: 0; font-size: 1rem; line-height: 1.9; }
+	.article-content {
+		width: 100%;
+		padding: 0 0 0 16px;
+		border-left: 1px solid color-mix(in srgb, var(--color-accent) 50%, var(--detail-line));
+		font-size: 1rem;
+		line-height: 1.9;
+	}
 	.article-content ::ng-deep .ql-editor h1 { font-size: 1.6rem; }
 	.article-content ::ng-deep .ql-editor h2 { font-size: 1.3rem; }
 	.article-content ::ng-deep .ql-editor h3 { font-size: 1.12rem; }
 	.article-content ::ng-deep .ql-editor table { margin-right: 0; margin-left: 0; }
 	.article-error { min-height: 300px; padding: 40px 24px; }
+	.article-gallery {
+		width: 100%;
+		margin-top: 0;
+		padding: 32px 0 0 16px;
+		border-left: 1px solid color-mix(in srgb, var(--color-accent) 50%, var(--detail-line));
+	}
+	.article-gallery-title { font-size: 1.28rem; margin-bottom: 18px; }
+	.gallery-viewer { border-radius: 12px; }
+	.gallery-stage { height: clamp(220px, 62vw, 340px); }
+	.gallery-nav-btn { width: 36px; height: 36px; }
+	.gallery-nav-btn svg { width: 16px; height: 16px; }
+	.gallery-nav-prev { left: 8px; }
+	.gallery-nav-next { right: 8px; }
+	.gallery-counter { top: 10px; right: 10px; padding: 3px 8px; font-size: 11px; }
+	.gallery-caption { padding: 22px 14px 10px; font-size: 12.5px; }
+	.gallery-thumb-track-wrap { padding: 10px 12px 12px; }
+	.gallery-thumb-track-wrap::before,
+	.gallery-thumb-track-wrap::after { top: 10px; bottom: 12px; width: 24px; }
+	.gallery-thumb-track-wrap::before { left: 12px; }
+	.gallery-thumb-track-wrap::after { right: 12px; }
+	.gallery-thumb { width: 64px; height: 64px; }
 }
 
 @media (min-width: 641px) and (max-width: 768px) {
@@ -868,6 +1106,8 @@
 	.hero-media { width: 100%; }
 	.hero-image { min-height: 0; aspect-ratio: 16 / 10; }
 	.article-content { width: 100%; padding-left: 24px; }
+	.article-gallery { width: 100%; padding-left: 24px; padding-top: 36px; }
+	.gallery-thumb { width: 76px; height: 76px; }
 }
 
 @media (max-width: 420px) {
@@ -875,4 +1115,6 @@
 	.article-content ::ng-deep .ql-editor pre,
 	.article-content ::ng-deep .ql-editor .ql-syntax { padding: 0.9em; font-size: 0.82em; }
 	.article-error { padding: 32px 18px; }
+	.gallery-stage { height: clamp(200px, 66vw, 300px); }
+	.gallery-thumb { width: 56px; height: 56px; }
 }

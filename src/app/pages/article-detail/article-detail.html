@@ -62,6 +62,55 @@
                         <div class="ql-editor" #articleBody [innerHTML]="currentArticle.content | safeHtml"></div>
                     </article>
                 }
+
+				@if (galleryImages().length > 0) {
+					<section class="article-gallery" aria-label="圖片集">
+						<h2 class="article-gallery-title">圖片集</h2>
+
+						<div class="gallery-viewer">
+							<div class="gallery-stage" (touchstart)="onGalleryTouchStart($event)" (touchend)="onGalleryTouchEnd($event)">
+								<img
+									class="gallery-stage-image"
+									[src]="galleryImages()[activeGalleryIndex()].url"
+									[alt]="galleryImages()[activeGalleryIndex()].label || '圖片 ' + (activeGalleryIndex() + 1)"
+								>
+
+								@if (galleryImages().length > 1) {
+									<button type="button" class="gallery-nav-btn gallery-nav-prev" (click)="showPrevGalleryImage()" aria-label="上一張圖片">
+										<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+									</button>
+									<button type="button" class="gallery-nav-btn gallery-nav-next" (click)="showNextGalleryImage()" aria-label="下一張圖片">
+										<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+									</button>
+									<span class="gallery-counter">{{ activeGalleryIndex() + 1 }} / {{ galleryImages().length }}</span>
+								}
+
+								@if (galleryImages()[activeGalleryIndex()].label) {
+									<div class="gallery-caption">{{ galleryImages()[activeGalleryIndex()].label }}</div>
+								}
+							</div>
+
+							@if (galleryImages().length > 1) {
+								<div class="gallery-thumb-track-wrap">
+									<div class="gallery-thumb-track" #galleryThumbTrack>
+										@for (image of galleryImages(); track image.url + '_' + $index; let i = $index) {
+											<button
+												type="button"
+												class="gallery-thumb"
+												[class.active]="activeGalleryIndex() === i"
+												(click)="setActiveGalleryImage(i)"
+												[attr.aria-current]="activeGalleryIndex() === i ? 'true' : null"
+												[attr.aria-label]="image.label || ('圖片 ' + (i + 1))"
+											>
+												<img [src]="image.url" [alt]="image.label || ('縮圖 ' + (i + 1))">
+											</button>
+										}
+									</div>
+								</div>
+							}
+						</div>
+					</section>
+				}
 			</main>
 		</div>
 

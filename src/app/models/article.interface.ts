@@ -1,3 +1,9 @@
+export interface GalleryImage {
+  url: string;
+  label?: string;
+  sort_order?: number;
+}
+
 export interface ArticleData {
   id?: number;
   slug: string;
@@ -12,6 +18,7 @@ export interface ArticleData {
   is_published?: boolean;
   published_at?: string;
   view_count?: number;
+  galleryImages?: GalleryImage[];
 }
 
 export interface PaginationInfo {
