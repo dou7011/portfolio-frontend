@@ -176,7 +176,7 @@
                   class="gallery-item-label"
                   placeholder="圖片說明（選填）"
                   [(ngModel)]="image.label"
-                  [name]="'gallery_label_' + i"
+                  [name]="'gallery_label_' + image.localId"
                   [disabled]="isSaving()"
                 >
                 <div class="gallery-item-footer">
