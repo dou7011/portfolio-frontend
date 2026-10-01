@@ -1,12 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { ToastComponent } from './components/toast/toast.component';
 import { ResumeService } from './services/resume.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, ToastComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

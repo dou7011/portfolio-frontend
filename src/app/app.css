@@ -169,12 +169,14 @@
 }
 
 .header-nav a:hover,
-.header-nav a:focus-visible {
+.header-nav a:focus-visible,
+.header-nav a.active {
     color: var(--color-accent-hover);
 }
 
 .header-nav a:hover::after,
-.header-nav a:focus-visible::after {
+.header-nav a:focus-visible::after,
+.header-nav a.active::after {
     transform: scaleX(1);
 }
 
