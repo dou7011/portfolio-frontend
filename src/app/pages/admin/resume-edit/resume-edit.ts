@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
+import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 import { ResumeService } from '../../../services/resume.service';
 import { ToastService } from '../../../services/toast.service';
 import { ApiError } from '../../../models/api.interface';
@@ -10,7 +11,7 @@ import { ApiError } from '../../../models/api.interface';
 @Component({
   selector: 'app-resume-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, QuillModule],
+  imports: [CommonModule, ReactiveFormsModule, QuillModule, QuillStylesComponent],
   templateUrl: './resume-edit.html',
   styleUrl: './resume-edit.css'
 })
@@ -96,7 +97,7 @@ export class ResumeEditComponent implements OnInit {
   loadResumeData() {
     this.isLoading = true;
     this.saveError = '';
-    this.resumeService.getResumeData(this.currentLang).subscribe({
+    this.resumeService.getResumeData(this.currentLang, true).subscribe({
       next: (res) => {
         const data = res.data;
         if (!data) {

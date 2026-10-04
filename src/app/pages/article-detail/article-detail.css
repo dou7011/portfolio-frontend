@@ -21,10 +21,6 @@
 	mask-image: linear-gradient(to bottom, black, transparent 62%);
 }
 
-.article-detail-page * {
-	box-sizing: border-box;
-}
-
 .article-detail-layout {
 	position: relative;
 	display: grid;

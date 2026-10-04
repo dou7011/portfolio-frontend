@@ -18,6 +18,12 @@ export type AuthMeResponse = ApiSuccess<AuthUser & { csrfToken?: string }>;
 export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/auth`;
+  private lastVerifiedAt = 0;
+
+  /** 在時限內已成功驗證過登入狀態。 */
+  isRecentlyVerified(ttlMs = 30_000): boolean {
+    return Date.now() - this.lastVerifiedAt < ttlMs;
+  }
 
   loginApi(credentials: { email: string; password: string }) {
     return this.http.post<LoginResponse>(
@@ -39,7 +45,10 @@ export class AuthService {
    */
   logout(): Observable<void> {
     return this.http.post(`${this.apiUrl}/logout`, null, { withCredentials: true }).pipe(
-      tap(() => sessionStorage.removeItem('portfolio_csrf')),
+      tap(() => {
+        sessionStorage.removeItem('portfolio_csrf');
+        this.lastVerifiedAt = 0;
+      }),
       map(() => undefined)
     );
   }
@@ -50,6 +59,7 @@ export class AuthService {
   verifyPermissions(): Observable<AuthMeResponse> {
     return this.http.get<AuthMeResponse>(`${this.apiUrl}/me`, { withCredentials: true }).pipe(
       tap((response) => {
+        this.lastVerifiedAt = response.success ? Date.now() : 0;
         const csrfToken = response.data?.csrfToken;
         if (csrfToken) {
           sessionStorage.setItem('portfolio_csrf', csrfToken);

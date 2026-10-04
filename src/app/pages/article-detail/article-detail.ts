@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -11,12 +12,14 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
 import { EMPTY, catchError, retry, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { timeout } from 'rxjs';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { QuillStylesComponent } from '../../components/quill-styles/quill-styles.component';
 
 interface TocItem {
   id: string;
@@ -64,7 +67,8 @@ export function collectTocItems(container: HTMLElement): TocItem[] {
 
 @Component({
   selector: 'app-article-detail',
-  imports: [RouterLink, SafeHtmlPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, SafeHtmlPipe, QuillStylesComponent],
   templateUrl: './article-detail.html',
   styleUrl: './article-detail.css',
 })
@@ -73,6 +77,8 @@ export class ArticleDetailComponent {
   private readonly articlesService = inject(ArticlesService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly injector = inject(Injector);
+  private readonly titleService = inject(Title);
+  private readonly metaService = inject(Meta);
 
   @ViewChild('articleBody') private readonly articleBodyRef?: ElementRef<HTMLDivElement>;
   @ViewChild('galleryThumbTrack') private readonly galleryThumbTrackRef?: ElementRef<HTMLDivElement>;
@@ -94,17 +100,34 @@ export class ArticleDetailComponent {
   private sectionStarts: number[] = [];
   private sectionEnds: number[] = [];
   private contentResizeObserver?: ResizeObserver;
-  private readonly onScroll = () => this.updateProgress();
+  private scrollFrame = 0;
+  private readonly onScroll = () => {
+    if (this.scrollFrame) return;
+    this.scrollFrame = requestAnimationFrame(() => {
+      this.scrollFrame = 0;
+      this.updateProgress();
+    });
+  };
   private readonly onResize = () => {
     this.measureSections();
     this.updateProgress();
   };
 
   constructor() {
+    const defaultTitle = this.titleService.getTitle();
+    const defaultDescription = this.metaService.getTag('name="description"')?.content ?? '';
+    const defaultOgTitle = this.metaService.getTag('property="og:title"')?.content ?? '';
     window.addEventListener('scroll', this.onScroll, { passive: true });
     window.addEventListener('resize', this.onResize, { passive: true });
     this.destroyRef.onDestroy(() => {
+      this.titleService.setTitle(defaultTitle);
+      this.metaService.updateTag({ name: 'description', content: defaultDescription });
+      this.metaService.updateTag({ property: 'og:title', content: defaultOgTitle });
+      this.metaService.updateTag({ property: 'og:description', content: defaultDescription });
+      this.metaService.updateTag({ property: 'og:type', content: 'website' });
+      this.metaService.removeTag('property="og:image"');
       window.removeEventListener('scroll', this.onScroll);
+      cancelAnimationFrame(this.scrollFrame);
       window.removeEventListener('resize', this.onResize);
       this.contentResizeObserver?.disconnect();
     });
@@ -153,6 +176,7 @@ export class ArticleDetailComponent {
         }
 
         this.article.set(response.data);
+        this.updateSeoMeta(response.data);
         this.activeGalleryIndex.set(0);
         this.isLoading.set(false);
         // 等內文的 innerHTML 實際渲染完成後再掃描標題，避免抓不到剛插入的節點
@@ -306,6 +330,21 @@ export class ArticleDetailComponent {
     this.errorMessage.set(message);
     this.errorType.set(type);
     this.isLoading.set(false);
+  }
+
+  private updateSeoMeta(article: ArticleData): void {
+    const title = `${article.title} | Ho-Tai's Portfolio`;
+    const plainContent = (article.content ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const description = (article.excerpt?.trim() || plainContent).slice(0, 160);
+
+    this.titleService.setTitle(title);
+    this.metaService.updateTag({ name: 'description', content: description });
+    this.metaService.updateTag({ property: 'og:title', content: title });
+    this.metaService.updateTag({ property: 'og:description', content: description });
+    this.metaService.updateTag({ property: 'og:type', content: 'article' });
+    if (article.cover_image?.trim()) {
+      this.metaService.updateTag({ property: 'og:image', content: article.cover_image.trim() });
+    }
   }
 
 }

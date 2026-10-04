@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, HostListener, OnInit, inject, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, HostListener, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -8,11 +8,13 @@ import { ApiError } from '../../../models/api.interface';
 import { ResumeData } from '../../../models/resume.interface';
 import { ResumeService } from '../../../services/resume.service';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
+import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 
 @Component({
   selector: 'app-resume-interactive',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, RouterLink, SafeHtmlPipe],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent],
   templateUrl: './resume-interactive.html',
   styleUrl: './resume-interactive.css',
 })

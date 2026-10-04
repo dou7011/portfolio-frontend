@@ -1,11 +1,14 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 
 import { ToastComponent } from './components/toast/toast.component';
 import { ResumeService } from './services/resume.service';
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -18,6 +21,13 @@ export class App implements OnInit {
   protected readonly currentYear = new Date().getFullYear();
   protected readonly isDarkMode = signal(false);
   protected readonly resumeData = this.resumeService.resumeData;
+  protected readonly isAdminRoute = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects.startsWith('/admin')),
+    ),
+    { initialValue: this.router.url.startsWith('/admin') },
+  );
 
   constructor() {
     const savedTheme = localStorage.getItem('portfolio-theme');
@@ -38,9 +48,5 @@ export class App implements OnInit {
     this.isDarkMode.set(isDark);
     document.documentElement.dataset['theme'] = isDark ? 'dark' : 'light';
     localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
-  }
-
-  protected isAdminRoute(): boolean {
-    return this.router.url.startsWith('/admin');
   }
 }

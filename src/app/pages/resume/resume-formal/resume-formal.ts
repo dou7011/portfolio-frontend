@@ -1,17 +1,19 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { ResumeService } from '../../../services/resume.service';
 import { ResumeData } from '../../../models/resume.interface';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
+import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 import { retry, timeout } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
 
 @Component({
   selector: 'app-resume-formal',
-  imports: [CommonModule, RouterLink, SafeHtmlPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent],
   templateUrl: './resume-formal.html',
   styleUrl: './resume-formal.css',
 })

@@ -1,22 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <title>Ho-Tai's Portfolio</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ho-Tai Lin 的作品集：全端開發、系統架構與技術文章。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ho-Tai's Portfolio">
+  <meta property="og:description" content="Ho-Tai Lin 的作品集：全端開發、系統架構與技術文章。">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <script>
-    (function() {
-      try {
-        const savedTheme = localStorage.getItem('portfolio-theme');
-        const isDark = savedTheme === 'dark' || savedTheme === null;
-        document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-      } catch (error) {
-        document.documentElement.dataset.theme = 'dark';
-      }
-    })();
-  </script>
+  <script src="/theme-init.js"></script>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ee3369d033534a048a47075ceb37ed64"}'></script>
   <!-- End Cloudflare Web Analytics -->

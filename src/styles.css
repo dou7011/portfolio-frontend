@@ -1,6 +1,8 @@
-@import 'quill/dist/quill.snow.css';
-@import 'quill/dist/quill.core.css';
-
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 html, body {
   overflow-anchor: none;

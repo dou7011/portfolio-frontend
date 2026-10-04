@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
+import { authChildGuard, authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   // 當網址是空的時候 (首頁)，載入 HomeComponent
@@ -34,6 +34,7 @@ export const routes: Routes = [
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin/admin').then((m) => m.AdminComponent),
     canActivate: [authGuard],
+    canActivateChild: [authChildGuard],
     children: [
       {
         path: '',

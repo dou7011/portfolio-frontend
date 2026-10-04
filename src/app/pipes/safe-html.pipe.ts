@@ -6,6 +6,7 @@ import { marked } from 'marked';
 const VIDEO_FILE_EXTENSION_RE = /\.(mp4|webm|ogg|ogv|mov|m4v)(\?.*)?$/i;
 // 直接圖片檔的副檔名
 const IMAGE_FILE_EXTENSION_RE = /\.(jpe?g|png|gif|webp|avif|svg)(\?.*)?$/i;
+const YOUTUBE_ID_RE = /^[\w-]{6,20}$/;
 
 @Pipe({
   name: 'safeHtml',
@@ -141,21 +142,18 @@ export class SafeHtmlPipe implements PipeTransform {
   private toYouTubeEmbedUrl(url: URL): string | null {
     const host = url.hostname.replace(/^www\./i, '').toLowerCase();
 
+    const toEmbed = (id: string | null | undefined): string | null =>
+      id && YOUTUBE_ID_RE.test(id) ? `https://www.youtube.com/embed/${id}` : null;
+
     if (host === 'youtu.be') {
-      const id = url.pathname.slice(1);
-      return id ? `https://www.youtube.com/embed/${id}` : null;
+      return toEmbed(url.pathname.slice(1));
     }
 
     if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
-      if (url.pathname.startsWith('/embed/')) return url.href;
-      if (url.pathname === '/watch') {
-        const id = url.searchParams.get('v');
-        return id ? `https://www.youtube.com/embed/${id}` : null;
-      }
-      if (url.pathname.startsWith('/shorts/')) {
-        const id = url.pathname.split('/')[2];
-        return id ? `https://www.youtube.com/embed/${id}` : null;
-      }
+      // 一律重組網址，不直接沿用輸入的 href（避免夾帶任意路徑/參數）
+      if (url.pathname.startsWith('/embed/')) return toEmbed(url.pathname.split('/')[2]);
+      if (url.pathname === '/watch') return toEmbed(url.searchParams.get('v'));
+      if (url.pathname.startsWith('/shorts/')) return toEmbed(url.pathname.split('/')[2]);
     }
 
     return null;
@@ -165,7 +163,8 @@ export class SafeHtmlPipe implements PipeTransform {
     const host = url.hostname.replace(/^www\./i, '').toLowerCase();
 
     if (host === 'player.vimeo.com' && url.pathname.startsWith('/video/')) {
-      return url.href;
+      const id = url.pathname.split('/')[2];
+      return id && /^\d+$/.test(id) ? `https://player.vimeo.com/video/${id}` : null;
     }
     if (host === 'vimeo.com') {
       const id = url.pathname.split('/').filter(Boolean)[0];

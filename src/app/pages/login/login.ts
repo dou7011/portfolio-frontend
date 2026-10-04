@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { ApiError } from '../../models/api.interface';
 
 @Component({
   selector: 'app-login',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
@@ -18,8 +19,8 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  public errorMessage = '';
-  public isLoading = false;
+  public readonly errorMessage = signal('');
+  public readonly isLoading = signal(false);
 
   // email 追加格式驗證
   public loginForm = this.fb.group({
@@ -42,20 +43,20 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.invalid) return;
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
     
     const credentials = this.loginForm.getRawValue();
 
     this.authService.loginApi(credentials).subscribe({
       next: () => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.router.navigate(['/']);
       },
       error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         const apiError = err.error as ApiError | undefined;
-        this.errorMessage = apiError?.message ?? '登入失敗，請檢查網路或後端狀態';
+        this.errorMessage.set(apiError?.message ?? '登入失敗，請檢查網路或後端狀態');
       }
     });
   }

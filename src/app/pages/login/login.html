@@ -22,12 +22,12 @@
           }
         </div>
 
-        @if (errorMessage) {
-          <div class="error-msg">{{ errorMessage }}</div>
+        @if (errorMessage()) {
+          <div class="error-msg">{{ errorMessage() }}</div>
         }
 
-        <button type="submit" [disabled]="loginForm.invalid || isLoading" class="submit-btn">
-          {{ isLoading ? '登入中...' : '登入' }}
+        <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="submit-btn">
+          {{ isLoading() ? '登入中...' : '登入' }}
         </button>
       </form>
     </div>

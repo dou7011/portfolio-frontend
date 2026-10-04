@@ -60,7 +60,7 @@ export class ArticlesService {
 
   getArticleBySlug(slug: string, includeDrafts = false): Observable<ApiSuccess<ArticleData>> {
     const queryString = includeDrafts ? '?includeDrafts=1' : '';
-    return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}/${slug}${queryString}`);
+    return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}/${encodeURIComponent(slug)}${queryString}`);
   }
 
   createArticle(payload: ArticleData): Observable<ApiSuccess<ArticleData>> {

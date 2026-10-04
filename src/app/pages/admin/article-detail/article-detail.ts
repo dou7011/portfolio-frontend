@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
+import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../../../models/api.interface';
 import { ArticleData, GalleryImage } from '../../../models/article.interface';
@@ -36,7 +37,7 @@ interface GalleryImageItem {
 @Component({
   selector: 'app-article-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, QuillModule, RouterLink],
+  imports: [CommonModule, FormsModule, QuillModule, RouterLink, QuillStylesComponent],
   templateUrl: './article-detail.html',
   styleUrl: './article-detail.css',
 })
@@ -45,6 +46,16 @@ export class ArticleDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly articlesService = inject(ArticlesService);
   private readonly toastService = inject(ToastService);
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      const coverUrl = this.coverImagePreviewUrl();
+      if (coverUrl) URL.revokeObjectURL(coverUrl);
+      this.galleryImages().forEach((image) => {
+        if (image.previewUrl) URL.revokeObjectURL(image.previewUrl);
+      });
+    });
+  }
 
   readonly mode = signal<'new' | 'edit'>('new');
   readonly articleId = signal<number | null>(null);
