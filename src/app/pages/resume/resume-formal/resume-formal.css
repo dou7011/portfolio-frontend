@@ -587,15 +587,6 @@
   color: var(--accent);
 }
 
-.loading {
-  min-height: 55vh;
-  display: grid;
-  place-content: center;
-  gap: 12px;
-  color: var(--text-sub);
-  text-align: center;
-}
-
 .error-state {
   min-height: 55vh;
   display: grid;
@@ -606,20 +597,8 @@
   padding: 0 20px;
 }
 
-.spinner {
-  width: 34px;
-  height: 34px;
-  margin: 0 auto;
-  border-radius: 50%;
-  border: 3px solid var(--color-resume-divider);
-  border-top-color: var(--accent);
-  animation: spin 0.9s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+app-loading-indicator {
+  min-height: 55vh;
 }
 
 @media (prefers-reduced-motion: reduce) {

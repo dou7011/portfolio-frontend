@@ -1,7 +1,9 @@
 <app-quill-styles />
 <section class="article-detail-page">
 	@if (isLoading()) {
-		<div class="article-status" role="status">載入文章中...</div>
+		<div class="article-status">
+			<app-loading-indicator label="文章載入中..." />
+		</div>
 	} @else if (article(); as currentArticle) {
 		<div class="article-detail-layout">
 			<aside class="article-sidebar">

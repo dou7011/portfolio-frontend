@@ -148,10 +148,7 @@
       </a>
     </footer>
   } @else if (isLoading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>{{ uiText().loading }}</p>
-    </div>
+    <app-loading-indicator [label]="uiText().loading" />
   } @else {
     <div class="error-state">
       <p>{{ errorMessage() || uiText().fallbackError }}</p>

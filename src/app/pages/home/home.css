@@ -433,6 +433,16 @@
   gap: 28px;
   align-items: stretch;
   justify-content: center;
+}
+
+.home-loading-state {
+  grid-column: 1 / -1;
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--home-border);
+  border-radius: 18px;
+  background: var(--home-surface);
   width: min(100%, 1280px);
   margin: 0 auto;
 }

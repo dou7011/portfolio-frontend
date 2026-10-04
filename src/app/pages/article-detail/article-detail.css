@@ -825,7 +825,7 @@
 .gallery-thumb-track {
 	display: flex;
 	gap: 10px;
-	padding-bottom: 9px;
+	padding: 4px 0 9px;
 	overflow-x: auto;
 	scroll-snap-type: x proximity;
 	scrollbar-width: thin;

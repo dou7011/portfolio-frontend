@@ -204,9 +204,7 @@
     </main>
   } @else if (isLoading()) {
     <main class="container">
-      <div class="loading-state reveal">
-        <p>{{ uiText().loading }}</p>
-      </div>
+      <app-loading-indicator [label]="uiText().loading" />
     </main>
   } @else {
     <main class="container">

@@ -6,6 +6,7 @@ import { ResumeService } from '../../../services/resume.service';
 import { ResumeData } from '../../../models/resume.interface';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
+import { LoadingIndicatorComponent } from '../../../components/loading-indicator/loading-indicator';
 import { retry, timeout } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
@@ -13,7 +14,7 @@ import { ApiError } from '../../../models/api.interface';
 @Component({
   selector: 'app-resume-formal',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent],
   templateUrl: './resume-formal.html',
   styleUrl: './resume-formal.css',
 })

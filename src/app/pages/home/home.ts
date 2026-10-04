@@ -6,12 +6,13 @@ import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
 import { ResumeService } from '../../services/resume.service';
 import { RouterLink } from '@angular/router';
+import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator';
 
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LoadingIndicatorComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

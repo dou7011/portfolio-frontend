@@ -20,6 +20,7 @@ import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { QuillStylesComponent } from '../../components/quill-styles/quill-styles.component';
+import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator';
 
 interface TocItem {
   id: string;
@@ -68,7 +69,7 @@ export function collectTocItems(container: HTMLElement): TocItem[] {
 @Component({
   selector: 'app-article-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, SafeHtmlPipe, QuillStylesComponent],
+  imports: [RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent],
   templateUrl: './article-detail.html',
   styleUrl: './article-detail.css',
 })

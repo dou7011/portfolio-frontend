@@ -1,0 +1,127 @@
+:host {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  color: var(--color-text-main);
+}
+
+.loading-indicator {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.loading-emblem {
+  position: relative;
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 24%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 12%, var(--color-surface)) 0%,
+    color-mix(in srgb, var(--color-surface) 84%, transparent) 72%
+  );
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.loading-orbit,
+.loading-ring,
+.loading-ring-inner {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.loading-orbit {
+  inset: -5px;
+  border: 1px dashed color-mix(in srgb, var(--color-accent) 36%, var(--color-line));
+  animation: loading-spin 9s linear infinite;
+}
+
+.loading-orbit-dot {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 55%, transparent);
+  transform: translateX(-50%);
+}
+
+.loading-ring {
+  inset: 5px;
+  border: 2px solid color-mix(in srgb, var(--color-line-strong) 76%, transparent);
+  border-top-color: var(--color-accent);
+  border-right-color: color-mix(in srgb, var(--color-accent) 44%, var(--color-line-strong));
+  animation: loading-spin 1.35s cubic-bezier(0.5, 0.1, 0.3, 0.9) infinite;
+}
+
+.loading-ring-inner {
+  inset: 13px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 34%, var(--color-line));
+  border-bottom-color: var(--color-accent-hover);
+  animation: loading-spin-reverse 1.9s linear infinite;
+}
+
+.loading-core {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  animation: loading-pulse 1.6s ease-in-out infinite;
+}
+
+.loading-label {
+  color: var(--color-text-main);
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.loading-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text-sub);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.loading-caption-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: loading-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes loading-spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes loading-pulse {
+  50% { opacity: 0.45; transform: scale(0.76); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-orbit,
+  .loading-ring,
+  .loading-ring-inner,
+  .loading-core,
+  .loading-caption-dot {
+    animation: none;
+  }
+}

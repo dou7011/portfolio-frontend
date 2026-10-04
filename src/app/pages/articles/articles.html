@@ -158,7 +158,9 @@
           <span>{{ totalCount() }} 篇結果</span>
         </div>
         @if (isLoading()) {
-          <div class="loading-state">載入中...</div>
+            <div class="loading-state is-loading">
+            <app-loading-indicator label="文章載入中..." />
+          </div>
         } @else if (loadError()) {
           <div class="content-error" role="alert">
             <div class="content-error-mark" aria-hidden="true">!</div>

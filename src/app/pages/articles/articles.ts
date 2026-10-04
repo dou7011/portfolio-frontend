@@ -5,12 +5,13 @@ import { retry } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleData } from '../../models/article.interface';
 import { ArticlesService } from '../../services/articles.service';
+import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator';
 
 @Component({
   selector: 'app-articles',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LoadingIndicatorComponent],
   templateUrl: './articles.html',
   styleUrl: './articles.css',
 })

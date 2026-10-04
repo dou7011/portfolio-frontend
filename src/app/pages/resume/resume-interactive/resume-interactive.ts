@@ -9,12 +9,13 @@ import { ResumeData } from '../../../models/resume.interface';
 import { ResumeService } from '../../../services/resume.service';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
+import { LoadingIndicatorComponent } from '../../../components/loading-indicator/loading-indicator';
 
 @Component({
   selector: 'app-resume-interactive',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent],
   templateUrl: './resume-interactive.html',
   styleUrl: './resume-interactive.css',
 })

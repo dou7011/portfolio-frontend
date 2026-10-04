@@ -638,6 +638,10 @@
   box-shadow: var(--articles-panel-shadow);
 }
 
+.loading-state.is-loading {
+  padding: 0;
+}
+
 .content-error {
   position: relative;
   display: grid;
