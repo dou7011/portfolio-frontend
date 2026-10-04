@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { ArticleData } from '../../../models/article.interface';
 import { ApiError } from '../../../models/api.interface';
 import { ArticlesService } from '../../../services/articles.service';
@@ -10,13 +12,17 @@ import { ArticlesService } from '../../../services/articles.service';
 @Component({
   selector: 'app-articles',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './articles.html',
   styleUrl: './articles.css',
 })
 export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly articlesService = inject(ArticlesService);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
   private tagResizeObserver?: ResizeObserver;
+  private loadRequestId = 0;
 
   @ViewChild('tagList') private tagList?: ElementRef<HTMLDivElement>;
 
@@ -58,29 +64,40 @@ export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadArticles(): void {
+    const requestId = ++this.loadRequestId;
     this.isLoading = true;
     this.pageError = '';
+    this.changeDetector.markForCheck();
     const isPublished = this.getPublishedFilterValue();
     this.articlesService.getArticles({
       page: this.page,
       pageSize: 10,
       tag: (this.selectedTag === 'all' ? undefined : this.selectedTag),
       is_published: isPublished,
-    }).subscribe({
+    }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        if (requestId !== this.loadRequestId) return;
+        this.isLoading = false;
+        this.changeDetector.markForCheck();
+      }),
+    ).subscribe({
       next: (response) => {
+        if (requestId !== this.loadRequestId) return;
         const data = response.data;
         this.articles = data?.data ?? [];
-        this.totalCount = data?.pagination.totalFiltered ?? 0;
-        this.totalPages = data?.pagination.totalPages || 1;
-        this.tagOptions = data?.aggregations.tags ?? [];
-        this.isLoading = false;
+        this.totalCount = data?.pagination?.totalFiltered ?? 0;
+        this.totalPages = data?.pagination?.totalPages || 1;
+        this.tagOptions = data?.aggregations?.tags ?? [];
+        this.changeDetector.markForCheck();
         requestAnimationFrame(() => this.updateTagOverflow());
       },
       error: (error: HttpErrorResponse) => {
+        if (requestId !== this.loadRequestId) return;
         console.error('Failed to load articles:', error);
         this.articles = [];
-        this.isLoading = false;
         this.pageError = this.getErrorMessage(error, '載入文章失敗，請稍後再試。');
+        this.changeDetector.markForCheck();
       },
     });
   }
@@ -121,6 +138,7 @@ export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (error: HttpErrorResponse) => {
         this.pageError = this.getErrorMessage(error, '刪除文章失敗，請稍後再試。');
+        this.changeDetector.markForCheck();
       },
     });
   }
@@ -152,5 +170,6 @@ export class ArticlesComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!tagList) return;
 
     this.isTagsOverflowing = tagList.scrollHeight > tagList.clientHeight + 1;
+    this.changeDetector.markForCheck();
   }
 }
