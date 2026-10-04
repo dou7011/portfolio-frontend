@@ -1,8 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 import { ResumeService } from '../../../services/resume.service';
 import { ToastService } from '../../../services/toast.service';
@@ -11,6 +13,7 @@ import { ApiError } from '../../../models/api.interface';
 @Component({
   selector: 'app-resume-edit',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule, QuillModule, QuillStylesComponent],
   templateUrl: './resume-edit.html',
   styleUrl: './resume-edit.css'
@@ -19,6 +22,9 @@ export class ResumeEditComponent implements OnInit {
   private fb = inject(FormBuilder);
   private resumeService = inject(ResumeService);
   private toastService = inject(ToastService);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private loadRequestId = 0;
 
   public currentLang: 'zh' | 'en' = 'zh';
   public isLoading = false;
@@ -95,14 +101,24 @@ export class ResumeEditComponent implements OnInit {
   }
 
   loadResumeData() {
+    const requestId = ++this.loadRequestId;
     this.isLoading = true;
     this.saveError = '';
-    this.resumeService.getResumeData(this.currentLang, true).subscribe({
+    this.changeDetector.markForCheck();
+    this.resumeService.getResumeData(this.currentLang, true).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        if (requestId !== this.loadRequestId) return;
+        this.isLoading = false;
+        this.changeDetector.markForCheck();
+      }),
+    ).subscribe({
       next: (res) => {
+        if (requestId !== this.loadRequestId) return;
         const data = res.data;
         if (!data) {
           this.saveError = '目前沒有可編輯的履歷資料。';
-          this.isLoading = false;
+          this.changeDetector.markForCheck();
           return;
         }
         this.skills.clear();
@@ -160,12 +176,13 @@ export class ResumeEditComponent implements OnInit {
           }));
         });
 
-        this.isLoading = false;
+        this.changeDetector.markForCheck();
       },
       error: (err: HttpErrorResponse) => {
+        if (requestId !== this.loadRequestId) return;
         const apiError = err.error as ApiError | undefined;
         this.saveError = apiError?.message ?? '載入履歷失敗，請稍後再試。';
-        this.isLoading = false;
+        this.changeDetector.markForCheck();
       }
     });
   }
@@ -242,17 +259,22 @@ export class ResumeEditComponent implements OnInit {
       projects: rawValue.projects ?? [],
     };
 
-    this.resumeService.updateResume(payload).subscribe({
-      next: () => {
+    this.resumeService.updateResume(payload).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
         this.isSaving = false;
+        this.changeDetector.markForCheck();
+      }),
+    ).subscribe({
+      next: () => {
         this.toastService.show('履歷內容已成功更新。', 'success', '更新成功');
         this.loadResumeData();
       },
       error: (err: HttpErrorResponse) => {
-        this.isSaving = false;
         const apiError = err.error as ApiError | undefined;
         this.saveError = apiError?.message ?? '儲存失敗，請稍後再試。';
         this.toastService.show(this.saveError, 'error', '更新失敗');
+        this.changeDetector.markForCheck();
       },
     });
   }

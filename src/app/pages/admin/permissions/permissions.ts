@@ -1,6 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { PermissionService } from '../../../services/permission.service';
 import { Permission } from '../../../models/permission.interface';
 import { ApiError } from '../../../models/api.interface';
@@ -13,12 +15,16 @@ interface PermissionTableGroup {
 @Component({
   selector: 'app-permissions',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './permissions.html',
   styleUrl: './permissions.css',
 })
 export class PermissionsComponent implements OnInit {
   private permissionService = inject(PermissionService);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private loadRequestId = 0;
 
   public permissions: Permission[] = [];
   public isLoading = false;
@@ -29,18 +35,30 @@ export class PermissionsComponent implements OnInit {
   }
 
   loadPermissions(): void {
+    const requestId = ++this.loadRequestId;
     this.isLoading = true;
     this.pageError = '';
+    this.changeDetector.markForCheck();
 
-    this.permissionService.getPermissions().subscribe({
-      next: (res) => {
-        this.permissions = res.data ?? [];
+    this.permissionService.getPermissions().pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        if (requestId !== this.loadRequestId) return;
         this.isLoading = false;
+        this.changeDetector.markForCheck();
+      }),
+    ).subscribe({
+      next: (res) => {
+        if (requestId !== this.loadRequestId) return;
+        this.permissions = res.data ?? [];
+        this.changeDetector.markForCheck();
       },
       error: (err: HttpErrorResponse) => {
+        if (requestId !== this.loadRequestId) return;
+        console.error('Failed to load permissions:', err);
         const apiError = err.error as ApiError | undefined;
         this.pageError = apiError?.message ?? '載入權限失敗，請稍後再試。';
-        this.isLoading = false;
+        this.changeDetector.markForCheck();
       },
     });
   }

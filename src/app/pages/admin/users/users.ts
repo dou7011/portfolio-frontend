@@ -1,7 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, forkJoin } from 'rxjs';
 import { UserService } from '../../../services/user.service';
 import { RoleService } from '../../../services/role.service';
 import { User } from '../../../models/user.interface';
@@ -12,6 +14,7 @@ import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'app-users',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './users.html',
   styleUrl: './users.css',
@@ -21,6 +24,9 @@ export class UsersComponent implements OnInit {
   private userService = inject(UserService);
   private roleService = inject(RoleService);
   private toastService = inject(ToastService);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private loadRequestId = 0;
 
   public users: User[] = [];
   public roles: Role[] = [];
@@ -44,29 +50,37 @@ export class UsersComponent implements OnInit {
   }
 
   loadUsers(): void {
+    const requestId = ++this.loadRequestId;
     this.isLoading = true;
     this.pageError = '';
+    this.changeDetector.markForCheck();
 
-    this.roleService.getRoles().subscribe({
-      next: (roleRes) => {
-        this.roles = roleRes.data ?? [];
-        console.log('Roles loaded:', this.roles);
-      },
-      error: () => {
-        this.roles = [];
-      },
-    });
-
-    this.userService.getUsers().subscribe({
-      next: (res) => {
-        this.users = res.data ?? [];
+    forkJoin({
+      roles: this.roleService.getRoles(),
+      users: this.userService.getUsers(),
+    }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        if (requestId !== this.loadRequestId) return;
         this.isLoading = false;
+        this.changeDetector.markForCheck();
+      }),
+    ).subscribe({
+      next: ({ roles, users }) => {
+        if (requestId !== this.loadRequestId) return;
+        this.roles = roles.data ?? [];
+        this.users = users.data ?? [];
+        this.changeDetector.markForCheck();
       },
       error: (err: HttpErrorResponse) => {
+        if (requestId !== this.loadRequestId) return;
+        console.error('Failed to load users and roles:', err);
         const apiError = err.error as ApiError | undefined;
-        this.pageError = apiError?.message ?? '載入使用者失敗，請稍後再試。';
-        this.isLoading = false;
-      },
+        this.users = [];
+        this.roles = [];
+        this.pageError = apiError?.message ?? '載入使用者與角色資料失敗，請稍後再試。';
+        this.changeDetector.markForCheck();
+      }
     });
   }
 
@@ -158,22 +172,29 @@ export class UsersComponent implements OnInit {
         })
       : this.userService.createUser(payload);
 
-    request$.subscribe({
-      next: () => {
+    request$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
         this.isSubmitting = false;
+        this.changeDetector.markForCheck();
+      }),
+    ).subscribe({
+      next: () => {
         this.formMessage = this.isEditing ? '✅ 使用者更新成功' : '✅ 使用者建立成功';
         this.toastService.show(this.formMessage, 'success');
         this.loadUsers();
         setTimeout(() => {
           this.closeForm();
+          this.changeDetector.markForCheck();
         }, 800);
+        this.changeDetector.markForCheck();
       },
       error: (err: HttpErrorResponse) => {
         const apiError = err.error as ApiError | undefined;
         const message = apiError?.message ?? '儲存失敗，請稍後再試。';
         this.formMessage = message;
         this.toastService.show(message, 'error');
-        this.isSubmitting = false;
+        this.changeDetector.markForCheck();
       },
     });
   }
@@ -183,13 +204,15 @@ export class UsersComponent implements OnInit {
       return;
     }
 
-    this.userService.deleteUser(user.id).subscribe({
+    this.userService.deleteUser(user.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.users = this.users.filter((item) => item.id !== user.id);
+        this.changeDetector.markForCheck();
       },
       error: (err: HttpErrorResponse) => {
         const apiError = err.error as ApiError | undefined;
         this.pageError = apiError?.message ?? '刪除失敗，請稍後再試。';
+        this.changeDetector.markForCheck();
       },
     });
   }
