@@ -10,12 +10,13 @@ import { ResumeService } from '../../../services/resume.service';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 import { LoadingIndicatorComponent } from '../../../components/loading-indicator/loading-indicator';
+import { ResumeLoadErrorComponent } from '../../../components/resume-load-error/resume-load-error';
 
 @Component({
   selector: 'app-resume-interactive',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent, ResumeLoadErrorComponent],
   templateUrl: './resume-interactive.html',
   styleUrl: './resume-interactive.css',
 })
@@ -66,6 +67,10 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
     const nextLang: 'zh' | 'en' = this.currentLang() === 'zh' ? 'en' : 'zh';
     this.currentLang.set(nextLang);
     this.fetchResumeData(nextLang);
+  }
+
+  retryLoadResume(): void {
+    this.fetchResumeData(this.currentLang());
   }
 
   formatEducationEndDate(endDate: string): string {

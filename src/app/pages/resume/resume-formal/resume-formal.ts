@@ -7,6 +7,7 @@ import { ResumeData } from '../../../models/resume.interface';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { QuillStylesComponent } from '../../../components/quill-styles/quill-styles.component';
 import { LoadingIndicatorComponent } from '../../../components/loading-indicator/loading-indicator';
+import { ResumeLoadErrorComponent } from '../../../components/resume-load-error/resume-load-error';
 import { retry, timeout } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiError } from '../../../models/api.interface';
@@ -14,7 +15,7 @@ import { ApiError } from '../../../models/api.interface';
 @Component({
   selector: 'app-resume-formal',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent],
+  imports: [CommonModule, RouterLink, SafeHtmlPipe, QuillStylesComponent, LoadingIndicatorComponent, ResumeLoadErrorComponent],
   templateUrl: './resume-formal.html',
   styleUrl: './resume-formal.css',
 })
@@ -64,6 +65,10 @@ export class ResumeFormalComponent implements OnInit {
     const nextLang: 'zh' | 'en' = this.currentLang() === 'zh' ? 'en' : 'zh';
     this.currentLang.set(nextLang);
     this.fetchResumeData(nextLang);
+  }
+
+  public retryLoadResume(): void {
+    this.fetchResumeData(this.currentLang());
   }
 
   public formatEducationEndDate(endDate: string): string {

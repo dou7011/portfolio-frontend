@@ -1,0 +1,23 @@
+<section class="resume-load-error" role="alert">
+  <span class="error-mark" aria-hidden="true">!</span>
+  <span class="error-eyebrow">{{ isEnglish() ? 'TEMPORARY ERROR' : '暫時性錯誤' }}</span>
+  <h1>{{ isEnglish() ? 'Resume temporarily unavailable' : '履歷暫時無法載入' }}</h1>
+  <p>
+    {{ isEnglish()
+      ? 'We could not retrieve the resume right now. Please try again in a moment.'
+      : '目前無法取得履歷資料，請稍後再試。' }}
+  </p>
+  <div class="error-actions">
+    <button type="button" class="retry-button" (click)="retry.emit()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 11a8 8 0 0 0-14.8-3L3 11m0-6v6h6M4 13a8 8 0 0 0 14.8 3L21 13m0 6v-6h-6" />
+      </svg>
+      {{ isEnglish() ? 'Try again' : '重新載入' }}
+    </button>
+    <button type="button" class="language-button" (click)="toggleLanguage.emit()" [attr.aria-label]="isEnglish() ? 'Switch language to Chinese' : 'Switch language to English'">
+      <span [class.selected]="!isEnglish()">中</span>
+      <span class="language-divider"></span>
+      <span [class.selected]="isEnglish()">EN</span>
+    </button>
+  </div>
+</section>

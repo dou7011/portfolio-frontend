@@ -208,13 +208,11 @@
     </main>
   } @else {
     <main class="container">
-      <div class="error-state reveal">
-        <p>{{ errorMessage() || uiText().fallback }}</p>
-        <button class="lang-switch" (click)="toggleLang()" aria-label="切換語言">
-          <span class="lang-switch-option">中</span>
-          <span class="lang-switch-option">EN</span>
-        </button>
-      </div>
+      <app-resume-load-error
+        [isEnglish]="currentLang() === 'en'"
+        (retry)="retryLoadResume()"
+        (toggleLanguage)="toggleLang()"
+      />
     </main>
   }
 </div>

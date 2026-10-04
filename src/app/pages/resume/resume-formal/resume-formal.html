@@ -150,12 +150,10 @@
   } @else if (isLoading()) {
     <app-loading-indicator [label]="uiText().loading" />
   } @else {
-    <div class="error-state">
-      <p>{{ errorMessage() || uiText().fallbackError }}</p>
-      <button class="lang-switch" [class.en]="currentLang() === 'en'" (click)="toggleLang()" aria-label="切換語言">
-        <span class="lang-switch-option">中</span>
-        <span class="lang-switch-option">EN</span>
-      </button>
-    </div>
+    <app-resume-load-error
+      [isEnglish]="currentLang() === 'en'"
+      (retry)="retryLoadResume()"
+      (toggleLanguage)="toggleLang()"
+    />
   }
 </div>
