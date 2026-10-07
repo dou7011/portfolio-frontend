@@ -92,12 +92,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0, rootMargin: '0px 0px 15% 0px' }
     );
 
     revealElements.forEach((element, index) => {
       const htmlElement = element as HTMLElement;
-      htmlElement.style.transitionDelay = `${Math.min(index * 55, 280)}ms`;
+      htmlElement.style.transitionDelay = `${Math.min(index * 40, 160)}ms`;
       observer.observe(htmlElement);
     });
 
