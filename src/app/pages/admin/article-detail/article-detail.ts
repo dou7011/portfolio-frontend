@@ -11,6 +11,7 @@ import { ArticleData, GalleryImage } from '../../../models/article.interface';
 import { ArticlesService } from '../../../services/articles.service';
 import { UploadService } from '../../../services/upload.service';
 import { ToastService } from '../../../services/toast.service';
+import { imageDataUrlToBlob } from '../../../utils/image-data-url';
 
 interface ArticleFormModel {
   slug: string;
@@ -323,7 +324,7 @@ export class ArticleDetailComponent implements OnInit {
       const source = image.getAttribute('src');
       if (!source) continue;
 
-      const blob = await fetch(source).then((response) => response.blob());
+      const blob = imageDataUrlToBlob(source);
       const extension = blob.type.split('/')[1]?.split(';')[0] || 'png';
       const result = await firstValueFrom(
         this.uploadService.uploadImage(new File([blob], `embedded-image.${extension}`, { type: blob.type })),
