@@ -29,6 +29,10 @@ interface TocItem {
   weight: number;
 }
 
+const VIEW_DWELL_MS = 3 * 60 * 1000;
+const VIEW_DEDUPE_MS = 24 * 60 * 60 * 1000;
+const VIEW_STORAGE_PREFIX = 'article_viewed:';
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -102,7 +106,11 @@ export class ArticleDetailComponent {
   private sectionEnds: number[] = [];
   private contentResizeObserver?: ResizeObserver;
   private scrollFrame = 0;
+  private viewSlug: string | null = null;
+  private viewDwellMs = 0;
+  private viewTimer?: ReturnType<typeof setInterval>;
   private readonly onScroll = () => {
+    this.checkViewByScroll();
     if (this.scrollFrame) return;
     this.scrollFrame = requestAnimationFrame(() => {
       this.scrollFrame = 0;
@@ -131,6 +139,7 @@ export class ArticleDetailComponent {
       cancelAnimationFrame(this.scrollFrame);
       window.removeEventListener('resize', this.onResize);
       this.contentResizeObserver?.disconnect();
+      this.stopViewTracking();
     });
   }
 
@@ -138,6 +147,7 @@ export class ArticleDetailComponent {
     this.route.paramMap.pipe(
       switchMap((params) => {
         const slug = params.get('slug');
+        this.stopViewTracking();
         this.article.set(null);
         this.isLoading.set(true);
         this.errorMessage.set('');
@@ -180,10 +190,67 @@ export class ArticleDetailComponent {
         this.updateSeoMeta(response.data);
         this.activeGalleryIndex.set(0);
         this.isLoading.set(false);
+        this.startViewTracking(response.data.slug);
         // 等內文的 innerHTML 實際渲染完成後再掃描標題，避免抓不到剛插入的節點
         afterNextRender(() => this.buildToc(), { injector: this.injector });
       },
     });
+  }
+
+  // 有效閱讀：累積可見停留滿 3 分鐘，或捲到頁面底部，才算一次瀏覽；同一裝置 24 小時內只計一次
+  private startViewTracking(slug?: string): void {
+    if (!slug || this.hasRecentlyViewed(slug)) return;
+
+    this.viewSlug = slug;
+    this.viewDwellMs = 0;
+    this.viewTimer = setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      this.viewDwellMs += 1000;
+      if (this.viewDwellMs >= VIEW_DWELL_MS) this.commitView();
+    }, 1000);
+  }
+
+  private stopViewTracking(): void {
+    clearInterval(this.viewTimer);
+    this.viewTimer = undefined;
+    this.viewSlug = null;
+    this.viewDwellMs = 0;
+  }
+
+  private checkViewByScroll(): void {
+    if (!this.viewSlug) return;
+
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    // 內容短到不需捲動時不算「滑到底」，僅能靠停留時間計次
+    if (maxScroll > 0 && window.scrollY >= maxScroll - 4) this.commitView();
+  }
+
+  private commitView(): void {
+    const slug = this.viewSlug;
+    if (!slug) return;
+
+    this.stopViewTracking();
+    this.markViewed(slug);
+    this.articlesService.recordView(slug).subscribe({
+      error: (error) => console.error('Failed to record article view:', error),
+    });
+  }
+
+  private hasRecentlyViewed(slug: string): boolean {
+    try {
+      const viewedAt = Number(localStorage.getItem(VIEW_STORAGE_PREFIX + slug));
+      return viewedAt > 0 && Date.now() - viewedAt < VIEW_DEDUPE_MS;
+    } catch {
+      return false;
+    }
+  }
+
+  private markViewed(slug: string): void {
+    try {
+      localStorage.setItem(VIEW_STORAGE_PREFIX + slug, String(Date.now()));
+    } catch {
+      // localStorage 不可用時略過去重
+    }
   }
 
   scrollToHeading(id: string, event: Event): void {

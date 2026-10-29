@@ -63,6 +63,10 @@ export class ArticlesService {
     return this.http.get<ApiSuccess<ArticleData>>(`${this.apiUrl}/${encodeURIComponent(slug)}${queryString}`);
   }
 
+  recordView(slug: string): Observable<ApiSuccess<null>> {
+    return this.http.post<ApiSuccess<null>>(`${this.apiUrl}/${encodeURIComponent(slug)}/view`, {});
+  }
+
   createArticle(payload: ArticleData): Observable<ApiSuccess<ArticleData>> {
     return this.http.post<ApiSuccess<ArticleData>>(this.apiUrl, payload);
   }

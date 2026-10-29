@@ -4,6 +4,9 @@
     <div>
       <a class="back-link" routerLink="/admin/articles">← 返回文章列表</a>
       <h1>{{ mode() === 'new' ? '新增文章' : '編輯文章' }}</h1>
+      @if (mode() === 'edit' && !isLoading()) {
+        <span class="view-count">閱讀次數：{{ viewCount() }}</span>
+      }
     </div>
     <div class="header-actions">
       <button type="button" class="cancel-btn" (click)="cancel()">取消</button>

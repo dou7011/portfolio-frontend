@@ -62,6 +62,7 @@ export class ArticleDetailComponent implements OnInit {
   readonly articleId = signal<number | null>(null);
   readonly isLoading = signal(true);
   readonly isSaving = signal(false);
+  readonly viewCount = signal(0);
   readonly savingStatusText = signal('儲存中...');
   readonly pendingCoverFile = signal<File | null>(null);
   readonly coverImagePreviewUrl = signal('');
@@ -182,6 +183,7 @@ export class ArticleDetailComponent implements OnInit {
         }
 
         this.articleId.set(article.id ?? null);
+        this.viewCount.set(article.view_count ?? 0);
         this.form = {
           slug: article.slug ?? '',
           title: article.title ?? '',
