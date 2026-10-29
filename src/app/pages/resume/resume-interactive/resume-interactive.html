@@ -14,16 +14,27 @@
             <span class="pulse"></span>
             <span>{{ uiText().badge }}</span>
           </div>
-          <button
-            class="lang-switch"
-            [class.en]="currentLang() === 'en'"
-            (click)="toggleLang()"
-            [disabled]="isLoading()"
-            aria-label="切換語言"
-          >
-            <span class="lang-switch-option">中</span>
-            <span class="lang-switch-option">EN</span>
-          </button>
+          <div class="hero-actions">
+            <a
+              class="export-pdf-btn"
+              [routerLink]="['/resume-formal']"
+              [queryParams]="{ lang: currentLang(), print: 1 }"
+              [attr.aria-label]="uiText().exportPdfLabel"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+              <span>PDF</span>
+            </a>
+            <button
+              class="lang-switch"
+              [class.en]="currentLang() === 'en'"
+              (click)="toggleLang()"
+              [disabled]="isLoading()"
+              aria-label="切換語言"
+            >
+              <span class="lang-switch-option">中</span>
+              <span class="lang-switch-option">EN</span>
+            </button>
+          </div>
         </div>
         <h1 class="hero-title">
           <span class="gradient-text">{{ data.title }}</span><span class="dot">.</span>
@@ -193,6 +204,15 @@
       </section>
 
       <div class="resume-footer-nav reveal">
+        <a
+          class="export-pdf-btn"
+          [routerLink]="['/resume-formal']"
+          [queryParams]="{ lang: currentLang(), print: 1 }"
+          [attr.aria-label]="uiText().exportPdfLabel"
+        >
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          <span>PDF</span>
+        </a>
         <a class="formal-link" [routerLink]="['/resume-formal']">
           {{ uiText().formalLink }}
         </a>

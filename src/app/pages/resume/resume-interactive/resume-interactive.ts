@@ -42,6 +42,7 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
           loading: '載入履歷資料中...',
           fallback: '載入資料失敗，請稍後再試。',
           formalLink: '切換到制式履歷',
+          exportPdfLabel: '匯出 PDF',
         }
       : {
           badge: 'System Architecture & Full-Stack',
@@ -53,6 +54,7 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
           loading: 'Loading resume data...',
           fallback: 'Failed to load data. Please try again later.',
           formalLink: 'View formal resume',
+          exportPdfLabel: 'Export PDF',
         };
   }
 

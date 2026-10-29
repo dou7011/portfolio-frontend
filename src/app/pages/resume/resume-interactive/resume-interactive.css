@@ -99,9 +99,69 @@
 .hero-header-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 28px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.export-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-text-main);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-apple), background-color 0.2s var(--ease-apple), transform 0.3s var(--ease-spring);
+}
+
+.export-pdf-btn svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.export-pdf-btn:hover:not(:disabled),
+.export-pdf-btn:focus-visible {
+  border-color: var(--color-text-main);
+  background: color-mix(in srgb, var(--color-text-main) 6%, transparent);
+}
+
+.export-pdf-btn:hover:not(:disabled) svg,
+.export-pdf-btn:focus-visible svg {
+  transform: translateY(1px);
+}
+
+.export-pdf-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.export-pdf-btn:focus-visible {
+  outline: 2px solid var(--color-text-main);
+  outline-offset: 3px;
+}
+
+.export-pdf-btn:disabled {
+  cursor: wait;
+  opacity: 0.55;
 }
 
 .hero-badge {
@@ -671,7 +731,9 @@
 /* ---------- 頁尾連結 ---------- */
 .resume-footer-nav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 12px;
   order: 6;
 }
 

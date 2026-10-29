@@ -155,6 +155,66 @@
   color: var(--color-button-text);
 }
 
+/* ---------- 匯出 PDF ---------- */
+.header-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.export-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-text-main);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-apple), background-color 0.2s var(--ease-apple), transform 0.3s var(--ease-spring);
+}
+
+.export-pdf-btn svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.export-pdf-btn:hover:not(:disabled),
+.export-pdf-btn:focus-visible {
+  border-color: var(--color-text-main);
+  background: color-mix(in srgb, var(--color-text-main) 6%, transparent);
+}
+
+.export-pdf-btn:hover:not(:disabled) svg,
+.export-pdf-btn:focus-visible svg {
+  transform: translateY(1px);
+}
+
+.export-pdf-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.export-pdf-btn:focus-visible {
+  outline: 2px solid var(--color-text-main);
+  outline-offset: 3px;
+}
+
+.export-pdf-btn:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 /* ---------- 內容 ---------- */
 .resume-content {
   display: flex;
@@ -460,7 +520,10 @@
 /* ---------- 頁尾 ---------- */
 .resume-footer {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
+  gap: 12px;
   padding: 0 0 clamp(24px, 4vw, 36px);
 }
 
@@ -537,14 +600,42 @@ app-loading-indicator {
   }
 }
 
+/* ---------- 匯出 PDF：單欄、黑白為主、單一強調色，重點是主管能一眼掃讀 ---------- */
 @media print {
   :host {
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --rule: #d6d6d6;
+    --brand: #7a4c30;
+    --color-text-main: var(--ink);
+    --color-text-sub: var(--ink-soft);
+    --color-text-muted-dark: var(--ink-soft);
+    --color-heading-strong: var(--ink);
+    --color-line: var(--rule);
+    --color-line-strong: var(--rule);
+    --color-accent: var(--brand);
+    --color-accent-hover: var(--brand);
+    --color-button-text: #ffffff;
+    --glass-bg: transparent;
+    --glass-bg-strong: transparent;
+    --glass-border: var(--rule);
+    --glass-highlight: transparent;
+    --glow-accent: transparent;
+    --shadow-soft: none;
+    --muted: var(--ink-soft);
     padding: 0;
+    color: var(--ink);
+    font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .resume-wrapper {
     margin: 0;
     max-width: 100%;
+    overflow: visible;
     border: 0;
     border-radius: 0;
     box-shadow: none;
@@ -553,13 +644,255 @@ app-loading-indicator {
     backdrop-filter: none;
   }
 
-  .header-top h1 {
-    background: none;
-    color: #000;
-  }
-
-  .lang-switch,
+  .header-actions,
   .resume-footer {
     display: none;
+  }
+
+  /* 標頭：姓名 + 一句話摘要 + 聯絡方式，底部粗線與內文區隔 */
+  .resume-header {
+    padding: 0 0 12pt;
+    border-bottom: 2pt solid var(--ink);
+  }
+
+  .header-top {
+    display: block;
+    margin-bottom: 6pt;
+  }
+
+  .header-top h1 {
+    padding: 0;
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--ink);
+    font-size: 24pt;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+
+  .summary {
+    max-width: none;
+    font-size: 10pt;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .contact-row {
+    gap: 4pt 18pt;
+    margin-top: 8pt;
+  }
+
+  .contact-link {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* 內容順序：經歷 → 技術 → 專案 → 學歷 → 證照 */
+  .resume-content {
+    gap: 14pt;
+    padding: 12pt 0 0;
+  }
+
+  .section-experience { order: 1; }
+  .section-skills { order: 2; }
+  .section-projects { order: 3; }
+  .section-education { order: 4; }
+  .section-certifications { order: 5; }
+
+  /* 區塊標題：左側色條 + 底線，一眼分出段落 */
+  .section-title {
+    margin: 0 0 8pt;
+    padding: 1pt 0 3pt 7pt;
+    border-bottom: 0.75pt solid var(--ink);
+    border-left: 3.5pt solid var(--brand);
+    font-size: 11pt;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    break-after: avoid;
+  }
+
+  .section-title::after {
+    display: none;
+  }
+
+  /* 條目：標題左、日期右，下一行為公司／學位 */
+  .entry-item,
+  .timeline-card {
+    padding: 7pt 0;
+    border-bottom: 0.5pt dashed var(--rule);
+    break-inside: avoid;
+  }
+
+  .entry-item:first-child,
+  .timeline-card:first-child {
+    padding-top: 0;
+  }
+
+  .entry-item:last-child,
+  .timeline-card:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .entry-header,
+  .timeline-header {
+    gap: 2pt 12pt;
+  }
+
+  .entry-header h3,
+  .timeline-header h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .mini-date,
+  .date-badge {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--brand);
+  }
+
+  .company-name {
+    margin: 1pt 0 4pt;
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--brand);
+  }
+
+  .entry-sub {
+    margin: 1pt 0 0;
+    font-size: 10pt;
+    color: var(--ink-soft);
+  }
+
+  .description-box {
+    font-size: 9.5pt;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .cert-desc {
+    margin-top: 2pt;
+    font-size: 9.5pt;
+    color: var(--ink-soft);
+  }
+
+  /* 技術棧：左欄分類、右欄以「・」分隔的純文字 */
+  .skill-row {
+    grid-template-columns: 84pt minmax(0, 1fr);
+    gap: 2pt 12pt;
+    padding: 4pt 0;
+    border-bottom: 0.5pt dashed var(--rule);
+    break-inside: avoid;
+  }
+
+  .skill-row:first-child {
+    padding-top: 0;
+  }
+
+  .skill-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .skill-cat {
+    padding-top: 0;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .tags {
+    display: block;
+  }
+
+  .tag {
+    display: inline;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 9.5pt;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .tag:not(:last-child)::after {
+    content: ' ・ ';
+    color: var(--brand);
+  }
+
+  /* 專案：技術標籤改為標題下方的灰字一行 */
+  .project-links {
+    gap: 10pt;
+  }
+
+  .project-link {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: underline;
+  }
+
+  .project-description {
+    margin-top: 3pt;
+    font-size: 9.5pt;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  ::ng-deep .project-description .ql-editor {
+    line-height: 1.6;
+  }
+
+  ::ng-deep .project-description .ql-editor p { margin-bottom: 0.3em; }
+  ::ng-deep .project-description .ql-editor ul,
+  ::ng-deep .project-description .ql-editor ol { margin-bottom: 0.3em; }
+  ::ng-deep .project-description .ql-editor li { margin-bottom: 0; }
+  ::ng-deep .project-description .ql-editor strong { color: var(--ink); }
+
+  /* 證照：名稱左、證號右，說明獨佔下一行，縮短版面 */
+  .section-certifications .entry-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0 12pt;
+  }
+
+  .section-certifications .entry-sub {
+    margin: 0;
+    font-size: 9pt;
+    text-align: right;
+  }
+
+  .section-certifications .cert-desc {
+    grid-column: 1 / -1;
+    margin-top: 1pt;
+  }
+
+  .project-tags {
+    margin-top: 4pt;
+  }
+
+  .project-tag {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: var(--ink-soft);
   }
 }
