@@ -11,47 +11,47 @@ html, body {
 :root {
 	/* 基礎頁面色彩 */
 	color-scheme: light;
-	--color-bg: #f8f3eb;
-	--color-bg-soft: #fdfaf5;
-	--color-surface: #fffefa;
-	--color-surface-soft: #fbf5ed;
-	--color-text-main: #4a3b31;
-	--color-text-sub: #8a7363;
-	--color-line: #ebdfd2;
-	--color-line-strong: #e2d1be;
-	--color-accent: #9b7357;
-	--color-accent-hover: #7d5c45;
-	--color-accent-soft: #c6a38a;
-	--color-sidebar-bg: #f8f3eb;
-	--color-sidebar-line: #e5ddd6;
+	--color-bg: #f6f3ee;
+	--color-bg-soft: #fbf9f6;
+	--color-surface: #fffdfa;
+	--color-surface-soft: #f3eee7;
+	--color-text-main: #1f1b18;
+	--color-text-sub: #5f5750;
+	--color-line: #e6dfd5;
+	--color-line-strong: #d3c8ba;
+	--color-accent: #8c5e3f;
+	--color-accent-hover: #6d452b;
+	--color-accent-soft: #bf9a7f;
+	--color-sidebar-bg: #f6f3ee;
+	--color-sidebar-line: #e2dbd1;
 	--color-danger-soft: #fce8e3;
 	--color-danger-text: #b05a4a;
 	--color-danger-line: #f0c4bb;
 	--color-success-soft: #e2f3e7;
 	--color-success-text: #2d5e3e;
-	--color-language-bg: #f1e8df;
-	--color-language-border: #cdb9a8;
-	--color-language-selected: #5a4335;
-	--color-language-unselected: #856b58;
+	--color-language-bg: #f1ebe3;
+	--color-language-border: #cdbfae;
+	--color-language-selected: #3d2e24;
+	--color-language-unselected: #6a5d52;
 	--color-tag-bg: #fffcf8;
-	--color-tag-text: #6f5645;
-	--color-tag-border: #e3d3c4;
+	--color-tag-text: #4f4339;
+	--color-tag-border: #ddd2c4;
 	--color-overlay: rgba(31, 25, 20, 0.46);
-	--shadow-soft: 0 14px 28px rgba(130, 96, 70, 0.08);
-	--admin-control-bg: #fffefa;
-	--admin-control-muted: #f5eee8;
-	--admin-control-border: #ddcec0;
-	--admin-control-hover: #f3e8de;
-	--admin-selected-bg: #f2e1d1;
-	--admin-selected-border: #b9825b;
-	--admin-heading: #4b382c;
+	--shadow-soft: 0 10px 30px rgba(60, 42, 28, 0.08), 0 1px 2px rgba(60, 42, 28, 0.04);
+	--admin-control-bg: #fffdfa;
+	--admin-control-muted: #f3eee7;
+	--admin-control-border: #d6cabb;
+	--admin-control-hover: #f0e8de;
+	--admin-selected-bg: #eddfd0;
+	--admin-selected-border: #8c5e3f;
+	--admin-heading: #1f1b18;
 	/* 共用固定色彩 */
 	--color-white: #ffffff;
 	--color-transparent: transparent;
 	--color-readonly: #f5f5f5;
 	--color-success: #5a8a5a;
-	--color-focus: #4f46e5;
-	--color-focus-soft: rgba(79, 70, 229, 0.1);
+	--color-focus: #8c5e3f;
+	--color-focus-soft: rgba(140, 94, 63, 0.14);
 	--color-spinner-track: rgba(255, 255, 255, 0.35);
 	--color-shadow-dark: rgba(44, 35, 28, 0.22);
 	--color-shadow-soft: rgba(68, 53, 43, 0.18);
@@ -62,11 +62,11 @@ html, body {
 	--color-control-muted: #f1e7de;
 	--color-control-hover: #f7f0ea;
 	--color-control-hover-border: #cdb9a8;
-	--color-heading-strong: #2f2924;
-	--color-text-muted-dark: #756458;
+	--color-heading-strong: #14110f;
+	--color-text-muted-dark: #463e37;
 	--color-button-text: #ffffff;
-	--color-button-border: #b98a67;
-	--color-selection-border: #b98a67;
+	--color-button-border: #8c5e3f;
+	--color-selection-border: #8c5e3f;
 	--color-selection-soft: rgba(160, 120, 90, 0.18);
 	--color-success-border: rgba(108, 169, 120, 0.3);
 	--color-success-icon: rgba(80, 144, 96, 0.12);
@@ -77,12 +77,12 @@ html, body {
 	--color-row-hover: rgba(244, 237, 230, 0.2);
 	--color-success-strong: #10b981;
 	--color-error-strong: #ef4444;
-	--color-form-line: #cbd5e1;
-	--color-form-heading: #334155;
-	--color-disabled: #94a3b8;
-	--color-accent-deep: #4338ca;
-	--color-resume-divider: #ecdfd3;
-	--color-resume-accent-line: #ceb39d;
+	--color-form-line: #d3c8ba;
+	--color-form-heading: #2b241f;
+	--color-disabled: #9a9088;
+	--color-accent-deep: #6d452b;
+	--color-resume-divider: #e6dfd5;
+	--color-resume-accent-line: #bf9a7f;
 	--color-login-error-bg: #fef2f2;
 	--color-login-error-text: #a03030;
 	--color-login-error-border: #fde0e0;
@@ -90,82 +90,92 @@ html, body {
 	--color-language-hover-shadow: rgba(147, 108, 80, 0.14);
 	--color-login-shadow: rgba(155, 115, 87, 0.28);
 	--color-login-hover-shadow: rgba(155, 115, 87, 0.32);
-	--background-grid: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+	--background-grid: linear-gradient(rgba(60, 42, 28, 0.035) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(60, 42, 28, 0.035) 1px, transparent 1px);
+	/* 玻璃 / 光暈 / 動態：全站共用，只使用單一強調色 */
+	--glass-bg: rgba(255, 253, 250, 0.62);
+	--glass-bg-strong: rgba(255, 253, 250, 0.82);
+	--glass-border: rgba(120, 90, 65, 0.16);
+	--glass-highlight: rgba(255, 255, 255, 0.7);
+	--glow-accent: rgba(160, 112, 78, 0.2);
+	--gradient-accent: linear-gradient(135deg, #a8714c 0%, #7a4c30 100%);
+	--gradient-text: linear-gradient(110deg, #1f1b18 0%, #8c5e3f 55%, #b98560 100%);
+	--ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+	--ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 :root[data-theme='dark'] {
 	/* 暗色模式只覆寫 token，元件不需要各自維護色票。 */
 	color-scheme: dark;
-	--color-bg: #0a0f14;
-	--color-bg-soft: #191c20;
-	--color-surface: #202428;
-	--color-surface-soft: #292e33;
-	--color-text-main: #f3f4f6;
-	--color-text-sub: #aeb5bd;
-	--color-line: #363c43;
-	--color-line-strong: #4b535c;
-	--color-accent: #e0ad7e;
-	--color-accent-hover: #f0bd8c;
-	--color-accent-soft: #bd8d64;
-	--color-sidebar-bg: #181b1f;
-	--color-sidebar-line: #30363d;
+	--color-bg: #0c0b0a;
+	--color-bg-soft: #151311;
+	--color-surface: #1c1a18;
+	--color-surface-soft: #252220;
+	--color-text-main: #f5f2ee;
+	--color-text-sub: #b5ada4;
+	--color-line: #34302c;
+	--color-line-strong: #4a443e;
+	--color-accent: #e3b387;
+	--color-accent-hover: #f2c9a1;
+	--color-accent-soft: #b88b64;
+	--color-sidebar-bg: #151311;
+	--color-sidebar-line: #302c28;
 	--color-danger-soft: #422629;
 	--color-danger-text: #f1a6a0;
 	--color-danger-line: #6b3d42;
 	--color-success-soft: #203b2c;
 	--color-success-text: #a9d7b5;
-	--color-language-bg: #151a1f;
-	--color-language-border: #66727d;
-	--color-language-selected: #161b20;
-	--color-language-unselected: #d7dee5;
-	--color-tag-bg: #252d35;
-	--color-tag-text: #e2e8ee;
-	--color-tag-border: #536270;
+	--color-language-bg: #151311;
+	--color-language-border: #6a625a;
+	--color-language-selected: #161412;
+	--color-language-unselected: #d9d2c9;
+	--color-tag-bg: #262321;
+	--color-tag-text: #e8e2da;
+	--color-tag-border: #5a524a;
 	--color-overlay: rgba(0, 0, 0, 0.7);
-	--shadow-soft: 0 14px 28px rgba(0, 0, 0, 0.3);
-	--admin-control-bg: #252b31;
-	--admin-control-muted: #1b2025;
-	--admin-control-border: #4b5762;
-	--admin-control-hover: #303941;
+	--shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+	--admin-control-bg: #262321;
+	--admin-control-muted: #1a1816;
+	--admin-control-border: #504941;
+	--admin-control-hover: #322e2a;
 	--admin-selected-bg: #3a3027;
-	--admin-selected-border: #e0ad7e;
-	--admin-heading: #f4f6f8;
-	--color-white: #f3f4f6;
-	--color-readonly: #20262c;
+	--admin-selected-border: #e3b387;
+	--admin-heading: #f7f4f0;
+	--color-white: #f5f2ee;
+	--color-readonly: #211f1d;
 	--color-success: #a9d7b5;
-	--color-focus: #e0ad7e;
-	--color-focus-soft: rgba(224, 173, 126, 0.2);
+	--color-focus: #e3b387;
+	--color-focus-soft: rgba(227, 179, 135, 0.2);
 	--color-spinner-track: rgba(255, 255, 255, 0.35);
 	--color-shadow-dark: rgba(0, 0, 0, 0.42);
 	--color-shadow-soft: rgba(0, 0, 0, 0.28);
 	--color-backdrop: rgba(0, 0, 0, 0.7);
 	--color-backdrop-light: rgba(0, 0, 0, 0.55);
-	--color-control-placeholder: #727d88;
-	--color-control-placeholder-strong: #87929d;
-	--color-control-muted: #252b31;
-	--color-control-hover: #303941;
-	--color-control-hover-border: #66727d;
-	--color-heading-strong: #f4f6f8;
-	--color-text-muted-dark: #b9c1c9;
-	--color-button-text: #111315;
-	--color-button-border: #e0ad7e;
-	--color-selection-border: #e0ad7e;
-	--color-selection-soft: rgba(224, 173, 126, 0.2);
+	--color-control-placeholder: #7d756c;
+	--color-control-placeholder-strong: #968d83;
+	--color-control-muted: #262321;
+	--color-control-hover: #322e2a;
+	--color-control-hover-border: #6a625a;
+	--color-heading-strong: #f7f4f0;
+	--color-text-muted-dark: #c8c0b7;
+	--color-button-text: #14110f;
+	--color-button-border: #e3b387;
+	--color-selection-border: #e3b387;
+	--color-selection-soft: rgba(227, 179, 135, 0.2);
 	--color-success-border: rgba(169, 215, 181, 0.35);
 	--color-success-icon: rgba(169, 215, 181, 0.14);
 	--color-danger-border-soft: rgba(241, 166, 160, 0.3);
 	--color-danger-icon: rgba(241, 166, 160, 0.14);
 	--color-light-border: rgba(255, 255, 255, 0.2);
-	--color-light-surface: rgba(32, 36, 40, 0.9);
+	--color-light-surface: rgba(28, 26, 24, 0.9);
 	--color-row-hover: rgba(255, 255, 255, 0.05);
 	--color-success-strong: #86efac;
 	--color-error-strong: #fca5a5;
-	--color-form-line: #4b5563;
-	--color-form-heading: #dbe3ea;
-	--color-disabled: #6b7280;
-	--color-accent-deep: #f0bd8c;
-	--color-resume-divider: #46515b;
+	--color-form-line: #4a443e;
+	--color-form-heading: #e8e2da;
+	--color-disabled: #75706a;
+	--color-accent-deep: #f2c9a1;
+	--color-resume-divider: #3c3732;
 	--color-resume-accent-line: #8f6c50;
 	--color-login-error-bg: #452629;
 	--color-login-error-text: #f1a6a0;
@@ -174,8 +184,32 @@ html, body {
 	--color-language-hover-shadow: rgba(0, 0, 0, 0.45);
 	--color-login-shadow: rgba(0, 0, 0, 0.3);
 	--color-login-hover-shadow: rgba(0, 0, 0, 0.4);
-	--background-grid: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+	--background-grid: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+	--glass-bg: rgba(32, 29, 27, 0.55);
+	--glass-bg-strong: rgba(32, 29, 27, 0.8);
+	--glass-border: rgba(255, 245, 235, 0.1);
+	--glass-highlight: rgba(255, 255, 255, 0.06);
+	--glow-accent: rgba(227, 179, 135, 0.16);
+	--gradient-accent: linear-gradient(135deg, #f0c79d 0%, #d49b6a 100%);
+	--gradient-text: linear-gradient(110deg, #f7f4f0 0%, #e3b387 55%, #f2c9a1 100%);
+}
+
+html {
+	--site-header-h: 60px;
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 720px) {
+	html {
+		--site-header-h: 56px;
+	}
+}
+
+/* 首頁區塊導覽用：錨點跳轉時預留頁首高度 */
+html.home-sections {
+	scroll-padding-top: var(--site-header-h);
 }
 
 html,
@@ -189,6 +223,24 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Noto Sans JP', 'Noto Sans TC', 'Hiragino Sans', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+::selection {
+	background: var(--color-selection-soft);
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
 }
 
 button,

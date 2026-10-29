@@ -1,7 +1,22 @@
 <div class="home-page">
-  <section class="hero-section">
-    <div class="hero-orb" aria-hidden="true"></div>
+  <nav class="page-dots" aria-label="首頁區塊">
+    @for (section of pageSections; track section.id; let i = $index) {
+      <button
+        type="button"
+        class="page-dot"
+        [class.is-active]="activeSection() === section.id"
+        [style.--p]="sectionProgress()[i]"
+        [attr.aria-label]="'前往' + section.label"
+        [attr.aria-current]="activeSection() === section.id ? 'true' : null"
+        (click)="scrollToSection(section.id)">
+        <span class="page-dot-label">{{ section.label }}</span>
+      </button>
+    }
+  </nav>
 
+  <section id="top" class="hero-section">
+    <div class="hero-orb" aria-hidden="true"></div>
+    <div class="hero-orb hero-orb-alt" aria-hidden="true"></div>
     <div class="hero-inner">
       <div class="hero-copy">
         <div class="eyebrow reveal">
@@ -11,7 +26,7 @@
 
         <h1 class="reveal">
           Building digital<br />
-          <span class="gradient-word">systems that matter.</span>
+          <span class="accent-word">systems that matter.</span>
         </h1>
 
         <div class="hero-summary reveal">
@@ -27,7 +42,7 @@
                 <path d="M5 12h13M13 6l6 6-6 6" />
               </svg>
             </a>
-            <a class="secondary-btn" href="/resume">關於我</a>
+            <a class="secondary-btn" routerLink="/resume">關於我</a>
             @if (resumeData(); as resume) {
               <div class="social-links" aria-label="聯絡方式">
                 @if (resume.email) {
@@ -59,8 +74,6 @@
         </div>
       </div>
     </div>
-
-    <div class="scroll-hint">Scroll to explore</div>
   </section>
 
   <section id="about" class="info-section">
@@ -109,7 +122,7 @@
         </div>
         <div class="featured-actions">
           <span class="timeline-label">2024 — 2026</span>
-          <a class="more-link" href="/articles">
+          <a class="more-link" routerLink="/articles">
             <span>More</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M5 12h13M13 6l6 6-6 6" />
@@ -126,62 +139,20 @@
         } @else {
           @for (article of articles(); track article.slug; let i = $index) {
             <a class="project-card reveal" [routerLink]="['/articles', article.slug]" [attr.aria-label]="'查看文章：' + article.title">
-            <div class="project-visual" [class.visual-auth]="!hasCoverImage(article) && i % 2 === 0" [class.visual-notes]="!hasCoverImage(article) && i % 2 === 1" [class.has-cover]="hasCoverImage(article)">
+            <div class="project-visual" [class.has-cover]="hasCoverImage(article)">
               @if (hasCoverImage(article)) {
                 <img class="project-cover-image" [src]="getCoverImageUrl(article)" [alt]="article.title" loading="lazy" />
                 <div class="cover-overlay">
                   <span class="cover-badge">{{ article.type || 'PROJECT' }}</span>
                 </div>
-              } @else if (i % 2 === 0) {
-                <div class="project-frame">
-                  <div class="window-bar">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span class="header-label">{{ article.type || 'PROJECT' }}</span>
-                  </div>
-
-                  <div class="window-body">
-                    <div class="bars-panel">
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                    </div>
-
-                    <div class="status-panel">
-                      <div class="status-row">
-                        <span>{{ article.tags?.[0] || 'TECH' }}</span>
-                        <span class="status-live">LIVE</span>
-                      </div>
-                      <div class="progress-bar"><span></span></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="float-dot"></div>
               } @else {
-                <div class="note-panel">
-                  <div class="panel-head">
-                    <span>Project log</span>
-                    <span>{{ article.type || 'CASE STUDY' }}</span>
-                  </div>
-
-                  <div class="note-cards">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-
-                  <div class="panel-lines">
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
+                <span class="placeholder-index" aria-hidden="true">{{ '0' + (i + 1) }}</span>
               }
             </div>
 
             <div class="project-copy">
               <div class="project-head">
-                <span class="project-tag" [class.project-tag-blue]="i % 2 === 0" [class.project-tag-green]="i % 2 === 1">
+                <span class="project-tag">
                   {{ article.type || 'Featured' }}
                 </span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -205,19 +176,48 @@
     </div>
   </section>
 
-  <footer class="cta-section">
+  <footer id="contact" class="cta-section">
     <div class="section-inner">
       <div class="cta-card reveal">
-        <div class="cta-line"></div>
-        <p class="section-label">03 — Contact</p>
-        <h2>Let's build something great.</h2>
-        <p class="cta-copy">對完整技術歷程與技能樹感興趣？歡迎檢視我的線上履歷。</p>
-        <a class="primary-btn" href="/resume">
-          檢視完整履歷
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M5 12h13M13 6l6 6-6 6" />
-          </svg>
-        </a>
+        <div class="cta-content">
+          <p class="section-label">03 — Beyond the projects</p>
+          <h2>好的系統，<br />從理解每一個細節開始。</h2>
+          <p class="cta-copy">從系統架構到使用體驗，讓想法成為真正能運作的產品。進一步認識我的開發經歷、技術專長與實作歷程。</p>
+          <a class="primary-btn" routerLink="/resume">
+            檢視完整履歷
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M5 12h13M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </div>
+        <div class="resume-preview" role="group" aria-label="履歷內容摘要">
+          <div class="resume-preview-heading">
+            <span class="resume-monogram" aria-hidden="true">HL</span>
+            <div>
+              <p class="resume-preview-name">Ho-Tai Lin</p>
+              <p class="resume-preview-role">Full-stack Developer</p>
+            </div>
+            <span class="resume-preview-label">PROFILE</span>
+          </div>
+          <dl class="resume-preview-details">
+            <div>
+              <dt>專注領域</dt>
+              <dd>企業級系統・全端開發</dd>
+            </div>
+            <div>
+              <dt>核心技術</dt>
+              <dd>Angular / TypeScript / Python</dd>
+            </div>
+            <div>
+              <dt>實作經驗</dt>
+              <dd>SSO 權限中心・Portal 企業入口</dd>
+            </div>
+          </dl>
+          <div class="resume-preview-footer">
+            <span>從架構到體驗，完整交付。</span>
+            <span aria-hidden="true">DESIGN & BUILD</span>
+          </div>
+        </div>
       </div>
     </div>
   </footer>

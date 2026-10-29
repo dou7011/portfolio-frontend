@@ -24,6 +24,7 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
   private resumeService = inject(ResumeService);
   private readonly destroyRef = inject(DestroyRef);
   private requestVersion = 0;
+  private mouseGlow: HTMLElement | null = null;
   public resumeData = signal<ResumeData | null>(null);
   public errorMessage = signal('');
   public isLoading = signal(false);
@@ -139,14 +140,15 @@ export class ResumeInteractiveComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:mousemove', ['$event'])
   onWindowMouseMove(event: MouseEvent): void {
-    const globalGlow = document.querySelector('.mouse-glow') as HTMLElement | null;
-    if (!globalGlow) {
+    this.mouseGlow ??= document.querySelector<HTMLElement>('.mouse-glow');
+    const glow = this.mouseGlow;
+    if (!glow) {
       return;
     }
 
     requestAnimationFrame(() => {
-      globalGlow.style.setProperty('--cursor-x', `${event.clientX}px`);
-      globalGlow.style.setProperty('--cursor-y', `${event.clientY}px`);
+      glow.style.setProperty('--cursor-x', `${event.clientX}px`);
+      glow.style.setProperty('--cursor-y', `${event.clientY}px`);
     });
   }
 

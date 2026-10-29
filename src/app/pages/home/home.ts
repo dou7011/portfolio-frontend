@@ -23,8 +23,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public readonly articles = signal<ArticleData[]>([]);
   public readonly isLoadingArticles = signal(false);
   public readonly resumeData = this.resumeService.resumeData;
+  public readonly pageSections = [
+    { id: 'top', label: '首頁' },
+    { id: 'about', label: '關於我' },
+    { id: 'featured', label: '文章與專案' },
+    { id: 'contact', label: '聯絡我' },
+  ];
+  public readonly activeSection = signal('top');
+  public readonly sectionProgress = signal<number[]>([1, 0, 0, 0]);
 
   ngOnInit(): void {
+    document.documentElement.classList.add('home-sections');
+    this.destroyRef.onDestroy(() => document.documentElement.classList.remove('home-sections'));
     this.loadFeaturedArticles();
   }
 
@@ -32,6 +42,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.bindRevealAnimation();
     this.bindOrbMotion();
     this.bindCardPointerGlow();
+    this.bindSectionTracking();
+  }
+
+  public scrollToSection(id: string): void {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   public getExcerpt(article: ArticleData): string {
@@ -114,28 +129,82 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private bindOrbMotion(): void {
-    const orb = document.querySelector('.hero-orb') as HTMLElement | null;
-    if (window.matchMedia('(pointer: fine)').matches && orb) {
-      window.addEventListener(
-        'pointermove',
-        (event) => {
-          const x = (event.clientX / window.innerWidth - 0.5) * 28;
-          const y = (event.clientY / window.innerHeight - 0.5) * 20;
-          orb.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-        },
-        { passive: true }
+  private bindSectionTracking(): void {
+    const sections = this.pageSections
+      .map((section) => document.getElementById(section.id))
+      .filter((element): element is HTMLElement => !!element);
+    let frame = 0;
+
+    // 以視窗中線判斷目前所在區塊，用 rAF 節流避免捲動時過度計算
+    const update = () => {
+      frame = 0;
+      const probe = window.innerHeight / 2;
+      const current = sections.find((section) => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= probe && rect.bottom > probe;
+      });
+      if (current) {
+        this.activeSection.set(current.id);
+      }
+
+      // 區塊中心越靠近可視區中心，導覽文字越清晰（1 = 完整顯示，0 = 隱藏）
+      const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--site-header-h')) || 0;
+      const viewCenter = (headerHeight + window.innerHeight) / 2;
+      this.sectionProgress.set(
+        this.pageSections.map((section) => {
+          const element = document.getElementById(section.id);
+          if (!element) {
+            return 0;
+          }
+          const rect = element.getBoundingClientRect();
+          const distance = Math.abs(rect.top + rect.height / 2 - viewCenter);
+          const span = Math.max(rect.height, window.innerHeight - headerHeight);
+          return Math.round(Math.max(0, 1 - distance / span) * 1000) / 1000;
+        })
       );
+    };
+    const onScroll = () => {
+      if (!frame) {
+        frame = requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(frame);
+    });
+  }
+
+  private bindOrbMotion(): void {
+    const orbs = Array.from(document.querySelectorAll<HTMLElement>('.hero-orb'));
+    if (!window.matchMedia('(pointer: fine)').matches || !orbs.length) {
+      return;
     }
+
+    const onMove = (event: PointerEvent) => {
+      const x = event.clientX / window.innerWidth - 0.5;
+      const y = event.clientY / window.innerHeight - 0.5;
+      orbs.forEach((orb, i) => {
+        const depth = i === 0 ? 40 : -28;
+        orb.style.setProperty('--orb-x', `${x * depth}px`);
+        orb.style.setProperty('--orb-y', `${y * depth}px`);
+      });
+    };
+
+    window.addEventListener('pointermove', onMove, { passive: true });
+    this.destroyRef.onDestroy(() => window.removeEventListener('pointermove', onMove));
   }
 
   private bindCardPointerGlow(): void {
-    document.querySelectorAll('.project-card').forEach((card) => {
-      const node = card as HTMLElement;
+    document.querySelectorAll<HTMLElement>('.project-card').forEach((node) => {
       node.onpointermove = (event) => {
         const rect = node.getBoundingClientRect();
-        node.style.setProperty('--mx', `${(event as PointerEvent).clientX - rect.left}px`);
-        node.style.setProperty('--my', `${(event as PointerEvent).clientY - rect.top}px`);
+        node.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+        node.style.setProperty('--my', `${event.clientY - rect.top}px`);
       };
     });
   }
