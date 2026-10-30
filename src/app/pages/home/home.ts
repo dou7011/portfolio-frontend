@@ -7,12 +7,13 @@ import { ArticlesService } from '../../services/articles.service';
 import { ResumeService } from '../../services/resume.service';
 import { RouterLink } from '@angular/router';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator';
+import { ContactRevealComponent } from '../../components/contact-reveal/contact-reveal';
 
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, LoadingIndicatorComponent],
+  imports: [RouterLink, LoadingIndicatorComponent, ContactRevealComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -25,7 +26,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public readonly resumeData = this.resumeService.resumeData;
   public readonly pageSections = [
     { id: 'top', label: '首頁' },
-    { id: 'about', label: '關於我' },
+    { id: 'about', label: '核心能力' },
     { id: 'featured', label: '文章與專案' },
     { id: 'contact', label: '聯絡我' },
   ];

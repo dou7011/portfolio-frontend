@@ -98,6 +98,9 @@ html, body {
 	--glass-border: rgba(120, 90, 65, 0.16);
 	--glass-highlight: rgba(255, 255, 255, 0.7);
 	--glow-accent: rgba(160, 112, 78, 0.2);
+	/* 卡片滑鼠聚光：亮色用柔和白光 + 極淡暖色，避免髒髒的棕色光暈 */
+	--spotlight-color: rgba(255, 255, 255, 0.9);
+	--spotlight-edge: rgba(140, 94, 63, 0.34);
 	--gradient-accent: linear-gradient(135deg, #a8714c 0%, #7a4c30 100%);
 	--gradient-text: linear-gradient(110deg, #1f1b18 0%, #8c5e3f 55%, #b98560 100%);
 	--ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -191,6 +194,8 @@ html, body {
 	--glass-border: rgba(255, 245, 235, 0.1);
 	--glass-highlight: rgba(255, 255, 255, 0.06);
 	--glow-accent: rgba(227, 179, 135, 0.16);
+	--spotlight-color: rgba(227, 179, 135, 0.16);
+	--spotlight-edge: rgba(227, 179, 135, 0.3);
 	--gradient-accent: linear-gradient(135deg, #f0c79d 0%, #d49b6a 100%);
 	--gradient-text: linear-gradient(110deg, #f7f4f0 0%, #e3b387 55%, #f2c9a1 100%);
 }

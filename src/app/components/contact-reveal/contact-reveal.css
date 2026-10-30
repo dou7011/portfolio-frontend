@@ -1,0 +1,209 @@
+/*
+ * 先以隱形的 .reserve 撐出「展開後」的寬度並參與版面，實際膠囊 .shell 以絕對定位疊在上面。
+ * 空間不夠時整顆元件會先換行，展開時不會再推動或重排周圍元素。
+ */
+:host {
+  --contact-border: var(--color-line-strong);
+
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  height: 40px;
+}
+
+.reserve {
+  display: block;
+  height: 40px;
+  /* 1 邊框 + 38 圖示 + 1 分隔線 + 14 內距，以及 8 間距 + 30 複製鈕 + 5 內距 + 1 邊框 */
+  padding: 0 44px 0 54px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 40px;
+  white-space: nowrap;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.shell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--contact-border);
+  border-radius: 999px;
+  background: transparent;
+  transition: border-color 0.2s var(--ease-apple), background-color 0.2s var(--ease-apple);
+}
+
+.shell.is-open,
+.shell:has(:focus-visible) {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--color-text-main);
+  text-decoration: none;
+}
+
+.icon {
+  width: 17px;
+  height: 17px;
+  transition: color 0.2s var(--ease-apple);
+}
+
+.shell.is-open .icon,
+.shell:has(:focus-visible) .icon {
+  color: var(--color-accent-hover);
+}
+
+/* 以 grid 軌道 0fr → 1fr 做出順暢的寬度展開 */
+.panel {
+  display: grid;
+  grid-template-columns: 0fr;
+  opacity: 0;
+  transition: grid-template-columns 0.5s var(--ease-apple), opacity 0.3s var(--ease-apple);
+}
+
+.shell.is-open .panel,
+.shell:has(:focus-visible) .panel {
+  grid-template-columns: 1fr;
+  opacity: 1;
+}
+
+.panel-inner {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panel-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 5px 0 14px;
+  border-left: 1px solid var(--contact-border);
+  white-space: nowrap;
+}
+
+.email {
+  color: var(--color-text-main);
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s var(--ease-apple);
+}
+
+.email:hover,
+.email:focus-visible {
+  color: var(--color-accent-hover);
+}
+
+.copy-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent-hover);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-apple), transform 0.3s var(--ease-spring);
+}
+
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+.copy-btn:active {
+  transform: scale(0.9);
+}
+
+.copy-btn svg {
+  grid-area: 1 / 1;
+  width: 15px;
+  height: 15px;
+  transition: transform 0.4s var(--ease-spring), opacity 0.25s var(--ease-apple);
+}
+
+.copy-btn .icon-check {
+  opacity: 0;
+  transform: scale(0.4) rotate(-30deg);
+}
+
+.copy-btn.is-copied {
+  background: var(--color-accent);
+  color: var(--color-button-text);
+}
+
+.copy-btn.is-copied .icon-copy {
+  opacity: 0;
+  transform: scale(0.4) rotate(30deg);
+}
+
+.copy-btn.is-copied .icon-check {
+  opacity: 1;
+  transform: none;
+}
+
+.toast {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--color-text-main);
+  color: var(--color-bg);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-apple), transform 0.35s var(--ease-spring);
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 有 hover 的裝置：滑鼠指著就展開 */
+@media (hover: hover) {
+  .shell:hover {
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+  }
+
+  .shell:hover .icon {
+    color: var(--color-accent-hover);
+  }
+
+  .shell:hover .panel {
+    grid-template-columns: 1fr;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .icon,
+  .copy-btn svg,
+  .toast {
+    transition: none;
+  }
+}

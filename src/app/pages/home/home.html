@@ -45,20 +45,15 @@
             <a class="secondary-btn" routerLink="/resume">關於我</a>
             @if (resumeData(); as resume) {
               <div class="social-links" aria-label="聯絡方式">
-                @if (resume.email) {
-                  <a class="social-icon" [href]="'mailto:' + resume.email" aria-label="寄送 Email" title="寄送 Email">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                      <rect x="3" y="5" width="18" height="14" rx="2" />
-                      <path d="m4 7 8 6 8-6" />
-                    </svg>
-                  </a>
-                }
                 @if (resume.github) {
                   <a class="social-icon" [href]="resume.github" target="_blank" rel="noopener noreferrer" aria-label="開啟 GitHub" title="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.47.09.65-.2.65-.45v-1.68c-2.65.58-3.21-1.12-3.21-1.12-.43-1.1-1.05-1.39-1.05-1.39-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.11-.24-4.33-1.06-4.33-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.62.98a9.1 9.1 0 0 1 4.76 0c1.82-1.24 2.62-.98 2.62-.98.52 1.31.19 2.28.1 2.52.61.67.98 1.52.98 2.56 0 3.65-2.22 4.46-4.34 4.7.34.29.64.86.64 1.74v2.58c0 .25.17.55.65.45A9.5 9.5 0 0 0 12 2.5Z" />
                     </svg>
                   </a>
+                }
+                @if (resume.email) {
+                  <app-contact-reveal class="hero-contact" [email]="resume.email" />
                 }
               </div>
             }
@@ -79,7 +74,7 @@
   <section id="about" class="info-section">
     <div class="section-inner split-layout">
       <div class="section-heading reveal">
-        <p class="section-label">01 — About</p>
+        <p class="section-label">01 — What I Build</p>
         <h2>
           從底層到前端，<br />
           掌握每一處細節。
@@ -180,15 +175,25 @@
     <div class="section-inner">
       <div class="cta-card reveal">
         <div class="cta-content">
-          <p class="section-label">03 — Beyond the projects</p>
-          <h2>好的系統，<br />從理解每一個細節開始。</h2>
-          <p class="cta-copy">從系統架構到使用體驗，讓想法成為真正能運作的產品。進一步認識我的開發經歷、技術專長與實作歷程。</p>
-          <a class="primary-btn" routerLink="/resume">
-            檢視完整履歷
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <path d="M5 12h13M13 6l6 6-6 6" />
-            </svg>
-          </a>
+          <p class="section-label">03 — Let's Build Together</p>
+          <h2>想了解更多，<br />或有想法一起打造？</h2>
+          <p class="cta-copy">歡迎查看完整履歷，了解我的開發經歷與技術專長，也可以直接寄信聊聊。</p>
+          <ul class="cta-topics" aria-label="可以聊聊的主題">
+            <li>企業級系統架構與從零到一的開發</li>
+            <li>SSO / RBAC 權限設計與服務整合</li>
+            <li>全端開發、容器化部署與維運</li>
+          </ul>
+          <div class="cta-actions">
+            <a class="primary-btn" routerLink="/resume">
+              檢視完整履歷
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </a>
+            @if (resumeData()?.email; as email) {
+              <app-contact-reveal [email]="email" />
+            }
+          </div>
         </div>
         <div class="resume-preview" role="group" aria-label="履歷內容摘要">
           <div class="resume-preview-heading">
