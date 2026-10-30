@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, signal } from '@angular/core';
 
 let nextId = 0;
 
@@ -9,7 +9,7 @@ let nextId = 0;
   templateUrl: './contact-reveal.html',
   styleUrl: './contact-reveal.css'
 })
-export class ContactRevealComponent {
+export class ContactRevealComponent implements AfterViewInit {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly destroyRef = inject(DestroyRef);
   private copyTimer = 0;
@@ -18,6 +18,8 @@ export class ContactRevealComponent {
   public readonly label = input('聯絡我');
   public readonly open = signal(false);
   public readonly copied = signal(false);
+  // 右側空間不足以展開時為 false：維持單純的圖示，點擊直接寄信
+  public readonly canExpand = signal(true);
   public readonly panelId = `contact-panel-${nextId++}`;
 
   constructor() {
@@ -40,9 +42,39 @@ export class ContactRevealComponent {
     });
   }
 
-  // 無 hover 的觸控裝置：點一下展開／收合；桌機維持直接寄信
+  ngAfterViewInit(): void {
+    const hostEl = this.host.nativeElement;
+    const reserve = hostEl.querySelector<HTMLElement>('.reserve');
+    const boundary = this.findBoundary();
+    if (!reserve || !boundary) {
+      return;
+    }
+
+    const update = () => {
+      const box = boundary.getBoundingClientRect();
+      const style = getComputedStyle(boundary);
+      const right = box.right - (parseFloat(style.paddingRight) || 0) - (parseFloat(style.borderRightWidth) || 0);
+      const fits = hostEl.getBoundingClientRect().left + reserve.offsetWidth <= right + 0.5;
+      this.canExpand.set(fits);
+      if (!fits) {
+        this.open.set(false);
+      }
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(boundary);
+    observer.observe(reserve);
+    window.addEventListener('resize', update, { passive: true });
+    this.destroyRef.onDestroy(() => {
+      observer.disconnect();
+      window.removeEventListener('resize', update);
+    });
+  }
+
+  // 無 hover 的觸控裝置：點一下展開／收合；桌機與空間不足時維持直接寄信
   public onTrigger(event: MouseEvent): void {
-    if (window.matchMedia('(hover: none)').matches) {
+    if (this.canExpand() && window.matchMedia('(hover: none)').matches) {
       event.preventDefault();
       this.open.update((value) => !value);
     }
@@ -65,5 +97,14 @@ export class ContactRevealComponent {
     this.copied.set(true);
     window.clearTimeout(this.copyTimer);
     this.copyTimer = window.setTimeout(() => this.copied.set(false), 1800);
+  }
+
+  // 往上找第一個真正產生版面盒子的祖先（略過 display: contents）
+  private findBoundary(): HTMLElement | null {
+    let node = this.host.nativeElement.parentElement;
+    while (node && getComputedStyle(node).display === 'contents') {
+      node = node.parentElement;
+    }
+    return node;
   }
 }

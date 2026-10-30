@@ -1,6 +1,7 @@
 /*
- * 先以隱形的 .reserve 撐出「展開後」的寬度並參與版面，實際膠囊 .shell 以絕對定位疊在上面。
- * 空間不夠時整顆元件會先換行，展開時不會再推動或重排周圍元素。
+ * 元件本身只佔 40px 圖示的位置，不會推動或換行周圍元素；展開時膠囊以絕對定位向右覆蓋空白處。
+ * 隱形的 .reserve 只用來量出展開後所需寬度，元件據此判斷右側空間夠不夠展開。
+ * 空間不足（.no-expand）時停用展開，維持單純的圖示，點擊直接寄信。
  */
 :host {
   --contact-border: var(--color-line-strong);
@@ -8,11 +9,15 @@
   position: relative;
   display: inline-block;
   vertical-align: top;
+  flex: 0 0 40px;
+  width: 40px;
   height: 40px;
 }
 
 .reserve {
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 40px;
   /* 1 邊框 + 38 圖示 + 1 分隔線 + 14 內距，以及 8 間距 + 30 複製鈕 + 5 內距 + 1 邊框 */
   padding: 0 44px 0 54px;
@@ -30,6 +35,7 @@
   left: 0;
   display: inline-flex;
   align-items: center;
+  width: max-content;
   height: 40px;
   box-sizing: border-box;
   border: 1px solid var(--contact-border);
@@ -180,6 +186,15 @@
 .toast.is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* 空間不足：不展開，hover／focus／觸控都只保留圖示 */
+.shell.no-expand .panel {
+  display: none;
+}
+
+.shell.no-expand .toast {
+  display: none;
 }
 
 /* 有 hover 的裝置：滑鼠指著就展開 */
